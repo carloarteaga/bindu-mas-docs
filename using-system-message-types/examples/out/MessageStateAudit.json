@@ -1,0 +1,23 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "MessageStateAudit",
+  "$user": "exampleUser",
+  "$when": "2026-10-19T18:08:36Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "audited_at": "2026-10-19T18:08:36Z",
+    "health_score": 0,
+    "irregularities_detected": "",
+    "irregularity_count": 1,
+    "node_id": "",
+    "node_role": "",
+    "status_summary": "",
+    "top_accumulating_types": "",
+    "total_stored_messages": 0
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$type": "AISemanticReactorSet",
+  "$node-dest": "node-1",
+  "$group": "mesh",
+  "$producer": "node-1",
+  "$user": "admin",
+  "$when": "2026-10-23T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "node-1",
+    "reactors": [
+      {
+        "reactor_id": "albarino-vintage-brain",
+        "provider": "typesafe",
+        "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+        "api_key_secret": "secret:TYPESAFE_API_KEY",
+        "model_id": "jev-latest",
+        "max_concurrency": 4,
+        "trigger_message_types": [
+          "SensorVineyardReading"
+        ],
+        "trigger_condition": "payload.soil_moisture_pct < 45.0 || payload.leaf_wetness_hours > 3.0 || payload.ambient_temp_c < 6.0",
+        "history_count": 0,
+        "context_query": "",
+        "response_message_type": "VineyardHarvestAdvisory",
+        "confidence_threshold": 0.80,
+        "cognitive_profile": true,
+        "questions": {
+          "fungal_risk_score": {
+            "type": "noul",
+            "instructions": "Evaluate the probability (0.0 to 1.0) of Plasmopara viticola (downy mildew) or Botrytis cinerea fungal infection given current humidity and continuous leaf wetness hours (>3.0h)."
+          },
+          "harvest_readiness_index": {
+            "type": "score",
+            "instructions": "Evaluate the sugar/acid maturation balance index of the Albariño parcel (scaled 0.0 to 100.0).",
+            "criteria": [
+              "0-20: Severe thermal or hydric stress blocking phenolic maturation",
+              "25-45: Early veraison or suboptimal photosynthetic activity",
+              "50-70: Moderate maturation with elevated humidity/disease pressure",
+              "75-90: Strong aromatic development with minor environmental stress",
+              "95-100: Optimal diurnal thermal range and sugar/malic-acid balance for harvest"
+            ]
+          }
+        },
+        "mapping_template": {
+          "vineyard_id": "string(payload.vineyard_id)",
+          "botanical_health_score": "ai.clamp(ai.round(double(resp.botanical_health_score), 2), 0.0, 1.0)",
+          "fungal_risk_score": "ai.clamp(ai.round(double(resp.fungal_risk_score), 2), 0.0, 1.0)",
+          "frost_alert": "bool(resp.frost_alert)",
+          "harvest_readiness_index": "ai.round(double(resp.harvest_readiness_index), 2)",
+          "action_recommendation": "bool(resp.frost_alert) ? 'CRITICAL FROST ALERT: Activate thermal heaters and wind turbines immediately' : (double(resp.fungal_risk_score) > 0.60 ? 'HIGH MILDEW RISK: Deploy targeted copper/sulfur fungicide treatment' : (payload.soil_moisture_pct < 45.0 ? 'DROUGHT STRESS: Initiate precision drip irrigation cycle' : 'Photosynthetic activity optimal. High diurnal thermal range preserving aromatic acidity'))"
+        },
+        "system_instruction": "You are an expert viticulturist and precision agronomy System One decision evaluator advising the Albariño wine estates of Rías Baixas, Galicia.",
+        "semantic_prompt_template": "Analyze telemetry for vineyard '{{index .trigger_event \"vineyard_id\"}}' (Parcel: {{index .trigger_event \"parcel_name\"}}).\n\nSensor Readings:\n- Ambient Temperature: {{index .trigger_event \"ambient_temp_c\"}} °C\n- Atmospheric Humidity: {{index .trigger_event \"humidity_pct\"}} %\n- Soil Moisture: {{index .trigger_event \"soil_moisture_pct\"}} %\n- Solar Radiation: {{index .trigger_event \"solar_radiation_w_m2\"}} W/m²\n- Continuous Leaf Wetness: {{index .trigger_event \"leaf_wetness_hours\"}} hours"
+      }
+    ]
+  }
+}

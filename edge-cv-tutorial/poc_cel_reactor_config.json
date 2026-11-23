@@ -1,0 +1,32 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-28T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "workstation-presence-overlap-arbitrator",
+        "input_message_type": "DisappearedClass",
+        "cron": "",
+        "trigger_condition": "has(payload.class_name) && payload.class_name == 'person' && double(payload.dwell_duration_seconds) >= 5.0",
+        "context_query": "SELECT \"$id\" AS cand_id, json_extract(raw_json, '$.fields.camera_id') AS cand_camera, CAST(json_extract(raw_json, '$.fields.max_bbox_area') AS REAL) AS cand_area, CAST(json_extract(raw_json, '$.fields.avg_confidence') AS REAL) AS cand_conf FROM v_messages WHERE \"$type\" = 'DisappearedClass' AND json_extract(raw_json, '$.fields.class_name') = 'person' AND json_extract(raw_json, '$.fields.camera_id') != ? AND \"$when\" >= datetime('now', '-45 seconds') ORDER BY \"$when\" DESC LIMIT 1",
+        "output_message_type": "WorkstationPresenceSession",
+        "transformation_expression": {
+          "session_id": "'session-' + string(payload.camera_id) + '-' + string(payload.track_id)",
+          "station_id": "string(payload.station_id)",
+          "primary_camera_id": "string(payload.camera_id)",
+          "supporting_camera_ids": "has(db.rows) && size(db.rows) > 0 ? [string(db.rows[0].fields.cand_camera)] : []",
+          "target_class": "'person'",
+          "clothing_color": "has(payload.final_dominant_color) ? string(payload.final_dominant_color) : 'DARK'",
+          "dwell_duration_seconds": "double(payload.dwell_duration_seconds)",
+          "authority_score": "double(payload.max_bbox_area) * double(payload.avg_confidence)",
+          "session_status": "'COMPLETED'"
+        }
+      }
+    ]
+  }
+}

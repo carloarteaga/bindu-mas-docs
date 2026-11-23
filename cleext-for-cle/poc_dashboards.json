@@ -1,0 +1,61 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "financial-audit-compliance-matrix",
+      "$id": "financial-audit-compliance-matrix",
+      "fields": {
+        "id": "financial-audit-compliance-matrix",
+        "name": "🏛️ Financial & Topology Compliance Matrix",
+        "query": {
+          "sql": "SELECT \"$when\" AS audit_time, json_extract(raw_json, '$.fields.auditor_node_id') AS node_id, json_extract(raw_json, '$.fields.auditor_locagram') AS locagram, CAST(json_extract(raw_json, '$.fields.health_score') AS INTEGER) AS compliance_score, json_extract(raw_json, '$.fields.runtime_log_level') AS log_level, json_extract(raw_json, '$.fields.schema_marine_registered') AS schema_ok, json_extract(raw_json, '$.fields.audit_summary') AS summary FROM v_messages WHERE \"$type\" = 'MeshTopologyInspection' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "audit_time": "Audit Timestamp",
+          "node_id": "Auditor Node ID",
+          "locagram": "Locagram Path",
+          "compliance_score": "Compliance Score",
+          "log_level": "Log Level",
+          "schema_ok": "Schema Marine Validated",
+          "summary": "Audit Findings"
+        },
+        "view": {
+          "type": "table",
+          "title": "Financial & Topology Compliance Matrix",
+          "chart_type": "table",
+          "x": "audit_time",
+          "y": [
+            "compliance_score"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "financial-node-health-scores",
+      "$id": "financial-node-health-scores",
+      "fields": {
+        "id": "financial-node-health-scores",
+        "name": "📊 Node Health & Compliance Scores",
+        "query": {
+          "sql": "WITH RankedAudits AS (SELECT json_extract(raw_json, '$.fields.auditor_node_id') AS node_id, CAST(json_extract(raw_json, '$.fields.health_score') AS INTEGER) AS score, ROW_NUMBER() OVER (PARTITION BY json_extract(raw_json, '$.fields.auditor_node_id') ORDER BY \"$when\" DESC) as rn FROM v_messages WHERE \"$type\" = 'MeshTopologyInspection') SELECT node_id AS Monitored_Node, score AS Health_Score FROM RankedAudits WHERE rn = 1 ORDER BY score ASC"
+        },
+        "labels": {
+          "Monitored_Node": "Monitored Node",
+          "Health_Score": "Health Score (0-100)"
+        },
+        "view": {
+          "type": "bar",
+          "title": "Node Health & Compliance Scores",
+          "chart_type": "bar",
+          "x": "Monitored_Node",
+          "y": [
+            "Health_Score"
+          ]
+        }
+      }
+    }
+  ]
+}

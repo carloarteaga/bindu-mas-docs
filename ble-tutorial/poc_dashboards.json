@@ -1,0 +1,68 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "ble-beacon-presence-audit-log",
+      "$id": "ble-beacon-presence-audit-log",
+      "fields": {
+        "id": "ble-beacon-presence-audit-log",
+        "name": "📡 BLE Beacon Ingress & Dwell Audit Trail",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$type\" AS event_type, json_extract(raw_json, '$.fields.beacon_id') AS beacon_id, json_extract(raw_json, '$.fields.scanner_node_id') AS scanner, json_extract(raw_json, '$.fields.zone_id') AS zone, CAST(json_extract(raw_json, '$.fields.rssi_dbm') AS REAL) AS rssi, CAST(json_extract(raw_json, '$.fields.estimated_distance_m') AS REAL) AS distance_m, CAST(json_extract(raw_json, '$.fields.dwell_duration_seconds') AS REAL) AS dwell_s, json_extract(raw_json, '$.fields.status') AS status FROM v_messages WHERE \"$type\" IN ('BLEBeaconSeen', 'BLEBeaconLost') ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "event_type": "Event Archetype",
+          "beacon_id": "iBeacon Digital Twin ID",
+          "scanner": "BLE Gateway Node",
+          "zone": "Zone / Room",
+          "rssi": "Filtered RSSI (dBm)",
+          "distance_m": "Est Distance (m)",
+          "dwell_s": "Dwell Time (s)",
+          "status": "State"
+        },
+        "view": {
+          "type": "table",
+          "title": "Real-Time BLE Beacon Transition Log (Arrivals & Departures)",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "rssi"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "ble-operation-room-spatial-map",
+      "$id": "ble-operation-room-spatial-map",
+      "fields": {
+        "id": "ble-operation-room-spatial-map",
+        "name": "🗺️ Operation Room BLE Beacon Spatial Occupancy Map",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.beacon_id') AS entity_id, json_extract(raw_json, '$.fields.status') AS status, json_extract(raw_json, '$.fields.zone_id') AS zone, CAST(json_extract(raw_json, '$.fields.coordinates_x') AS REAL) AS pos_x, CAST(json_extract(raw_json, '$.fields.coordinates_y') AS REAL) AS pos_y, json_extract(raw_json, '$.fields.where_locagram') AS geom FROM v_messages WHERE \"$type\" IN ('BLEBeaconSeen', 'BLEBeaconLost') ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "entity_id": "Beacon ID",
+          "status": "State",
+          "zone": "Room Zone",
+          "pos_x": "Coord X (m)",
+          "pos_y": "Coord Y (m)",
+          "geom": "GeoJSON Geometry"
+        },
+        "view": {
+          "type": "map",
+          "title": "Operation Room Real-Time 2D BLE Spatial Tracker",
+          "chart_type": "map",
+          "x": "pos_x",
+          "y": [
+            "pos_y"
+          ]
+        }
+      }
+    }
+  ]
+}

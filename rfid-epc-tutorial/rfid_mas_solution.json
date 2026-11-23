@@ -1,0 +1,57 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "rfid-dock-portal-solution",
+  "$user": "console",
+  "$when": "2026-10-10T12:00:00Z",
+  "fields": {
+    "solution_id": "rfid-dock-portal-solution",
+    "name": "Industrial RFID LLRP Dock Portal & 11-Standard EPC Digital Twin",
+    "version": "1.0.0",
+    "description": "High-throughput RAIN RFID LLRP gateway integration, zero-allocation 11-standard EPC bit-decoding, 4-antenna directional velocity tracking, RF physical layer health monitoring, and SLM delivery manifest reconciliation.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root"
+      ],
+      "message_types": [
+        "EpcSgtinRead@1.0.0",
+        "EpcSsccRead@1.0.0",
+        "EpcSglnRead@1.0.0",
+        "EpcGraiRead@1.0.0",
+        "EpcGiaiRead@1.0.0",
+        "EpcGsrnRead@1.0.0",
+        "EpcGdtiRead@1.0.0",
+        "EpcCpiRead@1.0.0",
+        "EpcSgcnRead@1.0.0",
+        "EpcItipRead@1.0.0",
+        "EpcGidRead@1.0.0",
+        "RfidAntennaTelemetry@1.0.0",
+        "PortalTransitEvent@1.0.0",
+        "LogisticsDiscrepancyAlert@1.0.0",
+        "RfidReaderConfig@1.0.0"
+      ],
+      "cel_reactors": [
+        "rfid-sgtin-transit-synthesizer",
+        "rfid-sscc-pallet-transit-synthesizer",
+        "rfid-antenna-health-guard"
+      ],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [
+        "rfid-slm-manifest-reconciler"
+      ],
+      "plugins": [
+        "bindu-rfid-epc-plugin@1.0.0"
+      ],
+      "media_storage_providers": [],
+      "access_users": [],
+      "access_roles": [],
+      "dashboards": [
+        "rfid-dock-portal-transit-monitor",
+        "rfid-epc-standards-breakdown",
+        "rfid-antenna-rf-health-matrix"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

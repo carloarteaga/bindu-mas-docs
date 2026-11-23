@@ -1,0 +1,18 @@
+{
+  "$group": "default",
+  "$producer": "bindu-mascl-plugin",
+  "$type": "MASclOcurrence",
+  "$user": "system",
+  "$when": "2026-09-22T12:00:00Z",
+  "fields": {
+    "occurrence_id": "occ-bpr-sample-01",
+    "agent_type": "BPR",
+    "agent_name": "bindu-mascl-plugin",
+    "execution_mode": "TRIGGER",
+    "node_id": "root",
+    "timestamp": "2026-09-22T12:00:00Z",
+    "status": "OK",
+    "latency_ms": 1.2,
+    "details": "Native Go BPR plugin handled trigger and emitted occurrence"
+  }
+}

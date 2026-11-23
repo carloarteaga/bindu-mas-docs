@@ -1,0 +1,100 @@
+{
+  "message_types": [
+    {
+      "name": "RawTagRead",
+      "description": "Unified semantic RFID tag read event normalized from heterogeneous commercial readers (Zebra, Hopeland, Chafon, Marktrace)",
+      "emoji": "🏷️",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 100,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "epc",
+          "type": "string",
+          "required": true,
+          "description": "Electronic Product Code hexadecimal string"
+        },
+        {
+          "name": "antenna",
+          "type": "integer",
+          "required": true,
+          "description": "Antenna port number (1-8) that captured the tag"
+        },
+        {
+          "name": "rssi",
+          "type": "number",
+          "required": true,
+          "description": "Received Signal Strength Indicator in dBm"
+        },
+        {
+          "name": "read_count",
+          "type": "integer",
+          "required": true,
+          "description": "Number of reads during this report cycle"
+        },
+        {
+          "name": "reader_vendor",
+          "type": "string",
+          "required": true,
+          "description": "Hardware manufacturer (Hopeland, Zebra, Chafon, Marktrace)"
+        },
+        {
+          "name": "reader_id",
+          "type": "string",
+          "required": true,
+          "description": "Physical reader hardware identifier"
+        },
+        {
+          "name": "dock_portal",
+          "type": "string",
+          "required": true,
+          "description": "Subpath or logistics dock location (e.g. rfid/hopeland/dock1)"
+        }
+      ]
+    },
+    {
+      "name": "ReaderHealthAlert",
+      "description": "Diagnostic alert emitted when a reader or antenna exhibits anomalous RF behavior or extreme signal degradation",
+      "emoji": "⚠️",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "reader_vendor",
+          "type": "string",
+          "required": true,
+          "description": "Hardware manufacturer"
+        },
+        {
+          "name": "dock_portal",
+          "type": "string",
+          "required": true,
+          "description": "Subpath or dock location identifier"
+        },
+        {
+          "name": "alert_code",
+          "type": "string",
+          "required": true,
+          "description": "Alert classification code (e.g. WEAK_SIGNAL, ANTENNA_FAULT)"
+        },
+        {
+          "name": "details",
+          "type": "string",
+          "required": true,
+          "description": "Human-readable description of the RF anomaly"
+        }
+      ]
+    }
+  ]
+}

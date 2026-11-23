@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "hello-world-starter",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "hello-world-starter",
+    "name": "Hello World Developer Starter & Plugin Archetype",
+    "version": "1.0.0",
+    "description": "Canonical developer starter project demonstrating BPR plugin lifecycle, schema management, and real-time event streaming.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-1", "bindu-pi3-uno", "bindu-minis", "dell-debian1"],
+      "message_types": ["HelloWorld@1.0.0", "HelloWorldConfig@1.0.0", "HelloWorldStats@1.0.0"],
+      "cel_reactors": [],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [],
+      "plugins": ["hello-world-plugin@1.0.0"],
+      "media_storage_providers": [],
+      "access_users": ["developer-guest"],
+      "access_roles": ["viewer"],
+      "dashboards": ["hello-world-dashboard", "hello-world-stats-chart"],
+      "system_config_keys": []
+    }
+  }
+}

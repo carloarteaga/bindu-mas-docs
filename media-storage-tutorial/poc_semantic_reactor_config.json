@@ -1,0 +1,109 @@
+{
+  "exported_at": "2026-10-23T12:00:00Z",
+  "message_types": [
+    "AISemanticReactorSet"
+  ],
+  "reactors_sets": [
+    {
+      "$type": "AISemanticReactorSet",
+      "$group": "mesh",
+      "$producer": "bindu-minis",
+      "$user": "admin",
+      "$when": "2026-10-23T12:00:00Z",
+      "fields": {
+        "gateway_node_id": "bindu-minis",
+        "reactors": [
+          {
+            "reactor_id": "patio-flower-counter",
+            "provider": "openai",
+            "api_endpoint": "http://192.168.12.160:11434/v1/chat/completions",
+            "api_key_secret": "secret:OLLAMA_API_KEY",
+            "model_id": "moondream:latest",
+            "max_concurrency": 1,
+            "inference_timeout": 300,
+            "trigger_message_types": [
+              "PatioMonitorMedia"
+            ],
+            "trigger_condition": "has(payload.patio_view) && payload.patio_view != ''",
+            "history_count": 0,
+            "context_query": "",
+            "response_message_type": "CountFlowersByColor",
+            "confidence_threshold": 0.5,
+            "cognitive_profile": true,
+            "mapping_template": {
+              "yellow_flowers": "int(resp.yellow_flowers)",
+              "orange_light_flowers": "int(resp.orange_light_flowers)",
+              "orange_dark_flowers": "int(resp.orange_dark_flowers)",
+              "total_flowers": "int(resp.yellow_flowers) + int(resp.orange_light_flowers) + int(resp.orange_dark_flowers)",
+              "analysis_summary": "string(resp.analysis_summary)"
+            },
+            "system_instruction": "You are a local computer vision flower analyzer. You analyze patio flower captures and count the flowers by color. You MUST return a single raw JSON object with EXACTLY these 5 keys: yellow_flowers, orange_light_flowers, orange_dark_flowers, total_flowers, analysis_summary. Do not output any markdown formatting, preambles, explanations, extra keys, or backticks. Output only raw JSON. Rules: 1. Count yellow_flowers, orange_light_flowers, orange_dark_flowers. 2. total_flowers MUST be an integer representing the sum of all counts. 3. analysis_summary MUST be a string describing the visual status of the backyard plants.",
+            "semantic_prompt_template": "Analyze the flower capture for patio '{{index .trigger_event \"$producer\"}}'.\n\nPatio View S3 URI: {{index .trigger_event \"fields\" \"patio_view\"}}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "AISemanticReactorSet",
+      "$group": "mesh",
+      "$producer": "root",
+      "$user": "admin",
+      "$when": "2026-10-23T12:00:00Z",
+      "fields": {
+        "gateway_node_id": "root",
+        "reactors": [
+          {
+            "reactor_id": "cognitive-execution-auditor",
+            "provider": "typesafe",
+            "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+            "api_key_secret": "secret:TYPESAFE_API_KEY",
+            "model_id": "jev-latest",
+            "max_concurrency": 2,
+            "inference_timeout": 30,
+            "trigger_message_types": [
+              "CountFlowersByColor"
+            ],
+            "trigger_condition": "payload.total_flowers >= 0",
+            "history_count": 5,
+            "context_query": "SELECT raw_json FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'patio-flower-counter' ORDER BY \"$when\" DESC LIMIT 5",
+            "response_message_type": "AIExecutionCognivityAuditory",
+            "confidence_threshold": 0.75,
+            "cognitive_profile": true,
+            "questions": {
+              "audit_status": {
+                "type": "choice",
+                "instructions": "Evaluate the execution efficiency and latency health of the vision AI reactor based on its AICognitiveProfile telemetry history.",
+                "criteria": {
+                  "OPTIMAL": "Execution succeeded with low hydration (<50ms) and fast vision inference (<1500ms) or nominal empty baseline",
+                  "ACCEPTABLE": "Execution succeeded with moderate inference latency (1500ms - 3000ms) and zero errors",
+                  "DEGRADED": "Elevated inference latency (>3000ms) or cold-start bottleneck observed across historical runs",
+                  "ANOMALOUS": "Erratic latency spikes, schema coercion warnings, or confidence drops detected in profile history",
+                  "TIMEOUT": "Execution timed out or failed to return a valid response within the deadline"
+                }
+              },
+              "avg_latency_ms": {
+                "type": "score",
+                "instructions": "Estimate the average total execution latency in milliseconds (0 to 5000 ms) from the AICognitiveProfile history (or 0 if no history logs are present).",
+                "criteria": [
+                  "0 ms: No historical telemetry records yet (nominal baseline)",
+                  "500 ms: Ultra-fast edge inference latency",
+                  "1500 ms: Standard multimodal VLM inference latency",
+                  "3000 ms: Elevated inference latency under edge compute load",
+                  "5000 ms: Severe latency saturation or cold-start stall"
+                ]
+              }
+            },
+            "mapping_template": {
+              "model_id": "'moondream:latest'",
+              "audit_status": "string(resp.audit_status)",
+              "avg_latency_ms": "int(resp.avg_latency_ms)",
+              "efficiency_summary": "string(resp.audit_status) == 'OPTIMAL' || string(resp.audit_status) == 'ACCEPTABLE' ? 'System One cognitive audit verified nominal VLM execution (' + string(resp.audit_status) + ', avg ' + string(resp.avg_latency_ms) + ' ms) with RLCD confidence ' + string(ai.round(double(resp.confidence) * 100.0, 1)) + '%.' : 'ALERT: System One cognitive audit flagged ' + string(resp.audit_status) + ' execution state (' + string(resp.avg_latency_ms) + ' ms); inspect edge VLM latency and hydration load.'"
+            },
+            "system_instruction": "You are a System One cognitive performance auditor evaluating AICognitiveProfile execution telemetry for edge multimodal AI reactors.",
+            "semantic_prompt_template": "Audit the execution metrics for the vision model that generated this CountFlowersByColor event (Total Flowers Counted: {{index .trigger_event \"fields\" \"total_flowers\"}}).\n\nHistorical telemetry profiles (AICognitiveProfile):\n{{range .history}}\n- Status: {{index .fields \"execution_status\"}}, Latency: {{index .fields \"hydration_latency_ms\"}} (hydration) + {{index .fields \"inference_latency_ms\"}} (inference) ms, Model: {{index .fields \"target_model\"}}\n{{else}}\n(No historical profiles found; baseline performance is nominal)\n{{end}}"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "message_types": [
+    {
+      "name": "MeshAuditTrigger",
+      "description": "On-demand command event triggering dynamic topological inspection and fleet health audit",
+      "emoji": "\ud83d\udef0\ufe0f",
+      "version": "1.0.0",
+      "persist": false,
+      "properties": [
+        {
+          "name": "audit_level",
+          "type": "string",
+          "required": true,
+          "description": "Inspection depth: STANDARD, DEEP, or SECURITY"
+        },
+        {
+          "name": "target_cluster",
+          "type": "string",
+          "required": false,
+          "description": "Target hierarchical locagram path or cluster prefix (e.g. /galicia)"
+        },
+        {
+          "name": "check_compliance",
+          "type": "boolean",
+          "required": true,
+          "description": "Flag instructing the auditor reactor to verify plugin and schema integrity"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "PT2H"
+    },
+    {
+      "name": "MeshTopologyInspection",
+      "description": "Comprehensive fleet topology and edge runtime audit event constructed via Google CEL and celext",
+      "emoji": "\ud83e\udded",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "auditor_node_id",
+          "type": "string",
+          "required": true,
+          "description": "Node identifier that executed the audit transformation"
+        },
+        {
+          "name": "auditor_locagram",
+          "type": "string",
+          "required": true,
+          "description": "Hierarchical geographic/logical locagram path of the executing node"
+        },
+        {
+          "name": "is_root_gateway",
+          "type": "boolean",
+          "required": true,
+          "description": "True if the audit was computed on the root gateway; false on child edge nodes"
+        },
+        {
+          "name": "parent_gateway_id",
+          "type": "string",
+          "required": true,
+          "description": "Immediate upstream parent node ID in mesh tree"
+        },
+        {
+          "name": "active_plugins",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "description": "List of active plugin identifiers assigned to this node"
+        },
+        {
+          "name": "runtime_producer",
+          "type": "string",
+          "required": true,
+          "description": "Configured producer identifier loaded from binduConfig.json"
+        },
+        {
+          "name": "runtime_log_level",
+          "type": "string",
+          "required": true,
+          "description": "Active logging level (DEBUG, INFO, WARN, ERROR)"
+        },
+        {
+          "name": "time_ntp_server",
+          "type": "string",
+          "required": true,
+          "description": "Configured NTP synchronization server"
+        },
+        {
+          "name": "schema_marine_registered",
+          "type": "boolean",
+          "required": true,
+          "description": "True if the RawMarineData contract schema is registered in message types"
+        },
+        {
+          "name": "marine_schema_badge",
+          "type": "string",
+          "required": true,
+          "description": "Emoji badge introspected dynamically from the schema registry"
+        },
+        {
+          "name": "audit_summary",
+          "type": "string",
+          "required": true,
+          "description": "Human-readable summary message formatted via CEL string interpolation"
+        },
+        {
+          "name": "health_score",
+          "type": "integer",
+          "required": true,
+          "description": "Calculated topological and runtime compliance score (0-100)"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 10,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "MeshTopologyCloudSync",
+      "description": "Cloud telemetry synchronization confirmation emitted by REST reactor bridge",
+      "emoji": "\u2601\ufe0f",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "auditor_node_id",
+          "type": "string",
+          "required": true,
+          "description": "Node identifier that executed the audit transformation"
+        },
+        {
+          "name": "auditor_locagram",
+          "type": "string",
+          "required": true,
+          "description": "Hierarchical geographic/logical locagram path of the executing node"
+        },
+        {
+          "name": "is_root_gateway",
+          "type": "boolean",
+          "required": true,
+          "description": "True if the audit was computed on the root gateway; false on child edge nodes"
+        },
+        {
+          "name": "parent_gateway_id",
+          "type": "string",
+          "required": true,
+          "description": "Immediate upstream parent node ID in mesh tree"
+        },
+        {
+          "name": "active_plugins",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "description": "List of active plugin identifiers assigned to this node"
+        },
+        {
+          "name": "runtime_producer",
+          "type": "string",
+          "required": true,
+          "description": "Configured producer identifier loaded from binduConfig.json"
+        },
+        {
+          "name": "runtime_log_level",
+          "type": "string",
+          "required": true,
+          "description": "Active logging level (DEBUG, INFO, WARN, ERROR)"
+        },
+        {
+          "name": "time_ntp_server",
+          "type": "string",
+          "required": true,
+          "description": "Configured NTP synchronization server"
+        },
+        {
+          "name": "schema_marine_registered",
+          "type": "boolean",
+          "required": true,
+          "description": "True if the RawMarineData contract schema is registered in message types"
+        },
+        {
+          "name": "marine_schema_badge",
+          "type": "string",
+          "required": true,
+          "description": "Emoji badge introspected dynamically from the schema registry"
+        },
+        {
+          "name": "audit_summary",
+          "type": "string",
+          "required": true,
+          "description": "Human-readable summary message formatted via CEL string interpolation"
+        },
+        {
+          "name": "health_score",
+          "type": "integer",
+          "required": true,
+          "description": "Calculated topological and runtime compliance score (0-100)"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 10,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P7D"
+    }
+  ]
+}

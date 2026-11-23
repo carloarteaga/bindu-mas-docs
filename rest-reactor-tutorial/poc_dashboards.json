@@ -1,0 +1,132 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "nunegal77-ocean-telemetry-trend",
+      "$id": "nunegal77-ocean-telemetry-trend",
+      "fields": {
+        "id": "nunegal77-ocean-telemetry-trend",
+        "name": "🌊 NUNEGAL-77 Ocean Telemetry & SST Trends",
+        "query": {
+          "sql": "SELECT * FROM (SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.vessel_id') AS vessel_id, CAST(json_extract(raw_json, '$.fields.sea_surface_temp_c') AS REAL) AS sst_celsius, CAST(json_extract(raw_json, '$.fields.wave_height_meters') AS REAL) AS wave_height_m, CAST(json_extract(raw_json, '$.fields.ocean_current_knots') AS REAL) AS current_knots FROM v_messages WHERE \"$type\" = 'RawMarineData' ORDER BY \"$when\" DESC LIMIT 50) ORDER BY timestamp ASC"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "vessel_id": "Vessel ID",
+          "sst_celsius": "Sea Surface Temp (°C)",
+          "wave_height_m": "Wave Height (m)",
+          "current_knots": "Current Velocity (knots)"
+        },
+        "view": {
+          "type": "line",
+          "title": "NUNEGAL-77 Sea Surface Temp & Wave Dynamics",
+          "chart_type": "line",
+          "x": "timestamp",
+          "y": [
+            "sst_celsius",
+            "wave_height_m",
+            "current_knots"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "nunegal77-rest-reactor-trace",
+      "$id": "nunegal77-rest-reactor-trace",
+      "fields": {
+        "id": "nunegal77-rest-reactor-trace",
+        "name": "🛰️ REST Reactor Zero-RAG Ingestion Audit",
+        "query": {
+          "sql": "WITH LatestGPS AS (SELECT json_extract(raw_json, '$.fields.vessel_id') AS vessel_id, CAST(json_extract(raw_json, '$.fields.latitude') AS REAL) AS lat, CAST(json_extract(raw_json, '$.fields.longitude') AS REAL) AS lon, CAST(json_extract(raw_json, '$.fields.speed_knots') AS REAL) AS speed, json_extract(raw_json, '$.fields.zone_id') AS zone, \"$when\" AS gps_at, ROW_NUMBER() OVER (ORDER BY \"$when\" DESC) as rn FROM v_messages WHERE \"$type\" = 'VesselGPSPosition'), LatestMarine AS (SELECT json_extract(raw_json, '$.fields.vessel_id') AS vessel_id, CAST(json_extract(raw_json, '$.fields.sea_surface_temp_c') AS REAL) AS sst, CAST(json_extract(raw_json, '$.fields.wave_height_meters') AS REAL) AS wave_h, CAST(json_extract(raw_json, '$.fields.ocean_current_knots') AS REAL) AS current_speed, json_extract(raw_json, '$.fields.fetch_status') AS fetch_status, \"$when\" AS fetched_at, ROW_NUMBER() OVER (ORDER BY \"$when\" DESC) as rn FROM v_messages WHERE \"$type\" = 'RawMarineData'), LatestQuota AS (SELECT json_extract(raw_json, '$.fields.haul_id') AS haul_id, json_extract(raw_json, '$.fields.quota_authorized') AS authorized, CAST(json_extract(raw_json, '$.fields.remaining_season_tons') AS REAL) AS remaining_quota, json_extract(raw_json, '$.fields.compliance_code') AS compliance, \"$when\" AS validated_at, ROW_NUMBER() OVER (ORDER BY \"$when\" DESC) as rn FROM v_messages WHERE \"$type\" = 'HaulQuotaValidation') SELECT g.vessel_id AS Vessel, g.lat AS Latitude, g.lon AS Longitude, g.speed AS Speed_Knots, g.zone AS Active_Zone, m.sst AS Sea_Surface_Temp, m.wave_h AS Wave_Height_M, m.current_speed AS Ocean_Current_Knots, m.fetch_status AS REST_Fetch_Status, m.fetched_at AS Telemetry_Fetched_At, q.haul_id AS Last_Haul_ID, q.compliance AS Maritime_Auth_Status, q.remaining_quota AS Remaining_Fleet_Quota_Tons FROM LatestGPS g LEFT JOIN LatestMarine m ON m.rn = 1 LEFT JOIN LatestQuota q ON q.rn = 1 WHERE g.rn = 1"
+        },
+        "labels": {
+          "Vessel": "Vessel ID",
+          "Latitude": "Latitude",
+          "Longitude": "Longitude",
+          "Speed_Knots": "Speed (knots)",
+          "Active_Zone": "Fishing Zone",
+          "Sea_Surface_Temp": "SST (°C)",
+          "Wave_Height_M": "Wave Height (m)",
+          "Ocean_Current_Knots": "Current Velocity (knots)",
+          "REST_Fetch_Status": "REST Egress Status",
+          "Telemetry_Fetched_At": "REST Fetched At",
+          "Last_Haul_ID": "Validated Haul ID",
+          "Maritime_Auth_Status": "Maritime Compliance Code",
+          "Remaining_Fleet_Quota_Tons": "Remaining Fleet Quota (Tons)"
+        },
+        "view": {
+          "type": "table",
+          "title": "REST Reactor Zero-RAG Ingestion Audit",
+          "chart_type": "table",
+          "x": "Vessel",
+          "y": [
+            "Sea_Surface_Temp"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "nunegal77-haul-quota-summary",
+      "$id": "nunegal77-haul-quota-summary",
+      "fields": {
+        "id": "nunegal77-haul-quota-summary",
+        "name": "⚖️ Catch Biomass vs Fleet Quota Compliance",
+        "query": {
+          "sql": "WITH HaulEvents AS (SELECT json_extract(raw_json, '$.fields.haul_id') AS haul_id, json_extract(raw_json, '$.fields.species') AS species, CAST(json_extract(raw_json, '$.fields.catch_tonnage') AS REAL) AS tonnage, \"$when\" AS haul_time FROM v_messages WHERE \"$type\" = 'HaulRegistered'), QuotaEvents AS (SELECT json_extract(raw_json, '$.fields.haul_id') AS haul_id, CAST(json_extract(raw_json, '$.fields.remaining_season_tons') AS REAL) AS remaining_tons, json_extract(raw_json, '$.fields.compliance_code') AS compliance FROM v_messages WHERE \"$type\" = 'HaulQuotaValidation') SELECT h.haul_id AS Haul_Identifier, h.species AS Target_Species, h.tonnage AS Declared_Catch_Tons, COALESCE(q.remaining_tons, 140.0) AS Remaining_Season_Tons FROM HaulEvents h LEFT JOIN QuotaEvents q ON q.haul_id = h.haul_id ORDER BY h.haul_time DESC LIMIT 20"
+        },
+        "labels": {
+          "Haul_Identifier": "Haul Identifier",
+          "Target_Species": "Target Species",
+          "Declared_Catch_Tons": "Declared Catch (Metric Tons)",
+          "Remaining_Season_Tons": "Remaining Season Quota (Tons)"
+        },
+        "view": {
+          "type": "bar",
+          "title": "Haul Catch Weight vs Fleet Quota",
+          "chart_type": "bar",
+          "x": "Haul_Identifier",
+          "y": [
+            "Declared_Catch_Tons",
+            "Remaining_Season_Tons"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "nunegal77-vessel-navigation-log",
+      "$id": "nunegal77-vessel-navigation-log",
+      "fields": {
+        "id": "nunegal77-vessel-navigation-log",
+        "name": "🧭 Vessel Navigation & Waypoint Log",
+        "query": {
+          "sql": "SELECT \"$when\" AS Timestamp, json_extract(raw_json, '$.fields.vessel_id') AS Vessel, CAST(json_extract(raw_json, '$.fields.latitude') AS REAL) AS Latitude, CAST(json_extract(raw_json, '$.fields.longitude') AS REAL) AS Longitude, CAST(json_extract(raw_json, '$.fields.speed_knots') AS REAL) AS Speed_Knots, CAST(json_extract(raw_json, '$.fields.heading_deg') AS REAL) AS Heading_Deg, json_extract(raw_json, '$.fields.zone_id') AS Fishing_Zone FROM v_messages WHERE \"$type\" = 'VesselGPSPosition' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "Timestamp": "GPS Fix Time",
+          "Vessel": "Vessel ID",
+          "Latitude": "Latitude (°N)",
+          "Longitude": "Longitude (°W)",
+          "Speed_Knots": "Speed (Knots)",
+          "Heading_Deg": "Heading (°)",
+          "Fishing_Zone": "Operational Zone"
+        },
+        "view": {
+          "type": "table",
+          "title": "Vessel Navigation & Waypoint Log",
+          "chart_type": "table",
+          "x": "Timestamp",
+          "y": [
+            "Speed_Knots"
+          ]
+        }
+      }
+    }
+  ]
+}

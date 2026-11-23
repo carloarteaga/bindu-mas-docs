@@ -1,0 +1,498 @@
+{
+  "message_types": [
+    {
+      "name": "PotatoBatchIngress",
+      "description": "Mobile intake scan event containing raw potato optical slice image and transportation temperature history",
+      "emoji": "\ud83e\udd54",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "lot_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique batch or lot identifier"
+        },
+        {
+          "name": "variety",
+          "type": "string",
+          "required": true,
+          "description": "Potato variety (e.g. Russet Burbank, Atlantic, Shepody)"
+        },
+        {
+          "name": "intake_weight_kg",
+          "type": "number",
+          "required": true,
+          "description": "Total intake batch weight in kilograms"
+        },
+        {
+          "name": "avg_transit_temp_c",
+          "type": "number",
+          "required": true,
+          "description": "Average transit temperature during freight transportation in degrees Celsius"
+        },
+        {
+          "name": "transit_duration_hours",
+          "type": "number",
+          "required": true,
+          "description": "Duration of transit in hours"
+        },
+        {
+          "name": "optical_slice_image_uri",
+          "type": "media-storage",
+          "required": false,
+          "description": "Out-of-band media reference pointing to cross-sectional optical slice image"
+        },
+        {
+          "name": "origin_farm",
+          "type": "string",
+          "required": false,
+          "description": "Origin agricultural farm and field lot"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "required": true,
+          "description": "Intake registration timestamp (RFC3339 UTC)"
+        }
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "PotatoOpticalAnalysis",
+      "description": "Optical AI vision analysis estimating reducing sugar coefficient (C_RS) and starch integrity",
+      "emoji": "\ud83d\udd2c",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "lot_id",
+          "type": "string",
+          "required": true,
+          "description": "Batch identifier"
+        },
+        {
+          "name": "reducing_sugar_index_crs",
+          "type": "number",
+          "required": true,
+          "description": "Estimated reducing sugar coefficient (C_RS)"
+        },
+        {
+          "name": "sugar_risk_level",
+          "type": "string",
+          "required": true,
+          "description": "Cold-Induced Sweetening risk classification (LOW, HIGH, CRITICAL)"
+        },
+        {
+          "name": "starch_uniformity_score",
+          "type": "number",
+          "required": true,
+          "description": "Starch cellular density and uniformity score (0.0 to 1.0)"
+        },
+        {
+          "name": "translucent_defect_percent",
+          "type": "number",
+          "required": true,
+          "description": "Percentage of translucent defect area detected in slice"
+        },
+        {
+          "name": "optical_model_confidence",
+          "type": "number",
+          "required": true,
+          "description": "Vision model inference confidence score"
+        },
+        {
+          "name": "rationale",
+          "type": "string",
+          "required": true,
+          "description": "Kinetic justification and biological reasoning"
+        }
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "PotatoThermodynamicSetpoints",
+      "description": "Calculated physical setpoints for Silo reconditioning and Fryer machinery using kinetic models",
+      "emoji": "\ud83c\udf21\ufe0f",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "lot_id",
+          "type": "string",
+          "required": true,
+          "description": "Batch identifier"
+        },
+        {
+          "name": "reconditioning_required",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether silo climate reconditioning is mandatory"
+        },
+        {
+          "name": "silo_temp_sp_c",
+          "type": "number",
+          "required": true,
+          "description": "Silo climate temperature setpoint in degrees Celsius"
+        },
+        {
+          "name": "silo_duration_days",
+          "type": "number",
+          "required": true,
+          "description": "Calculated silo reconditioning duration in days"
+        },
+        {
+          "name": "silo_duration_seconds",
+          "type": "number",
+          "required": true,
+          "description": "Simulated quarantine countdown duration in seconds"
+        },
+        {
+          "name": "fryer_oil_temp_sp_c",
+          "type": "number",
+          "required": true,
+          "description": "Frying oil heat exchanger temperature setpoint in degrees Celsius"
+        },
+        {
+          "name": "fryer_duration_seconds",
+          "type": "number",
+          "required": true,
+          "description": "Frying immersion duration in seconds"
+        },
+        {
+          "name": "fryer_belt_speed_sp_m_s",
+          "type": "number",
+          "required": true,
+          "description": "Conveyor belt velocity setpoint in mm per second"
+        },
+        {
+          "name": "evaluation_status",
+          "type": "string",
+          "required": true,
+          "description": "Kinetic evaluation state"
+        }
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "PotatoReconditioningWakeup",
+      "description": "Target awakening event emitted when potato batch reconditioning timer expires",
+      "emoji": "\u23f0",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 10,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "lot_id",
+          "type": "string",
+          "required": true,
+          "description": "Batch identifier"
+        },
+        {
+          "name": "silo_id",
+          "type": "string",
+          "required": true,
+          "description": "Target silo chamber identifier"
+        },
+        {
+          "name": "target_oil_temp_c",
+          "type": "number",
+          "required": true,
+          "description": "Post-reconditioning target frying oil temperature in degrees Celsius"
+        },
+        {
+          "name": "target_belt_speed_m_s",
+          "type": "number",
+          "required": true,
+          "description": "Post-reconditioning conveyor velocity setpoint in mm per second"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "required": true,
+          "description": "Wakeup event trigger reason"
+        }
+      ],
+      "longevity": "PT6H"
+    },
+    {
+      "name": "ModbusConfig",
+      "description": "Configuration message for BPR Modbus client plugin establishing connection to PLC server",
+      "emoji": "\ud83d\udd0c",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local"
+      ],
+      "properties": [
+        {
+          "name": "gateway_node_id",
+          "type": "string",
+          "required": true,
+          "description": "Target gateway node running BPR plugin"
+        },
+        {
+          "name": "server_host",
+          "type": "string",
+          "required": true,
+          "description": "Modbus TCP server IP or hostname"
+        },
+        {
+          "name": "server_port",
+          "type": "integer",
+          "required": true,
+          "description": "Modbus TCP server listening port"
+        },
+        {
+          "name": "unit_id",
+          "type": "integer",
+          "required": true,
+          "description": "Modbus Unit ID / Slave ID"
+        },
+        {
+          "name": "timeout_ms",
+          "type": "integer",
+          "required": true,
+          "description": "Modbus socket request timeout in milliseconds"
+        }
+      ]
+    },
+    {
+      "name": "ModbusSet",
+      "description": "Semantic command requesting BPR plugin to write register or coil to target PLC",
+      "emoji": "\ud83d\udcdd",
+      "version": "1.0.0",
+      "persist": false,
+      "retentionMode": "count",
+      "retentionValue": 5,
+      "routing": [
+        "local"
+      ],
+      "properties": [
+        {
+          "name": "target_device",
+          "type": "string",
+          "required": true,
+          "description": "Target PLC device identifier"
+        },
+        {
+          "name": "register_type",
+          "type": "string",
+          "required": true,
+          "description": "Target Modbus register type (holding, coil)"
+        },
+        {
+          "name": "register_address",
+          "type": "integer",
+          "required": true,
+          "description": "Modbus register address (0-65535)"
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": true,
+          "description": "Engineering value to write"
+        },
+        {
+          "name": "scale_factor",
+          "type": "number",
+          "required": false,
+          "description": "Optional multiplication scaling factor"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Human-readable intent description"
+        }
+      ],
+      "longevity": "PT2H"
+    },
+    {
+      "name": "ModbusGet",
+      "description": "Semantic request requesting BPR plugin to read registers or coils from target PLC",
+      "emoji": "\ud83d\udd0d",
+      "version": "1.0.0",
+      "persist": false,
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local"
+      ],
+      "properties": [
+        {
+          "name": "target_device",
+          "type": "string",
+          "required": true,
+          "description": "Target PLC device identifier"
+        },
+        {
+          "name": "register_type",
+          "type": "string",
+          "required": true,
+          "description": "Target Modbus register type (holding, input, coil, discrete)"
+        },
+        {
+          "name": "register_address",
+          "type": "integer",
+          "required": true,
+          "description": "Modbus starting register address"
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "required": true,
+          "description": "Number of contiguous registers or coils to read"
+        },
+        {
+          "name": "scale_factor",
+          "type": "number",
+          "required": false,
+          "description": "Optional division scaling factor"
+        },
+        {
+          "name": "request_id",
+          "type": "string",
+          "required": false,
+          "description": "Correlation identifier for asynchronous response"
+        }
+      ],
+      "longevity": "PT5M"
+    },
+    {
+      "name": "ModbusStatus",
+      "description": "Status and acknowledgement emitted by Modbus BPR plugin following write operations",
+      "emoji": "\u2705",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 20,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "command_id",
+          "type": "string",
+          "required": true,
+          "description": "Originating command identifier"
+        },
+        {
+          "name": "target_device",
+          "type": "string",
+          "required": true,
+          "description": "Target PLC device identifier"
+        },
+        {
+          "name": "register_address",
+          "type": "integer",
+          "required": true,
+          "description": "Written Modbus register address"
+        },
+        {
+          "name": "written_value",
+          "type": "number",
+          "required": true,
+          "description": "Actual value transmitted to PLC"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "description": "Write operation status (SUCCESS, ERROR, TIMEOUT)"
+        },
+        {
+          "name": "error_message",
+          "type": "string",
+          "required": false,
+          "description": "Error diagnostic message if status is ERROR"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "required": true,
+          "description": "Operation execution timestamp (RFC3339 UTC)"
+        }
+      ],
+      "longevity": "P1D"
+    },
+    {
+      "name": "ModbusData",
+      "description": "Telemetry and register data emitted by Modbus BPR plugin following read operations",
+      "emoji": "\ud83d\udcca",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "request_id",
+          "type": "string",
+          "required": true,
+          "description": "Originating request identifier"
+        },
+        {
+          "name": "target_device",
+          "type": "string",
+          "required": true,
+          "description": "Target PLC device identifier"
+        },
+        {
+          "name": "register_address",
+          "type": "integer",
+          "required": true,
+          "description": "Starting register address"
+        },
+        {
+          "name": "raw_values",
+          "type": "json",
+          "required": true,
+          "description": "List of raw 16-bit register integer words read from PLC"
+        },
+        {
+          "name": "scaled_value",
+          "type": "number",
+          "required": false,
+          "description": "Engineering scaled value calculated with scale_factor"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "required": true,
+          "description": "Data acquisition timestamp (RFC3339 UTC)"
+        }
+      ],
+      "longevity": "P7D"
+    }
+  ]
+}

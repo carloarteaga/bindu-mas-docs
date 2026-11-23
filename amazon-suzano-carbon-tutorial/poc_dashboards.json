@@ -1,0 +1,132 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "suzano-hectare-yield-dashboard",
+      "$id": "suzano-hectare-yield-dashboard",
+      "fields": {
+        "id": "suzano-hectare-yield-dashboard",
+        "name": "🌳 Suzano Hectare Carbon Sequestration & Oxygen Production Ledger",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS hectare_id, json_extract(raw_json, '$.fields.zone_id') AS zone, json_extract(raw_json, '$.fields.station_id') AS station, json_extract(raw_json, '$.fields.net_primary_productivity_g_c_m2') AS npp, json_extract(raw_json, '$.fields.co2_metric_tons_yr') AS co2_tons, json_extract(raw_json, '$.fields.o2_metric_tons_yr') AS o2_tons, json_extract(raw_json, '$.fields.audit_verified') AS verified, json_extract(raw_json, '$.fields.audit_rationale') AS audit_proof FROM v_messages WHERE \"$type\" = 'HectareCarbonOxygenYield' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "hectare_id": "Hectare Polygon",
+          "zone": "Zone",
+          "station": "Sentinel Station",
+          "npp": "NPP (g C/m2/yr)",
+          "co2_tons": "CO2 (Ton/ha/yr)",
+          "o2_tons": "O2 (Ton/ha/yr)",
+          "verified": "Audit Verified",
+          "audit_proof": "Stoichiometric Proof"
+        },
+        "view": {
+          "type": "table",
+          "title": "Certified Hectare Carbon & Oxygen Production Balance",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "co2_tons"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "suzano-subcanopy-telemetry-dashboard",
+      "$id": "suzano-subcanopy-telemetry-dashboard",
+      "fields": {
+        "id": "suzano-subcanopy-telemetry-dashboard",
+        "name": "🌱 Understory Solar Sentinel Stations (Sub-Canopy Microclimate)",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS station_id, json_extract(raw_json, '$.fields.hectare_id') AS hectare, json_extract(raw_json, '$.fields.soil_moisture_pct') AS soil_moisture, json_extract(raw_json, '$.fields.ambient_temp_c') AS temp_c, json_extract(raw_json, '$.fields.understory_co2_ppm') AS co2_ppm, json_extract(raw_json, '$.fields.par_solar_flux_umol') AS par_flux, json_extract(raw_json, '$.fields.battery_mv') AS battery_mv FROM v_messages WHERE \"$type\" = 'SubCanopySoilTelemetry' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "station_id": "Station ID",
+          "hectare": "Hectare",
+          "soil_moisture": "Soil Moisture (%)",
+          "temp_c": "Temp (°C)",
+          "co2_ppm": "Sub-Canopy CO2 (ppm)",
+          "par_flux": "PAR Flux (µmol/m2/s)",
+          "battery_mv": "Battery (mV)"
+        },
+        "view": {
+          "type": "table",
+          "title": "Sub-Canopy Environmental Microclimate (Vertical Fly-By Ingest)",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "soil_moisture"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "suzano-forest-threat-dashboard",
+      "$id": "suzano-forest-threat-dashboard",
+      "fields": {
+        "id": "suzano-forest-threat-dashboard",
+        "name": "🚨 Airborne Deforestation Alarms & Canopy Dieback Incidents",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS hectare_id, json_extract(raw_json, '$.fields.severity') AS severity, json_extract(raw_json, '$.fields.alert_type') AS threat_type, json_extract(raw_json, '$.fields.description') AS description, json_extract(raw_json, '$.fields.clearing_area_m2') AS clearing_m2, json_extract(raw_json, '$.fields.coordinates_lat') AS lat, json_extract(raw_json, '$.fields.coordinates_lon') AS lon FROM v_messages WHERE \"$type\" = 'ForestThreatAlert' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "hectare_id": "Hectare",
+          "severity": "Severity",
+          "threat_type": "Threat Classification",
+          "description": "Alarm Description",
+          "clearing_m2": "Clearing Area (m2)",
+          "lat": "Latitude",
+          "lon": "Longitude"
+        },
+        "view": {
+          "type": "table",
+          "title": "Deforestation & Canopy Threat Incident Log (CEL Guarded)",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "clearing_m2"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "suzano-canopy-inspection-dashboard",
+      "$id": "suzano-canopy-inspection-dashboard",
+      "fields": {
+        "id": "suzano-canopy-inspection-dashboard",
+        "name": "🚁 Airborne Drone Canopy Optical Inspections (Lightweight VLM)",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS drone_id, json_extract(raw_json, '$.fields.hectare_id') AS hectare, json_extract(raw_json, '$.fields.foliage_density_index') AS foliage_density, json_extract(raw_json, '$.fields.canopy_health_factor') AS health_factor, json_extract(raw_json, '$.fields.illegal_clearing_detected') AS clearing_detected, json_extract(raw_json, '$.fields.inspection_notes') AS notes FROM v_messages WHERE \"$type\" = 'CanopyFoliageInspection' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "drone_id": "Drone Node",
+          "hectare": "Hectare",
+          "foliage_density": "Foliage Density (FDI)",
+          "health_factor": "Canopy Vitality (CHF)",
+          "clearing_detected": "Clearing Detected",
+          "notes": "Optical Assessment"
+        },
+        "view": {
+          "type": "table",
+          "title": "Aerial Crown Multispectral Canopy Inspections",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "health_factor"
+          ]
+        }
+      }
+    }
+  ]
+}

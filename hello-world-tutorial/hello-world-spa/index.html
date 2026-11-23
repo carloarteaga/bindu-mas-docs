@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bindu Hello World SPA</title>
+  <link rel="stylesheet" href="/console/vendor/leaflet/leaflet.css">
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --panel: #fffdf8;
+      --ink: #1f2933;
+      --muted: #5e6a77;
+      --line: #d8d0bf;
+      --accent: #114b5f;
+      --accent-soft: #d8edf1;
+      --ok: #2a9d8f;
+      --warn: #9b2226;
+      --shadow: 0 16px 36px rgba(31, 41, 51, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(17, 75, 95, 0.10), transparent 28%),
+        linear-gradient(180deg, #fbf8f2 0%, var(--bg) 100%);
+    }
+
+    .shell {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .hero,
+    .main-grid,
+    .summary-grid,
+    .status-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero {
+      grid-template-columns: 1.35fr 0.85fr;
+      margin-bottom: 24px;
+    }
+
+    .main-grid {
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: start;
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 20px;
+    }
+
+    .status-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 20px;
+    }
+
+    .card,
+    .panel,
+    .hero-card,
+    .config-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card,
+    .config-card,
+    .panel,
+    .card {
+      padding: 22px;
+    }
+
+    .hero-card h1 {
+      margin: 0 0 10px;
+      font-size: clamp(34px, 4.8vw, 60px);
+      line-height: 0.96;
+      letter-spacing: -0.035em;
+    }
+
+    .hero-card p,
+    .config-card p,
+    .note,
+    .muted,
+    .empty {
+      color: var(--muted);
+    }
+
+    h2, h3 {
+      margin: 0 0 10px;
+    }
+
+    code,
+    pre,
+    .mono {
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+
+    .config-row,
+    .status-box {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #faf6ee;
+      border: 1px solid var(--line);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(17, 75, 95, 0.18);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+    }
+
+    .pill.ok {
+      background: rgba(42, 157, 143, 0.10);
+      color: var(--ok);
+      border-color: rgba(42, 157, 143, 0.18);
+    }
+
+    .pill.error {
+      background: rgba(155, 34, 38, 0.08);
+      color: var(--warn);
+      border-color: rgba(155, 34, 38, 0.18);
+    }
+
+    .card-title {
+      margin: 0 0 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .card-value {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    button {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #f4fafb;
+      padding: 12px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #faf6ee;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    #map {
+      height: 660px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: #dceaf0;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    .list-item {
+      border: 1px solid #e6dece;
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .list-item header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee6d8;
+      background: #fbf8f2;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .list-item pre {
+      margin: 0;
+      padding: 12px;
+      overflow: auto;
+      font-size: 12px;
+      line-height: 1.45;
+      background: #fff;
+    }
+
+    .tips {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .tips li + li { margin-top: 8px; }
+
+    .leaflet-tooltip.count-label {
+      background: rgba(17, 75, 95, 0.94);
+      border: 0;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(17, 75, 95, 0.28);
+      color: #fff;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 10px;
+    }
+
+    .leaflet-tooltip.count-label::before { display: none; }
+
+    @media (max-width: 1100px) {
+      .hero,
+      .main-grid,
+      .summary-grid,
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #map { height: 480px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <article class="hero-card">
+        <h1>Hello World<br>Mesh SPA</h1>
+        <p>
+          This tutorial SPA demonstrates the intended browser integration contract:
+          <code>POST /api/v1/messages/sql</code> for historical read-only queries,
+          plus MQTT over <code>wss</code> for live <code>HelloWorldStats</code>.
+          All map data is reconstructed from persisted messages.
+        </p>
+        <p class="muted">
+          The map shows the latest <code>NodeGeoLocation</code> geometry per node. Each time a
+          <code>HelloWorldStats</code> arrives, the page re-runs a grouped query over
+          <code>HelloWorld</code> and overlays the current totals inside the polygon that contains
+          each gateway point.
+        </p>
+      </article>
+      <aside class="config-card">
+        <h2>Configuration</h2>
+        <p>
+          This page is intentionally hardcoded so tutorial readers can edit a few
+          variables directly in the file and see how the integration works.
+        </p>
+        <div class="config-row"><strong>Root URL</strong><br><code id="cfg-root-url"></code></div>
+        <div class="config-row"><strong>Read-only Query</strong><br><code id="cfg-query-url"></code></div>
+        <div class="config-row"><strong>WS Topic</strong><br><code id="cfg-topic"></code></div>
+        <div class="config-row"><strong>WSS Endpoint</strong><br><code id="cfg-ws-url"></code></div>
+        <div class="config-row"><strong>Credentials</strong><br><code id="cfg-credentials"></code></div>
+      </aside>
+    </section>
+
+    <section class="summary-grid">
+      <article class="card">
+        <p class="card-title">Geo Nodes</p>
+        <p class="card-value" id="summary-geo-nodes">0</p>
+      </article>
+      <article class="card">
+        <p class="card-title">Gateway Totals</p>
+        <p class="card-value" id="summary-gateways">0</p>
+      </article>
+      <article class="card">
+        <p class="card-title">HelloWorld Total</p>
+        <p class="card-value" id="summary-total">0</p>
+      </article>
+      <article class="card">
+        <p class="card-title">Live Stats Seen</p>
+        <p class="card-value" id="summary-stats">0</p>
+      </article>
+    </section>
+
+    <section class="status-grid">
+      <div class="status-box">
+        <h3>Query Status</h3>
+        <p><span id="query-status" class="pill">Idle</span></p>
+        <button id="refresh-btn" type="button">Refresh Map Counts</button>
+      </div>
+      <div class="status-box">
+        <h3>WebSocket Status</h3>
+        <p><span id="ws-status" class="pill">Disconnected</span></p>
+        <button id="reconnect-btn" class="secondary" type="button">Reconnect WS</button>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <main class="panel">
+        <h2>Geo-Locagram Overlay</h2>
+        <p class="note">
+          Geometries come from a SQL query over <code>NodeGeoLocation</code>. The live trigger is
+          <code>HelloWorldStats</code> over MQTT/WSS, but the overlay counts are computed from a
+          fresh grouped query over persisted <code>HelloWorld</code> messages.
+        </p>
+        <div id="map"></div>
+      </main>
+
+      <aside class="panel">
+        <h2>How This Demo Works</h2>
+        <ol class="tips">
+          <li>Load the latest <code>NodeGeoLocation</code> per node with the generic SQL endpoint.</li>
+          <li>Connect to the public WSS integration endpoint exposed by root.</li>
+          <li>Subscribe to <code>HelloWorldStats/defaultGroup/+</code>.</li>
+          <li>Every time a stats message arrives, run a grouped count query on <code>HelloWorld</code>.</li>
+          <li>Place each total inside the polygon that contains its gateway point. The root total is drawn inside the first polygon returned by the SQL geometry set.</li>
+        </ol>
+      </aside>
+    </section>
+
+    <section class="panel" style="margin-top: 20px;">
+      <h2>Live HelloWorldStats</h2>
+      <p class="note">Raw <code>HelloWorldStats</code> JSON messages as they arrive over WSS.</p>
+      <div id="stats-list" class="list">
+        <div class="empty">No HelloWorldStats received yet.</div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/mqtt@5.3.4/dist/mqtt.min.js"></script>
+  <script src="/console/vendor/leaflet/leaflet.js"></script>
+  <script>
+    // Integration config for this standalone SPA.
+    // - rootUrl must point to the public rest_query listener.
+    // - wsIntegrationUrl must point to the public ws_integration listener.
+    // - In the tutorial/runtime example those ports are 8444 and 8443.
+    // - They are mesh-configurable, not universal product defaults.
+    // - For temporary local testing through SSH tunnels, point both URLs to 127.0.0.1.
+    const rootUrl = 'https://127.0.0.1:8444';
+    const credentials = 'console:SuperSecret1';
+    const wsIntegrationUrl = '';
+    const defaultWsPort = 8443;
+
+    const queryEndpoint = '/api/v1/messages/sql';
+    const statsTopic = 'HelloWorldStats/defaultGroup/+';
+    const statsListLimit = 40;
+
+    const sqlCache = new Map();
+    const state = {
+      map: null,
+      geometryLayer: null,
+      labelLayer: null,
+      locations: [],
+      locationByNode: new Map(),
+      polygonEntries: [],
+      countsByGateway: [],
+      liveStats: [],
+      mqttClient: null,
+      refreshTimer: null,
+    };
+
+    function normalizeBase(url) {
+      return String(url || '').replace(/\/+$/, '');
+    }
+
+    function apiURL(path) {
+      return normalizeBase(rootUrl) + path;
+    }
+
+    function authHeaders() {
+      const headers = { 'Content-Type': 'application/json' };
+      if (credentials) {
+        headers.Authorization = 'Basic ' + btoa(credentials);
+      }
+      return headers;
+    }
+
+    function setPill(id, message, kind) {
+      const node = document.getElementById(id);
+      node.textContent = message;
+      node.className = 'pill' + (kind ? ' ' + kind : '');
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function formatTimestamp(value) {
+      if (!value) return '-';
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+    }
+
+    function updateConfigView() {
+      document.getElementById('cfg-root-url').textContent = rootUrl;
+      document.getElementById('cfg-query-url').textContent = apiURL(queryEndpoint);
+      document.getElementById('cfg-topic').textContent = statsTopic;
+      document.getElementById('cfg-ws-url').textContent = resolveWSSURL();
+      document.getElementById('cfg-credentials').textContent = credentials || '(empty)';
+    }
+
+    async function loadSQL(name) {
+      if (sqlCache.has(name)) return sqlCache.get(name);
+      const url = new URL('./queries/' + name, window.location.href);
+      const res = await fetch(url.toString(), { credentials: 'omit' });
+      if (!res.ok) throw new Error('Failed to load query ' + name);
+      const sql = await res.text();
+      sqlCache.set(name, sql);
+      return sql;
+    }
+
+    async function runQuery(name) {
+      const sql = await loadSQL(name);
+      const res = await fetch(apiURL(queryEndpoint), {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ sql }),
+      });
+      const payload = await res.json();
+      if (!res.ok || !payload?.success) {
+        throw new Error(payload?.message || 'Query failed: ' + name);
+      }
+      return payload?.details?.rows || [];
+    }
+
+    function resolveWSSURL() {
+      if (wsIntegrationUrl) {
+        return wsIntegrationUrl;
+      }
+      const base = new URL(rootUrl);
+      return 'wss://' + base.hostname + ':' + defaultWsPort;
+    }
+
+    function parseJSONMaybe(value) {
+      if (!value) return null;
+      if (typeof value === 'object') return value;
+      try {
+        return JSON.parse(value);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function extractGeoJSON(record) {
+      const direct = parseJSONMaybe(record.geojson);
+      if (direct) return direct;
+      const where = parseJSONMaybe(record.where_json);
+      if (where && where.geojson) return where.geojson;
+      return null;
+    }
+
+    function geometryType(feature) {
+      if (!feature) return '';
+      if (feature.type === 'Feature') return feature.geometry?.type || '';
+      if (feature.type === 'FeatureCollection') return 'FeatureCollection';
+      return feature.type || '';
+    }
+
+    function featureCenter(feature) {
+      if (!feature) return null;
+      const temp = L.geoJSON(feature);
+      const bounds = temp.getBounds?.();
+      if (bounds && bounds.isValid && bounds.isValid()) {
+        const center = bounds.getCenter();
+        return [center.lat, center.lng];
+      }
+      const point = representativePoint(feature);
+      return point ? [point[1], point[0]] : null;
+    }
+
+    function representativePoint(feature) {
+      if (!feature) return null;
+      if (feature.type === 'Feature') return representativePoint(feature.geometry);
+      if (feature.type === 'FeatureCollection') {
+        for (const item of feature.features || []) {
+          const point = representativePoint(item);
+          if (point) return point;
+        }
+        return null;
+      }
+      if (feature.type === 'Point') return feature.coordinates;
+      if (feature.type === 'MultiPoint') return feature.coordinates?.[0] || null;
+      return null;
+    }
+
+    function polygonRings(feature) {
+      if (!feature) return [];
+      if (feature.type === 'Feature') return polygonRings(feature.geometry);
+      if (feature.type === 'FeatureCollection') {
+        return (feature.features || []).flatMap(item => polygonRings(item));
+      }
+      if (feature.type === 'Polygon') return feature.coordinates ? [feature.coordinates] : [];
+      if (feature.type === 'MultiPolygon') return feature.coordinates || [];
+      return [];
+    }
+
+    function pointInRing(point, ring) {
+      let inside = false;
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const xi = ring[i][0], yi = ring[i][1];
+        const xj = ring[j][0], yj = ring[j][1];
+        const intersects = ((yi > point[1]) !== (yj > point[1])) &&
+          (point[0] < ((xj - xi) * (point[1] - yi)) / ((yj - yi) || Number.EPSILON) + xi);
+        if (intersects) inside = !inside;
+      }
+      return inside;
+    }
+
+    function pointInPolygonFeature(point, feature) {
+      const polygons = polygonRings(feature);
+      for (const polygon of polygons) {
+        const outer = polygon[0];
+        if (!outer || !pointInRing(point, outer)) continue;
+        let inHole = false;
+        for (let i = 1; i < polygon.length; i += 1) {
+          if (pointInRing(point, polygon[i])) {
+            inHole = true;
+            break;
+          }
+        }
+        if (!inHole) return true;
+      }
+      return false;
+    }
+
+    function ensureMap() {
+      if (state.map) return;
+      state.map = L.map('map').setView([20, 0], 2);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap',
+      }).addTo(state.map);
+      state.geometryLayer = L.geoJSON(null).addTo(state.map);
+      state.labelLayer = L.layerGroup().addTo(state.map);
+    }
+
+    function colorForRecord(record) {
+      if (record.color) return record.color;
+      return geometryType(record.feature).includes('Point') ? '#2a9d8f' : '#114b5f';
+    }
+
+    function renderMap() {
+      ensureMap();
+      state.geometryLayer.clearLayers();
+      state.labelLayer.clearLayers();
+      state.locationByNode = new Map();
+      state.polygonEntries = [];
+      const bounds = [];
+
+      state.locations.forEach(record => {
+        const feature = record.feature;
+        if (!feature) return;
+        state.locationByNode.set(record.node_id, record);
+        const color = colorForRecord(record);
+        const layer = L.geoJSON(feature, {
+          style: {
+            color,
+            weight: 2,
+            fillColor: color,
+            fillOpacity: 0.16,
+          },
+          pointToLayer: (_, latlng) => L.circleMarker(latlng, {
+            radius: 8,
+            color,
+            weight: 2,
+            fillColor: color,
+            fillOpacity: 0.82,
+          }),
+        });
+
+        layer.bindPopup([
+          '<strong>' + escapeHTML(record.node_id) + '</strong>',
+          'Locagram: ' + escapeHTML(record.locagram || '-'),
+          'Updated: ' + escapeHTML(formatTimestamp(record.updated_at)),
+        ].join('<br>'));
+
+        const point = representativePoint(feature);
+        const center = featureCenter(feature);
+        const type = geometryType(feature);
+        if (type.includes('Polygon')) {
+          state.polygonEntries.push({ node_id: record.node_id, feature, center, record });
+        }
+
+        layer.eachLayer(item => {
+          if (typeof item.getBounds === 'function') {
+            const itemBounds = item.getBounds();
+            if (itemBounds?.isValid?.()) bounds.push(itemBounds);
+          } else if (typeof item.getLatLng === 'function') {
+            bounds.push(L.latLngBounds(item.getLatLng(), item.getLatLng()));
+          }
+        });
+
+        record.point = point;
+        record.center = center;
+        state.geometryLayer.addLayer(layer);
+      });
+
+      const labelTargets = aggregateCountsToTargets();
+      labelTargets.forEach(target => {
+        if (!target.center) return;
+        const marker = L.marker(target.center, { opacity: 0, interactive: false });
+        marker.bindTooltip(String(target.total), {
+          permanent: true,
+          direction: 'center',
+          className: 'count-label',
+        });
+        state.labelLayer.addLayer(marker);
+      });
+
+      document.getElementById('summary-geo-nodes').textContent = String(state.locations.length);
+      document.getElementById('summary-gateways').textContent = String(state.countsByGateway.length);
+      document.getElementById('summary-total').textContent = String(
+        state.countsByGateway.reduce((sum, row) => sum + Number(row.hello_world_count || 0), 0)
+      );
+
+      if (bounds.length > 0) {
+        const merged = bounds.reduce((acc, next) => acc.extend(next), bounds[0]);
+        state.map.fitBounds(merged.pad(0.12));
+      }
+    }
+
+    function fallbackFirstPolygonNodeId() {
+      return state.polygonEntries[0]?.node_id || '';
+    }
+
+    function resolveTargetNodeId(row) {
+      const gatewayNodeId = row.gateway_node_id;
+      if (gatewayNodeId === 'root') {
+        return fallbackFirstPolygonNodeId();
+      }
+
+      const record = state.locationByNode.get(gatewayNodeId);
+      const point = record?.point;
+      if (point) {
+        const container = state.polygonEntries.find(entry => pointInPolygonFeature(point, entry.feature));
+        if (container) return container.node_id;
+      }
+      if (record) return gatewayNodeId;
+      return '';
+    }
+
+    function aggregateCountsToTargets() {
+      const byTarget = new Map();
+      state.countsByGateway.forEach(row => {
+        const targetNodeId = resolveTargetNodeId(row);
+        if (!targetNodeId) return;
+        const existing = byTarget.get(targetNodeId) || {
+          targetNodeId,
+          total: 0,
+          gatewayNodes: [],
+          center: state.locationByNode.get(targetNodeId)?.center || null,
+        };
+        existing.total += Number(row.hello_world_count || 0);
+        existing.gatewayNodes.push(row.gateway_node_id);
+        byTarget.set(targetNodeId, existing);
+      });
+      return [...byTarget.values()];
+    }
+
+    async function refreshCounts() {
+      setPill('query-status', 'Running read-only query...', '');
+      document.getElementById('refresh-btn').disabled = true;
+      try {
+        state.countsByGateway = await runQuery('hello_world_counts_by_gateway.sql');
+        renderMap();
+        setPill('query-status', 'Counts refreshed', 'ok');
+      } catch (err) {
+        console.error(err);
+        setPill('query-status', err.message || 'Query failed', 'error');
+      } finally {
+        document.getElementById('refresh-btn').disabled = false;
+      }
+    }
+
+    function scheduleCountsRefresh() {
+      window.clearTimeout(state.refreshTimer);
+      state.refreshTimer = window.setTimeout(refreshCounts, 250);
+    }
+
+    function renderLiveStats() {
+      document.getElementById('summary-stats').textContent = String(state.liveStats.length);
+      const list = document.getElementById('stats-list');
+      if (!state.liveStats.length) {
+        list.innerHTML = '<div class="empty">No HelloWorldStats received yet.</div>';
+        return;
+      }
+      list.innerHTML = state.liveStats.map(entry => (
+        '<article class="list-item">' +
+          '<header><span><code>' + escapeHTML(entry.topic) + '</code></span><span>' + escapeHTML(formatTimestamp(entry.receivedAt)) + '</span></header>' +
+          '<pre>' + escapeHTML(JSON.stringify(entry.message, null, 2)) + '</pre>' +
+        '</article>'
+      )).join('');
+    }
+
+    function handleStatsMessage(topic, payload) {
+      let message;
+      try {
+        message = JSON.parse(payload.toString());
+      } catch (err) {
+        console.warn('Ignoring non-JSON MQTT payload', err);
+        return;
+      }
+      if (message?.$type !== 'HelloWorldStats') return;
+      state.liveStats.unshift({ topic, message, receivedAt: new Date().toISOString() });
+      state.liveStats = state.liveStats.slice(0, statsListLimit);
+      renderLiveStats();
+      scheduleCountsRefresh();
+    }
+
+    function parseCredentials(raw) {
+      const value = String(raw || '');
+      const separator = value.indexOf(':');
+      if (separator === -1) {
+        throw new Error('credentials must be user:password');
+      }
+      return {
+        username: value.slice(0, separator),
+        password: value.slice(separator + 1),
+      };
+    }
+
+    async function connectMQTT() {
+      if (state.mqttClient) {
+        try { state.mqttClient.end(true); } catch (_) {}
+        state.mqttClient = null;
+      }
+      setPill('ws-status', 'Connecting...', '');
+      const creds = parseCredentials(credentials);
+      const client = mqtt.connect(resolveWSSURL(), {
+        clientId: 'hello-world-spa-' + Math.random().toString(16).slice(2, 8),
+        clean: true,
+        reconnectPeriod: 2000,
+        connectTimeout: 5000,
+        username: creds.username,
+        password: creds.password,
+      });
+      state.mqttClient = client;
+
+      client.on('connect', () => {
+        setPill('ws-status', 'Connected', 'ok');
+        client.subscribe(statsTopic, err => {
+          if (err) {
+            setPill('ws-status', 'Subscribe failed', 'error');
+          }
+        });
+      });
+      client.on('reconnect', () => setPill('ws-status', 'Reconnecting...', ''));
+      client.on('offline', () => setPill('ws-status', 'Offline', 'error'));
+      client.on('close', () => setPill('ws-status', 'Closed', 'error'));
+      client.on('error', err => {
+        console.error(err);
+        setPill('ws-status', 'TLS / WS error', 'error');
+      });
+      client.on('message', handleStatsMessage);
+    }
+
+    async function bootstrap() {
+      updateConfigView();
+      ensureMap();
+      renderLiveStats();
+      try {
+        const locations = await runQuery('latest_node_geo_locations.sql');
+        state.locations = locations.map(row => ({
+          ...row,
+          feature: extractGeoJSON(row),
+        })).filter(row => row.feature);
+        renderMap();
+        await refreshCounts();
+        await connectMQTT();
+      } catch (err) {
+        console.error(err);
+        setPill('query-status', err.message || 'Bootstrap failed', 'error');
+        setPill('ws-status', 'Not connected', 'error');
+      }
+    }
+
+    document.getElementById('refresh-btn').addEventListener('click', refreshCounts);
+    document.getElementById('reconnect-btn').addEventListener('click', connectMQTT);
+
+    bootstrap();
+  </script>
+</body>
+</html>

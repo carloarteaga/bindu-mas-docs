@@ -1,0 +1,19 @@
+{
+  "id": "bindu-modbus-plugin",
+  "name": "Universal Modbus TCP Client & PLC Translator",
+  "version": "1.0.0",
+  "runtime": "bpr",
+  "capabilities": [
+    "modbus-tcp-client",
+    "plc-semantic-translation"
+  ],
+  "in": [
+    "ModbusConfig",
+    "ModbusSet",
+    "ModbusGet"
+  ],
+  "out": [
+    "ModbusStatus",
+    "ModbusData"
+  ]
+}

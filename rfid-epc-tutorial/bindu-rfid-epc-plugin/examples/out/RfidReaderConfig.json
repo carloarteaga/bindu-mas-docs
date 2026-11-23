@@ -1,0 +1,19 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "RfidReaderConfig",
+  "$user": "exampleUser",
+  "$when": "2026-10-13T21:58:53Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "reader_host": "",
+    "reader_id": "",
+    "reader_port": 0,
+    "rssi_threshold_dbm": 0,
+    "tx_power_cdbm": 0
+  }
+}

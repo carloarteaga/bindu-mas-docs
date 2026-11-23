@@ -1,0 +1,36 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "mesh-system-audit-solution",
+  "$user": "console",
+  "$when": "2026-10-19T14:00:00Z",
+  "fields": {
+    "solution_id": "mesh-system-audit-solution",
+    "name": "Mesh Routing & Retention Fleet Auditor",
+    "version": "1.0.0",
+    "description": "Fleet-wide operational governance auditing MessageState heartbeats across edge nodes, alerting on retention bloat, unassigned message routing leaks, and stale plugins via CEL kinetics.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root"
+      ],
+      "message_types": [
+        "MessageStateAudit@1.0.0"
+      ],
+      "cel_reactors": [
+        "mesh-message-state-retention-auditor"
+      ],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": [],
+      "access_roles": [],
+      "dashboards": [
+        "mesh-storage-auditor",
+        "mesh-routing-leak-inspector"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

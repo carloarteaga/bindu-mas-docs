@@ -1,0 +1,113 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-07-31T20:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "cognitive-execution-auditor-cel-patio",
+        "input_message_type": "",
+        "cron": "@every 1m",
+        "output_message_type": "AIExecutionCognivityAuditory",
+        "context_query": "SELECT (SELECT COALESCE(json_extract(raw_json, '$.fields.target_model'), 'moondream:latest') FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'patio-flower-counter' ORDER BY \"$when\" DESC LIMIT 1) AS model_id, (SELECT COALESCE(AVG(CAST(json_extract(raw_json, '$.fields.hydration_latency_ms') AS REAL) + CAST(json_extract(raw_json, '$.fields.inference_latency_ms') AS REAL)), 0) FROM (SELECT raw_json FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'patio-flower-counter' ORDER BY \"$when\" DESC LIMIT 5)) AS avg_latency",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "model_id": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.model_id) + ' (patio)' : 'moondream:latest (patio)'",
+          "avg_latency_ms": "has(db.rows) && size(db.rows) > 0 ? int(double(db.rows[0].fields.avg_latency)) : 0",
+          "audit_status": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'OPTIMAL' : (double(db.rows[0].fields.avg_latency) < 3000.0 ? 'ACCEPTABLE' : (double(db.rows[0].fields.avg_latency) < 5000.0 ? 'DEGRADED' : 'ANOMALOUS'))) : 'OPTIMAL'",
+          "efficiency_summary": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'Execution efficiency is optimal. Edge SLM is performing within target bounds.' : 'Execution latency is elevated. Consider model right-sizing or local compute optimization.') : 'No telemetry data found. System nominal.'"
+        }
+      },
+      {
+        "reactor_id": "cognitive-execution-auditor-cel-patio-llava",
+        "input_message_type": "",
+        "cron": "@every 1m",
+        "output_message_type": "AIExecutionCognivityAuditory",
+        "context_query": "SELECT (SELECT COALESCE(json_extract(raw_json, '$.fields.target_model'), 'llava-phi3:latest') FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'patio-flower-counter-llava:7b' ORDER BY \"$when\" DESC LIMIT 1) AS model_id, (SELECT COALESCE(AVG(CAST(json_extract(raw_json, '$.fields.hydration_latency_ms') AS REAL) + CAST(json_extract(raw_json, '$.fields.inference_latency_ms') AS REAL)), 0) FROM (SELECT raw_json FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'patio-flower-counter-llava:7b' ORDER BY \"$when\" DESC LIMIT 5)) AS avg_latency",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "model_id": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.model_id) + ' (patio-llava)' : 'llava-phi3:latest (patio-llava)'",
+          "avg_latency_ms": "has(db.rows) && size(db.rows) > 0 ? int(double(db.rows[0].fields.avg_latency)) : 0",
+          "audit_status": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'OPTIMAL' : (double(db.rows[0].fields.avg_latency) < 3000.0 ? 'ACCEPTABLE' : (double(db.rows[0].fields.avg_latency) < 5000.0 ? 'DEGRADED' : 'ANOMALOUS'))) : 'OPTIMAL'",
+          "efficiency_summary": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'Execution efficiency is optimal. Edge SLM is performing within target bounds.' : 'Execution latency is elevated. Consider model right-sizing or local compute optimization.') : 'No telemetry data found. System nominal.'"
+        }
+      },
+      {
+        "reactor_id": "cognitive-execution-auditor-cel-freezer",
+        "input_message_type": "",
+        "cron": "@every 1m",
+        "output_message_type": "AIExecutionCognivityAuditory",
+        "context_query": "SELECT (SELECT COALESCE(json_extract(raw_json, '$.fields.target_model'), 'qwen2.5-coder:0.5b') FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'freezer-cold-chain-guard' ORDER BY \"$when\" DESC LIMIT 1) AS model_id, (SELECT COALESCE(AVG(CAST(json_extract(raw_json, '$.fields.hydration_latency_ms') AS REAL) + CAST(json_extract(raw_json, '$.fields.inference_latency_ms') AS REAL)), 0) FROM (SELECT raw_json FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'freezer-cold-chain-guard' ORDER BY \"$when\" DESC LIMIT 5)) AS avg_latency",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "model_id": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.model_id) + ' (freezer)' : 'qwen2.5-coder:0.5b (freezer)'",
+          "avg_latency_ms": "has(db.rows) && size(db.rows) > 0 ? int(double(db.rows[0].fields.avg_latency)) : 0",
+          "audit_status": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'OPTIMAL' : (double(db.rows[0].fields.avg_latency) < 3000.0 ? 'ACCEPTABLE' : (double(db.rows[0].fields.avg_latency) < 5000.0 ? 'DEGRADED' : 'ANOMALOUS'))) : 'OPTIMAL'",
+          "efficiency_summary": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'Execution efficiency is optimal. Edge SLM is performing within target bounds.' : 'Execution latency is elevated. Consider model right-sizing or local compute optimization.') : 'No telemetry data found. System nominal.'"
+        }
+      },
+      {
+        "reactor_id": "cognitive-execution-auditor-cel-compressor",
+        "input_message_type": "",
+        "cron": "@every 1m",
+        "output_message_type": "AIExecutionCognivityAuditory",
+        "context_query": "SELECT (SELECT COALESCE(json_extract(raw_json, '$.fields.target_model'), 'qwen2.5-coder:0.5b') FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'compressor-maintenance-guard' ORDER BY \"$when\" DESC LIMIT 1) AS model_id, (SELECT COALESCE(AVG(CAST(json_extract(raw_json, '$.fields.hydration_latency_ms') AS REAL) + CAST(json_extract(raw_json, '$.fields.inference_latency_ms') AS REAL)), 0) FROM (SELECT raw_json FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'compressor-maintenance-guard' ORDER BY \"$when\" DESC LIMIT 5)) AS avg_latency",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "model_id": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.model_id) + ' (compressor)' : 'qwen2.5-coder:0.5b (compressor)'",
+          "avg_latency_ms": "has(db.rows) && size(db.rows) > 0 ? int(double(db.rows[0].fields.avg_latency)) : 0",
+          "audit_status": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'OPTIMAL' : (double(db.rows[0].fields.avg_latency) < 3000.0 ? 'ACCEPTABLE' : (double(db.rows[0].fields.avg_latency) < 5000.0 ? 'DEGRADED' : 'ANOMALOUS'))) : 'OPTIMAL'",
+          "efficiency_summary": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'Execution efficiency is optimal. Edge SLM is performing within target bounds.' : 'Execution latency is elevated. Consider model right-sizing or local compute optimization.') : 'No telemetry data found. System nominal.'"
+        }
+      },
+      {
+        "reactor_id": "cognitive-execution-auditor-cel-auditor",
+        "input_message_type": "",
+        "cron": "@every 1m",
+        "output_message_type": "AIExecutionCognivityAuditory",
+        "context_query": "SELECT (SELECT COALESCE(json_extract(raw_json, '$.fields.target_model'), 'qwen2.5:0.5b') FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'cognitive-execution-auditor' ORDER BY \"$when\" DESC LIMIT 1) AS model_id, (SELECT COALESCE(AVG(CAST(json_extract(raw_json, '$.fields.hydration_latency_ms') AS REAL) + CAST(json_extract(raw_json, '$.fields.inference_latency_ms') AS REAL)), 0) FROM (SELECT raw_json FROM v_messages WHERE \"$type\" = 'AICognitiveProfile' AND json_extract(raw_json, '$.fields.reactor_id') = 'cognitive-execution-auditor' ORDER BY \"$when\" DESC LIMIT 5)) AS avg_latency",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "model_id": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.model_id) + ' (auditor)' : 'qwen2.5:0.5b (auditor)'",
+          "avg_latency_ms": "has(db.rows) && size(db.rows) > 0 ? int(double(db.rows[0].fields.avg_latency)) : 0",
+          "audit_status": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'OPTIMAL' : (double(db.rows[0].fields.avg_latency) < 3000.0 ? 'ACCEPTABLE' : (double(db.rows[0].fields.avg_latency) < 5000.0 ? 'DEGRADED' : 'ANOMALOUS'))) : 'OPTIMAL'",
+          "efficiency_summary": "has(db.rows) && size(db.rows) > 0 ? (double(db.rows[0].fields.avg_latency) < 1500.0 ? 'Execution efficiency is optimal. Edge SLM is performing within target bounds.' : 'Execution latency is elevated. Consider model right-sizing or local compute optimization.') : 'No telemetry data found. System nominal.'"
+        }
+      },
+      {
+        "reactor_id": "freezer-cold-chain-guard-cel",
+        "input_message_type": "FreezerTelemetry",
+        "cron": "",
+        "output_message_type": "StorageRiskAssessment",
+        "context_query": "SELECT raw_json FROM v_messages WHERE \"$type\" = 'FreezerTelemetry' AND json_extract(raw_json, '$.fields.target_producer') = ? ORDER BY \"$when\" DESC LIMIT 1",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "risk_level": "double(payload.temperature) > -15.0 || bool(payload.door_open) ? 'CRITICAL' : 'NOMINAL'",
+          "estimated_minutes_to_spoilage": "double(payload.temperature) > -15.0 || bool(payload.door_open) ? 15 : 1440",
+          "root_cause_prediction": "bool(payload.door_open) ? 'Freezer door left open' : (double(payload.temperature) > -15.0 ? 'Cooling system efficiency degradation' : 'No anomalies detected')",
+          "recommended_action_code": "double(payload.temperature) > -15.0 || bool(payload.door_open) ? 'CHECK_COOLING_AND_CLOSE_DOOR' : 'NO_ACTION_REQUIRED'",
+          "target_producer": "string(head[\"$producer\"])"
+        }
+      },
+      {
+        "reactor_id": "mesh-health-email-reporter",
+        "input_message_type": "",
+        "cron": "0 0 18 * * *",
+        "output_message_type": "SendEmailRequest",
+        "context_query": "SELECT strftime('%Y-%m-%dT%H:%M:%SZ', 'now') as report_time, (SELECT 'ROOT NODE STATUS:\n' || \"$producer\" || ' (Role: ' || COALESCE(json_extract(raw_json, '$.fields.identity.role'), 'root') || '): CPU=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.cpu.usage_pct') AS REAL)) || '%, Mem=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.memory.used_pct') AS REAL)) || '%, Disk=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.disk_used_pct') AS REAL)) || '%, MsgCounts=' || COALESCE(json_extract(raw_json, '$.fields.storage.message_counts_by_type'), '[]') FROM v_messages WHERE \"$type\" = 'MessageState' AND COALESCE(json_extract(raw_json, '$.fields.identity.role'), json_extract(raw_json, '$.fields.role')) = 'root' ORDER BY \"$when\" DESC LIMIT 1) as root_summary, (SELECT group_concat(summary, char(10)) FROM (SELECT \"$producer\" || ' (' || COALESCE(json_extract(raw_json, '$.fields.identity.role'), 'node') || '): CPU=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.cpu.usage_pct') AS REAL)) || '%, Mem=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.memory.used_pct') AS REAL)) || '%, Disk=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.disk_used_pct') AS REAL)) || '%, MsgCounts=' || COALESCE(json_extract(raw_json, '$.fields.storage.message_counts_by_type'), '[]') as summary FROM v_messages WHERE \"$type\" = 'MessageState' GROUP BY \"$producer\" HAVING MAX(\"$when\") ORDER BY \"$producer\" ASC)) as mesh_summary",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "to": "'alerts@example.com'",
+          "subject": "'Report Mesh State (' + string(db.rows[0].fields.report_time) + ')'",
+          "body_text": "'ROOT NODE HEALTH REPORT:\\n\\n' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.root_summary != null ? string(db.rows[0].fields.root_summary) : 'No root summary available') + '\\n\\n---------------------------------\\n\\nALL REGISTERED NODES:\\n\\n' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.mesh_summary != null ? string(db.rows[0].fields.mesh_summary) : 'No mesh summary available')",
+          "body_html": "'<h3>ROOT NODE HEALTH REPORT</h3><pre>' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.root_summary != null ? string(db.rows[0].fields.root_summary) : 'No root summary available') + '</pre><br/><h3>ALL REGISTERED NODES</h3><pre>' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.mesh_summary != null ? string(db.rows[0].fields.mesh_summary) : 'No mesh summary available') + '</pre>'",
+          "attachments": "['minio_local://raw/Bindu-AUM_AIM-HIM-KLIM.png']"
+        }
+      }
+    ]
+  }
+}

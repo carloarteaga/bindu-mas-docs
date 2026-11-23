@@ -1,0 +1,42 @@
+{
+  "$type": "AISemanticReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-22T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mascl-ai-occurrence-emitter",
+        "api_endpoint": "http://localhost:11434/v1/chat/completions",
+        "api_key_secret": "secret:OLLAMA_API_KEY",
+        "model_id": "qwen2.5-coder:0.5b",
+        "max_concurrency": 1,
+        "trigger_message_types": [
+          "MASclTrigger"
+        ],
+        "trigger_condition": "true",
+        "history_count": 0,
+        "context_query": "",
+        "response_message_type": "MASclOcurrence",
+        "confidence_threshold": 0.70,
+        "cognitive_profile": true,
+        "mapping_template": {
+          "occurrence_id": "'occ-ai-' + (has(payload.trigger_id) ? string(payload.trigger_id) : (has(resp.occurrence_id) ? string(resp.occurrence_id) : 'default'))",
+          "agent_type": "'AI'",
+          "agent_name": "'mascl-ai-occurrence-emitter'",
+          "execution_mode": "has(payload.trigger_id) ? 'TRIGGER' : 'CRON'",
+          "node_id": "has(mesh.self.id) && mesh.self.id != '' ? string(mesh.self.id) : 'root'",
+          "timestamp": "string(head['$when'])",
+          "status": "'OK'",
+          "latency_ms": "180.0",
+          "details": "has(resp.details) && string(resp.details) != '' ? string(resp.details) : 'Semantic AI Edge LLM inference completed successfully'"
+        },
+        "system_instruction": "You are an autonomous edge intelligence agent in Bindu. Output strictly valid JSON conforming to the MASclOcurrence schema.",
+        "semantic_prompt_template": "Analyze trigger event from '{{index .trigger_event \"source\"}}'. Output strictly valid JSON matching:\n{\n  \"occurrence_id\": \"occ-ai-01\",\n  \"agent_type\": \"AI\",\n  \"agent_name\": \"mascl-ai-occurrence-emitter\",\n  \"execution_mode\": \"TRIGGER\",\n  \"node_id\": \"root\",\n  \"timestamp\": \"2026-09-22T12:00:00Z\",\n  \"status\": \"OK\",\n  \"latency_ms\": 180.0,\n  \"details\": \"Semantic reasoning engine evaluated edge state without anomalies.\"\n}"
+      }
+    ]
+  }
+}

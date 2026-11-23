@@ -1,0 +1,39 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "ble-spatial-presence-solution",
+  "$user": "console",
+  "$when": "2026-10-12T14:00:00Z",
+  "fields": {
+    "solution_id": "ble-spatial-presence-solution",
+    "name": "Bluetooth Low Energy (BLE) Spatial Presence & Reference Plane Digital Twin",
+    "version": "1.0.0",
+    "description": "Real-time 2.4 GHz physical BLE iBeacon presence detection, RSSI path-loss distance estimation, dwell-window debounce verification, operation-room 2D reference plane geolocagram projection, and real-time spatial occupancy dashboards.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root",
+        "node-dell-2"
+      ],
+      "message_types": [
+        "BLEBeaconSeen@1.0.0",
+        "BLEBeaconLost@1.0.0",
+        "BLEPluginConfig@1.0.0"
+      ],
+      "cel_reactors": [],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [],
+      "plugins": [
+        "bindu-ble-presence-plugin@1.0.0"
+      ],
+      "media_storage_providers": [],
+      "access_users": [],
+      "access_roles": [],
+      "dashboards": [
+        "ble-beacon-presence-audit-log",
+        "ble-operation-room-spatial-map"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

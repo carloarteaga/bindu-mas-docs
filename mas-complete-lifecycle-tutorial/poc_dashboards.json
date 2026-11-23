@@ -1,0 +1,33 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "mascl-occurrence-interval-monitor",
+      "$id": "mascl-occurrence-interval-monitor",
+      "fields": {
+        "id": "mascl-occurrence-interval-monitor",
+        "name": "⏱️ MAS Agent Execution & Interval Monitor",
+        "query": {
+          "sql": "WITH ordered_presence AS ( SELECT \"$producer\" AS producer, CAST(strftime('%s', \"$arriveTime\") AS REAL) AS current_epoch FROM v_messages WHERE \"$type\" = 'MASclOcurrence' ), time_deltas AS ( SELECT producer, current_epoch - LAG(current_epoch) OVER (PARTITION BY producer ORDER BY current_epoch ASC) AS delta_seconds FROM ordered_presence ) SELECT producer AS \"$producer\", COUNT(delta_seconds) AS total_intervals, ROUND(AVG(delta_seconds), 2) AS avg_interval_seconds, ROUND(AVG(delta_seconds) / 60.0, 2) AS avg_interval_minutes FROM time_deltas WHERE delta_seconds IS NOT NULL GROUP BY producer"
+        },
+        "labels": {
+          "$producer": "Agent Producer ID",
+          "total_intervals": "Total Intervals",
+          "avg_interval_seconds": "Avg Interval (Seconds)",
+          "avg_interval_minutes": "Avg Interval (Minutes)"
+        },
+        "view": {
+          "type": "bar",
+          "title": "MAS Agent Execution Frequency & Interval Distribution",
+          "chart_type": "bar",
+          "x": "$producer",
+          "y": [
+            "avg_interval_seconds",
+            "avg_interval_minutes"
+          ]
+        }
+      }
+    }
+  ]
+}

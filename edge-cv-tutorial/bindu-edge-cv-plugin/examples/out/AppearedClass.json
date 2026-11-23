@@ -1,0 +1,21 @@
+{
+  "$type": "AppearedClass",
+  "$id": "msg-appeared-001",
+  "$group": "mesh",
+  "$producer": "cam-usb-root",
+  "$user": "bindu-edge-cv-plugin",
+  "$when": "2026-09-28T12:00:00Z",
+  "fields": {
+    "camera_id": "cam-usb-root",
+    "station_id": "carlos-dev-workstation",
+    "track_id": "track-usb-501",
+    "class_name": "person",
+    "confidence": 0.96,
+    "dominant_color": "NAVY_BLUE",
+    "bbox_area": 0.392,
+    "bbox_centroid": [
+      0.5,
+      0.51
+    ]
+  }
+}

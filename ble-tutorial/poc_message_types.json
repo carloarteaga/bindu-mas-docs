@@ -1,0 +1,271 @@
+{
+  "message_types": [
+    {
+      "name": "BLEBeaconSeen",
+      "description": "Semantic BLE presence event emitted when a configured beacon becomes stably present.",
+      "emoji": "🟢📡",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "beacon_id",
+          "type": "string",
+          "required": true,
+          "description": "Canonical beacon identity (e.g. ibeacon:UUID:major:minor)."
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "required": false,
+          "description": "Protocol family: ibeacon or eddystone."
+        },
+        {
+          "name": "gateway_node_id",
+          "type": "string",
+          "required": true,
+          "description": "Edge gateway node where the BLE scanner detected the tag."
+        },
+        {
+          "name": "zone_id",
+          "type": "string",
+          "required": true,
+          "description": "Semantic reference zone where the tag is present."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "description": "Current presence state (always SEEN for this event)."
+        },
+        {
+          "name": "seen_at",
+          "type": "string",
+          "required": true,
+          "description": "RFC3339 timestamp when presence became stable."
+        },
+        {
+          "name": "rssi_raw",
+          "type": "integer",
+          "required": false,
+          "description": "Raw un-smoothed RSSI measurement in dBm."
+        },
+        {
+          "name": "rssi_filtered",
+          "type": "number",
+          "required": true,
+          "description": "Smoothed RSSI in dBm from Kalman or EMA filter."
+        },
+        {
+          "name": "distance_estimate_m",
+          "type": "number",
+          "required": false,
+          "description": "Approximate log-distance path loss estimate in meters."
+        },
+        {
+          "name": "tx_power",
+          "type": "integer",
+          "required": false,
+          "description": "Calibrated or advertised TX power at 1 meter in dBm."
+        },
+        {
+          "name": "ibeacon_uuid",
+          "type": "string",
+          "required": false,
+          "description": "128-bit Proximity UUID of the iBeacon."
+        },
+        {
+          "name": "ibeacon_major",
+          "type": "integer",
+          "required": false,
+          "description": "iBeacon major grouping number."
+        },
+        {
+          "name": "ibeacon_minor",
+          "type": "integer",
+          "required": false,
+          "description": "iBeacon minor individual number."
+        },
+        {
+          "name": "observation_count",
+          "type": "integer",
+          "required": false,
+          "description": "Number of consecutive observations accumulated during candidate dwell."
+        },
+        {
+          "name": "scanner_backend",
+          "type": "string",
+          "required": false,
+          "description": "Driver backend used by scanner: tinygo or mock."
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "persist": true
+    },
+    {
+      "name": "BLEBeaconLost",
+      "description": "Semantic BLE absence event emitted when an active beacon exceeds the absence silence window.",
+      "emoji": "🔴📡",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "beacon_id",
+          "type": "string",
+          "required": true,
+          "description": "Canonical beacon identity (e.g. ibeacon:UUID:major:minor)."
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "required": false,
+          "description": "Protocol family: ibeacon or eddystone."
+        },
+        {
+          "name": "gateway_node_id",
+          "type": "string",
+          "required": true,
+          "description": "Edge gateway node that was tracking the beacon."
+        },
+        {
+          "name": "zone_id",
+          "type": "string",
+          "required": true,
+          "description": "Last known semantic reference zone."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "description": "Current presence state (always LOST for this event)."
+        },
+        {
+          "name": "last_seen_at",
+          "type": "string",
+          "required": true,
+          "description": "RFC3339 timestamp of the last received physical radio packet."
+        },
+        {
+          "name": "lost_at",
+          "type": "string",
+          "required": true,
+          "description": "RFC3339 timestamp when absence silence threshold expired."
+        },
+        {
+          "name": "absence_window_ms",
+          "type": "integer",
+          "required": true,
+          "description": "Configured silence window in milliseconds that triggered the event."
+        },
+        {
+          "name": "last_rssi_filtered",
+          "type": "number",
+          "required": false,
+          "description": "Last filtered RSSI value in dBm recorded before loss."
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "required": false,
+          "description": "Reason for transition (e.g. ABSENCE_TIMEOUT)."
+        },
+        {
+          "name": "ibeacon_uuid",
+          "type": "string",
+          "required": false,
+          "description": "128-bit Proximity UUID of the iBeacon."
+        },
+        {
+          "name": "ibeacon_major",
+          "type": "integer",
+          "required": false,
+          "description": "iBeacon major grouping number."
+        },
+        {
+          "name": "ibeacon_minor",
+          "type": "integer",
+          "required": false,
+          "description": "iBeacon minor individual number."
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "persist": true
+    },
+    {
+      "name": "BLEPluginConfig",
+      "description": "Configuration for the BLE presence scanner plugin on edge gateway node.",
+      "emoji": "⚙️📡",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "gateway_node_id",
+          "type": "string",
+          "required": true,
+          "description": "Target edge gateway node id where plugin executes."
+        },
+        {
+          "name": "adapter",
+          "type": "string",
+          "required": false,
+          "description": "Bluetooth HCI adapter name (e.g. hci0)."
+        },
+        {
+          "name": "scanner_backend",
+          "type": "string",
+          "required": true,
+          "description": "Driver backend: tinygo (physical radio) or mock (CI fallback)."
+        },
+        {
+          "name": "presence_window_ms",
+          "type": "integer",
+          "required": true,
+          "description": "Minimum continuous dwell time in ms before declaring presence."
+        },
+        {
+          "name": "absence_window_ms",
+          "type": "integer",
+          "required": true,
+          "description": "Silence timeout in ms before declaring absence/lost."
+        },
+        {
+          "name": "reference_zone",
+          "type": "string",
+          "required": true,
+          "description": "Reference zone node ID (e.g. operation-room)."
+        },
+        {
+          "name": "reference_locagram",
+          "type": "string",
+          "required": true,
+          "description": "Locagram of reference zone (e.g. /root/node-dell-2/operation-room)."
+        },
+        {
+          "name": "zone_center_x",
+          "type": "number",
+          "required": false,
+          "description": "Local Cartesian X coordinate in meters for the zone center."
+        },
+        {
+          "name": "zone_center_y",
+          "type": "number",
+          "required": false,
+          "description": "Local Cartesian Y coordinate in meters for the zone center."
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local",
+        "child"
+      ],
+      "persist": true
+    }
+  ]
+}

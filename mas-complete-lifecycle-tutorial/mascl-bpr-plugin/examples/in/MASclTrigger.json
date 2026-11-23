@@ -1,0 +1,13 @@
+{
+  "$group": "default",
+  "$producer": "operator",
+  "$type": "MASclTrigger",
+  "$user": "console",
+  "$when": "2026-09-22T12:00:00Z",
+  "fields": {
+    "trigger_id": "trig-sample-01",
+    "source": "operator",
+    "timestamp": "2026-09-22T12:00:00Z",
+    "notes": "Sample trigger input for BPR plugin certification"
+  }
+}

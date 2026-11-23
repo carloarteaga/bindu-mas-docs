@@ -1,0 +1,258 @@
+{
+  "message_types": [
+    {
+      "name": "VesselGPSPosition",
+      "description": "Real-time navigation and geolocation coordinates from vessel NMEA receiver",
+      "emoji": "\ud83d\udccd",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "vessel_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique identifier of the vessel (e.g. TASA-41)"
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "required": true,
+          "description": "Latitude coordinate in decimal degrees"
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "required": true,
+          "description": "Longitude coordinate in decimal degrees"
+        },
+        {
+          "name": "speed_knots",
+          "type": "number",
+          "required": true,
+          "description": "Vessel speed over ground in knots"
+        },
+        {
+          "name": "heading_deg",
+          "type": "number",
+          "required": true,
+          "description": "Vessel heading in degrees (0-360)"
+        },
+        {
+          "name": "zone_id",
+          "type": "string",
+          "required": false,
+          "description": "Maritime operational fishing zone"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 100,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "HaulRegistered",
+      "description": "Deck scale confirmation event for fishing haul catch tonnage",
+      "emoji": "\ud83d\udc1f",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "haul_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique operational haul ID"
+        },
+        {
+          "name": "species",
+          "type": "string",
+          "required": true,
+          "description": "Target commercial fish species (e.g. Anchoveta)"
+        },
+        {
+          "name": "catch_tonnage",
+          "type": "number",
+          "required": true,
+          "description": "Measured catch weight in metric tons"
+        },
+        {
+          "name": "deck_temp_c",
+          "type": "number",
+          "required": false,
+          "description": "Ambient deck temperature in Celsius"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P30D"
+    },
+    {
+      "name": "RawMarineData",
+      "description": "Oceanographic parameters and SST fetched from external marine satellite API",
+      "emoji": "\ud83c\udf0a",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "vessel_id",
+          "type": "string",
+          "required": true,
+          "description": "Target vessel identifier"
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "required": true,
+          "description": "Latitude at time of query"
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "required": true,
+          "description": "Longitude at time of query"
+        },
+        {
+          "name": "sea_surface_temp_c",
+          "type": "number",
+          "required": true,
+          "description": "Sea surface temperature in Celsius degrees"
+        },
+        {
+          "name": "chlorophyll_mg_m3",
+          "type": "number",
+          "required": true,
+          "description": "Chlorophyll-a concentration in mg/m3"
+        },
+        {
+          "name": "wave_height_meters",
+          "type": "number",
+          "required": false,
+          "description": "Significant wave height in meters"
+        },
+        {
+          "name": "ocean_current_knots",
+          "type": "number",
+          "required": false,
+          "description": "Estimated ocean surface current in knots"
+        },
+        {
+          "name": "thermocline_depth_m",
+          "type": "integer",
+          "required": false,
+          "description": "Estimated thermocline layer depth in meters"
+        },
+        {
+          "name": "fetch_status",
+          "type": "string",
+          "required": true,
+          "description": "Execution status code (SUCCESS_NOMINAL / DEGRADED_FETCH)"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 100,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "HaulQuotaValidation",
+      "description": "Regulatory biomass quota compliance verification from Maritime Authority API",
+      "emoji": "\u2696\ufe0f",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "vessel_id",
+          "type": "string",
+          "required": true,
+          "description": "Vessel submitting haul registration"
+        },
+        {
+          "name": "haul_id",
+          "type": "string",
+          "required": true,
+          "description": "Validated haul identifier"
+        },
+        {
+          "name": "quota_authorized",
+          "type": "boolean",
+          "required": true,
+          "description": "True if catch is within regulatory biomass limits"
+        },
+        {
+          "name": "remaining_season_tons",
+          "type": "number",
+          "required": true,
+          "description": "Remaining fleet quota in metric tons"
+        },
+        {
+          "name": "compliance_code",
+          "type": "string",
+          "required": true,
+          "description": "Official maritime compliance status code"
+        },
+        {
+          "name": "rejection_reason",
+          "type": "string",
+          "required": false,
+          "description": "Explanation if quota is rejected or suspended"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P30D"
+    },
+    {
+      "name": "FleetOceanAssessment",
+      "description": "Fused oceanographic insights and fishing zone recommendations",
+      "emoji": "\ud83d\udef0\ufe0f",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "zone_id",
+          "type": "string",
+          "required": true,
+          "description": "Target fishing zone"
+        },
+        {
+          "name": "biomass_probability_score",
+          "type": "number",
+          "required": true,
+          "description": "Probabilistic fish presence score (0.0 - 1.0)"
+        },
+        {
+          "name": "favorable_thermal_front",
+          "type": "boolean",
+          "required": true,
+          "description": "Indicates optimal temperature gradient for target species"
+        },
+        {
+          "name": "operational_advice",
+          "type": "string",
+          "required": true,
+          "description": "Tactical routing advice for vessel fleet"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P14D"
+    }
+  ]
+}

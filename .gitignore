@@ -1,0 +1,13 @@
+# Build and binary artifacts
+*.tar.gz
+*.zip
+*.so
+*.so.*
+*.onnx.data
+*.bundle.json
+bundles/
+certify-report.json
+modbus-sim
+*.pdf
+.DS_Store
+Thumbs.db

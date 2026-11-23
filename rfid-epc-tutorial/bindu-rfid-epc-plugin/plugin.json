@@ -1,0 +1,28 @@
+{
+  "id": "bindu-rfid-epc-plugin",
+  "name": "Industrial LLRP RFID Reader & 11-Standard EPC Bit-Decoder",
+  "version": "1.0.0",
+  "runtime": "bpr",
+  "capabilities": [
+    "llrp-client",
+    "epc-bit-decoder",
+    "4-antenna-rf-telemetry"
+  ],
+  "in": [
+    "RfidReaderConfig"
+  ],
+  "out": [
+    "EpcSgtinRead",
+    "EpcSsccRead",
+    "EpcSglnRead",
+    "EpcGraiRead",
+    "EpcGiaiRead",
+    "EpcGsrnRead",
+    "EpcGdtiRead",
+    "EpcCpiRead",
+    "EpcSgcnRead",
+    "EpcItipRead",
+    "EpcGidRead",
+    "RfidAntennaTelemetry"
+  ]
+}

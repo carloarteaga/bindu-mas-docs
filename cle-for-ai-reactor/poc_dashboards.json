@@ -1,0 +1,68 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "albarino-microclimate-monitor",
+      "$id": "albarino-microclimate-monitor",
+      "fields": {
+        "id": "albarino-microclimate-monitor",
+        "name": "🍇 Albariño Microclimate & Soil Telemetry",
+        "query": {
+          "sql": "SELECT * FROM (SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.vineyard_id') AS vineyard_id, json_extract(raw_json, '$.fields.parcel_name') AS parcel, CAST(json_extract(raw_json, '$.fields.ambient_temp_c') AS REAL) AS temp_c, CAST(json_extract(raw_json, '$.fields.humidity_pct') AS REAL) AS humidity_pct, CAST(json_extract(raw_json, '$.fields.soil_moisture_pct') AS REAL) AS soil_moisture_pct, CAST(json_extract(raw_json, '$.fields.leaf_wetness_hours') AS REAL) AS leaf_wetness_hrs FROM v_messages WHERE \"$type\" = 'SensorVineyardReading' ORDER BY \"$when\" DESC LIMIT 50) ORDER BY timestamp ASC"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "vineyard_id": "Vineyard ID",
+          "parcel": "Parcel Name",
+          "temp_c": "Ambient Temp (°C)",
+          "humidity_pct": "Relative Humidity (%)",
+          "soil_moisture_pct": "Soil Moisture (%)",
+          "leaf_wetness_hrs": "Leaf Wetness (hours)"
+        },
+        "view": {
+          "type": "line",
+          "title": "Albariño Vineyard Microclimate Dynamics",
+          "chart_type": "line",
+          "x": "timestamp",
+          "y": [
+            "temp_c",
+            "humidity_pct",
+            "soil_moisture_pct"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "albarino-harvest-advisory-feed",
+      "$id": "albarino-harvest-advisory-feed",
+      "fields": {
+        "id": "albarino-harvest-advisory-feed",
+        "name": "🍷 AI Agronomic & Harvest Advisory Feed",
+        "query": {
+          "sql": "SELECT \"$when\" AS Advisory_Time, json_extract(raw_json, '$.fields.vineyard_id') AS Vineyard, CAST(json_extract(raw_json, '$.fields.botanical_health_score') AS REAL) AS Health_Score, CAST(json_extract(raw_json, '$.fields.fungal_risk_score') AS REAL) AS Fungal_Risk, CAST(json_extract(raw_json, '$.fields.harvest_readiness_index') AS REAL) AS Harvest_Index, json_extract(raw_json, '$.fields.frost_alert') AS Frost_Alert, json_extract(raw_json, '$.fields.action_recommendation') AS AI_Advice FROM v_messages WHERE \"$type\" = 'VineyardHarvestAdvisory' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "Advisory_Time": "Advisory Timestamp",
+          "Vineyard": "Vineyard ID",
+          "Health_Score": "Botanical Vitality",
+          "Fungal_Risk": "Fungal Disease Risk",
+          "Harvest_Index": "Harvest Readiness Index",
+          "Frost_Alert": "Frost Alarm",
+          "AI_Advice": "Agronomic LLM Advisory"
+        },
+        "view": {
+          "type": "table",
+          "title": "AI Agronomic & Harvest Advisory Feed",
+          "chart_type": "table",
+          "x": "Advisory_Time",
+          "y": [
+            "Harvest_Index"
+          ]
+        }
+      }
+    }
+  ]
+}

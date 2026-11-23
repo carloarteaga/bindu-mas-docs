@@ -1,0 +1,22 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "LogisticsDiscrepancyAlert",
+  "$user": "exampleUser",
+  "$when": "2026-10-13T21:58:53Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "alert_id": "",
+    "analysis_summary": "",
+    "confidence_score": 0,
+    "discrepancy_type": "",
+    "pallet_sscc": "",
+    "portal_id": "",
+    "recommended_action": "",
+    "severity": ""
+  }
+}

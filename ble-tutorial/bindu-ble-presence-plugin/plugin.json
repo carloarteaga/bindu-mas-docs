@@ -1,0 +1,18 @@
+{
+  "id": "bindu-ble-presence-plugin",
+  "name": "BLE Indoor Presence & Spatial Geofence Scanner",
+  "version": "1.0.0",
+  "runtime": "bpr",
+  "capabilities": [
+    "ble-scanner",
+    "presence-detection",
+    "spatial-where-geofence"
+  ],
+  "in": [
+    "BLEPluginConfig"
+  ],
+  "out": [
+    "BLEBeaconSeen",
+    "BLEBeaconLost"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "HelloWorld",
+  "$user": "exampleUser",
+  "$when": "2026-10-14T23:20:37Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "greeting": "Hello World"
+  }
+}

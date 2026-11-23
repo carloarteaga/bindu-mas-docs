@@ -1,0 +1,49 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "edge-cv-workstation-presence",
+  "$user": "console",
+  "$when": "2026-09-28T12:00:00Z",
+  "fields": {
+    "solution_id": "edge-cv-workstation-presence",
+    "name": "Edge CV: Multi-Camera Workstation Presence & Authority Arbitration",
+    "version": "1.0.0",
+    "description": "Edge computer vision solution orchestrating remote Tapo RTSP stream on node-dell-1 gateway with deterministic CEL visual authority arbitration on root.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root",
+        "node-dell-1"
+      ],
+      "message_types": [
+        "EdgeCVSet@1.0.0",
+        "EdgeCVSetStatus@1.0.0",
+        "AppearedClass@1.0.0",
+        "DisappearedClass@1.0.0",
+        "WorkstationPresenceSession@1.0.0"
+      ],
+      "cel_reactors": [
+        "workstation-presence-overlap-arbitrator"
+      ],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [],
+      "plugins": [
+        "bindu-edge-cv-plugin@1.0.0"
+      ],
+      "media_storage_providers": [
+        "minio_local"
+      ],
+      "access_users": [
+        "cv-operator"
+      ],
+      "access_roles": [
+        "admin"
+      ],
+      "dashboards": [
+        "carlos-workstation-presence-monitor",
+        "multi-camera-vision-stream-audit"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

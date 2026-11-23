@@ -1,0 +1,32 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-22T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mascl-cel-occurrence-emitter",
+        "input_message_type": "MASclTrigger",
+        "cron": "0 */15 * * * *",
+        "output_message_type": "MASclOcurrence",
+        "context_query": "SELECT json_extract(raw_json, '$.fields.trigger_id') AS trigger_id, \"$when\" AS trigger_time FROM v_messages WHERE \"$type\" = 'MASclTrigger' ORDER BY \"$when\" DESC LIMIT 1",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "occurrence_id": "'occ-cel-' + (has(payload.trigger_id) ? string(payload.trigger_id) : (has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.trigger_id) : 'default'))",
+          "agent_type": "'CEL'",
+          "agent_name": "'mascl-cel-occurrence-emitter'",
+          "execution_mode": "has(payload.trigger_id) ? 'TRIGGER' : 'CRON'",
+          "node_id": "has(mesh.self.id) && mesh.self.id != '' ? string(mesh.self.id) : 'root'",
+          "timestamp": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.trigger_time) : string(head['$when'])",
+          "status": "'OK'",
+          "latency_ms": "0.45",
+          "details": "'CEL declarative stream processor executed with zero-defect determinism'"
+        }
+      }
+    ]
+  }
+}

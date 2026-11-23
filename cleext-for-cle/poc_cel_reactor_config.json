@@ -1,0 +1,55 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-12T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mesh-topology-auditor",
+        "input_message_type": "MeshAuditTrigger",
+        "output_message_type": "MeshTopologyInspection",
+        "trigger_condition": "payload.check_compliance == true && mesh.self.id != '' && schema.is_registered('MeshTopologyInspection')",
+        "transformation_expression": {
+          "auditor_node_id": "mesh.self.id",
+          "auditor_locagram": "mesh.locagram(mesh.self.id)",
+          "is_root_gateway": "mesh.is_root(mesh.self.id)",
+          "parent_gateway_id": "mesh.is_parent('root') ? 'root' : (mesh.self.is_root ? 'mesh-root' : 'mesh-isolated')",
+          "active_plugins": "mesh.self.plugins",
+          "runtime_producer": "config.server.producer_id",
+          "runtime_log_level": "config.logging.level",
+          "time_ntp_server": "config.time.ntp_server != '' ? config.time.ntp_server : 'system-local'",
+          "schema_marine_registered": "schema.is_registered('RawMarineData')",
+          "marine_schema_badge": "schema.is_registered('RawMarineData') ? schema.types['RawMarineData'].emoji : '⚠️'",
+          "audit_summary": "'Node [' + mesh.self.id + '] at locagram ' + mesh.self.locagram + ' verified: parent=' + (mesh.is_parent('root') ? 'root' : (mesh.self.is_root ? 'self' : 'none')) + ', ntp=' + (config.time.ntp_server != '' ? config.time.ntp_server : 'local')",
+          "health_score": "(mesh.self.id != '' ? 40 : 0) + (config.logging.level != '' ? 30 : 10) + (schema.is_registered('MeshTopologyInspection') ? 30 : 0)"
+        }
+      },
+      {
+        "reactor_id": "proactive-mesh-sentinel",
+        "input_message_type": "",
+        "cron": "@every 5m",
+        "output_message_type": "MeshTopologyInspection",
+        "context_query": "SELECT COUNT(*) AS total_messages FROM v_messages",
+        "trigger_condition": "mesh.self.id != '' && schema.is_registered('MeshTopologyInspection')",
+        "transformation_expression": {
+          "auditor_node_id": "mesh.self.id",
+          "auditor_locagram": "mesh.locagram(mesh.self.id)",
+          "is_root_gateway": "mesh.is_root(mesh.self.id)",
+          "parent_gateway_id": "mesh.is_parent('root') ? 'root' : (mesh.self.is_root ? 'mesh-root' : 'mesh-isolated')",
+          "active_plugins": "mesh.self.plugins",
+          "runtime_producer": "config.server.producer_id",
+          "runtime_log_level": "config.logging.level",
+          "time_ntp_server": "config.time.ntp_server != '' ? config.time.ntp_server : 'system-local'",
+          "schema_marine_registered": "schema.is_registered('RawMarineData')",
+          "marine_schema_badge": "schema.is_registered('RawMarineData') ? schema.types['RawMarineData'].emoji : '⚠️'",
+          "audit_summary": "'Proactive Sentinel on [' + mesh.self.id + ']: ' + string(db.scalar) + ' total messages processed in local SQLite database'",
+          "health_score": "(mesh.self.id != '' ? 50 : 0) + (has(db.rows) && size(db.rows) > 0 ? 50 : 20)"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "mesh-storage-auditor",
+      "$id": "mesh-storage-auditor",
+      "fields": {
+        "id": "mesh-storage-auditor",
+        "name": "📊 Mesh Storage & Retention Fleet Auditor",
+        "query": {
+          "sql": "SELECT \"$producer\" AS node_id, json_extract(raw_json, '$.fields.node_role') AS node_role, CAST(json_extract(raw_json, '$.fields.total_stored_messages') AS INTEGER) AS total_messages, CAST(json_extract(raw_json, '$.fields.health_score') AS INTEGER) AS health_score, CAST(json_extract(raw_json, '$.fields.irregularity_count') AS INTEGER) AS anomalies, json_extract(raw_json, '$.fields.status_summary') AS status_summary, \"$when\" AS audited_at FROM v_messages WHERE \"$type\" = 'MessageStateAudit' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "node_id": "Node ID",
+          "node_role": "Role",
+          "total_messages": "Total Stored Messages",
+          "health_score": "Health Score",
+          "anomalies": "Anomalies Detected",
+          "status_summary": "Status Summary",
+          "audited_at": "Audited At"
+        },
+        "view": {
+          "type": "table",
+          "title": "Mesh Nodes Storage & Retention Health",
+          "chart_type": "table",
+          "x": "node_id",
+          "y": [
+            "health_score",
+            "total_messages",
+            "anomalies"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "mesh-routing-leak-inspector",
+      "$id": "mesh-routing-leak-inspector",
+      "fields": {
+        "id": "mesh-routing-leak-inspector",
+        "name": "🚨 Mesh Routing Leak & Anomaly Inspector",
+        "query": {
+          "sql": "SELECT \"$when\" AS detected_at, \"$producer\" AS reporting_node, CAST(json_extract(raw_json, '$.fields.health_score') AS INTEGER) AS health_score, CAST(json_extract(raw_json, '$.fields.irregularity_count') AS INTEGER) AS anomaly_count, json_extract(raw_json, '$.fields.status_summary') AS triage_notes FROM v_messages WHERE \"$type\" = 'MessageStateAudit' AND CAST(json_extract(raw_json, '$.fields.irregularity_count') AS INTEGER) > 0 ORDER BY \"$when\" DESC LIMIT 50"
+        },
+        "labels": {
+          "detected_at": "Detected At",
+          "reporting_node": "Reporting Node",
+          "health_score": "Health Score",
+          "anomaly_count": "Anomaly Count",
+          "triage_notes": "Triage Diagnostic Notes"
+        },
+        "view": {
+          "type": "table",
+          "title": "Routing Leak & Storage Anomaly Triage Feed",
+          "chart_type": "table",
+          "x": "detected_at",
+          "y": [
+            "anomaly_count"
+          ]
+        }
+      }
+    }
+  ]
+}

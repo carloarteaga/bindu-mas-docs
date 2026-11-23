@@ -1,0 +1,54 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "potato-processing-solution",
+  "$user": "console",
+  "$when": "2026-10-05T12:00:00Z",
+  "fields": {
+    "solution_id": "potato-processing-solution",
+    "name": "Potato Processing Thermodynamic Pipeline & Digital Twin",
+    "version": "1.0.0",
+    "description": "Autonomous Cold-Induced Sweetening (CIS) mitigation, llava-phi3:latest optical vision analysis, distributed priority scheduling, and Modbus PLC hardware control.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root"
+      ],
+      "message_types": [
+        "PotatoBatchIngress@1.0.0",
+        "PotatoOpticalAnalysis@1.0.0",
+        "PotatoThermodynamicSetpoints@1.0.0",
+        "PotatoReconditioningWakeup@1.0.0",
+        "ModbusConfig@1.0.0",
+        "ModbusSet@1.0.0",
+        "ModbusGet@1.0.0",
+        "ModbusStatus@1.0.0",
+        "ModbusData@1.0.0"
+      ],
+      "cel_reactors": [
+        "potato-quarantine-scheduler",
+        "potato-silo-climate-actuator",
+        "potato-immediate-fryer-actuator",
+        "potato-silo-awakening-fryer-actuator"
+      ],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [
+        "potato-llava-optical-analyzer"
+      ],
+      "plugins": [
+        "bindu-modbus-plugin@1.0.0"
+      ],
+      "media_storage_providers": [
+        "minio_local"
+      ],
+      "access_users": [],
+      "access_roles": [],
+      "dashboards": [
+        "potato-reconditioning-schedule-dashboard",
+        "potato-intake-and-optical-monitor",
+        "potato-plc-hardware-actuation-monitor"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

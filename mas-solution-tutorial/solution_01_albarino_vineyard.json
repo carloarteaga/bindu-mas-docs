@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "albarino-smart-vineyard-ai",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "albarino-smart-vineyard-ai",
+    "name": "Albariño Smart Vineyard AI & Harvest Advisory",
+    "version": "1.0.0",
+    "description": "Autonomous agronomic microclimate monitoring, fungal risk calculation, and LLM-assisted harvest readiness prediction.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-1"],
+      "message_types": ["SensorVineyardReading@1.0.0", "VineyardHarvestAdvisory@1.0.0"],
+      "cel_reactors": [],
+      "rest_reactors": [],
+      "semantic_ai_reactors": ["albarino-vintage-brain"],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": ["vineyard-manager"],
+      "access_roles": ["agronomist"],
+      "dashboards": ["albarino-microclimate-monitor", "albarino-harvest-advisory-feed"],
+      "system_config_keys": []
+    }
+  }
+}

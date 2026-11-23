@@ -1,0 +1,59 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "hello-world-dashboard",
+      "$id": "hello-world-dashboard",
+      "fields": {
+        "id": "hello-world-dashboard",
+        "name": "👋 Hello World Live Greeting Activity",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS producer_node, json_extract(raw_json, '$.fields.greeting') AS greeting_message FROM v_messages WHERE \"$type\" = 'HelloWorld' ORDER BY \"$when\" DESC LIMIT 25"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "producer_node": "Producer Node",
+          "greeting_message": "Greeting Message"
+        },
+        "view": {
+          "type": "table",
+          "title": "Hello World Live Greeting Activity",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "producer_node"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "hello-world-stats-chart",
+      "$id": "hello-world-stats-chart",
+      "fields": {
+        "id": "hello-world-stats-chart",
+        "name": "📈 Hello World Ingestion Frequency",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, CAST(json_extract(raw_json, '$.fields.count') AS INTEGER) AS message_count, json_extract(raw_json, '$.fields.since') AS window_start, json_extract(raw_json, '$.fields.until') AS window_end FROM v_messages WHERE \"$type\" = 'HelloWorldStats' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Report Time",
+          "message_count": "Message Count",
+          "window_start": "Window Start",
+          "window_end": "Window End"
+        },
+        "view": {
+          "type": "bar",
+          "title": "Hello World Ingestion Frequency",
+          "chart_type": "bar",
+          "x": "timestamp",
+          "y": [
+            "message_count"
+          ]
+        }
+      }
+    }
+  ]
+}

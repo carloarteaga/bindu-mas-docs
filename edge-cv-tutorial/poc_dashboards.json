@@ -1,0 +1,65 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "carlos-workstation-presence-monitor",
+      "$id": "carlos-workstation-presence-monitor",
+      "fields": {
+        "id": "carlos-workstation-presence-monitor",
+        "name": "💻 Carlos Workstation Presence & Focus Monitor",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.station_id') AS workstation, json_extract(raw_json, '$.fields.primary_camera_id') AS primary_camera, ROUND(CAST(json_extract(raw_json, '$.fields.dwell_duration_seconds') AS REAL), 1) AS dwell_seconds, ROUND(CAST(json_extract(raw_json, '$.fields.dwell_duration_seconds') AS REAL) / 60.0, 2) AS session_minutes, json_extract(raw_json, '$.fields.clothing_color') AS clothing, json_extract(raw_json, '$.fields.session_status') AS status FROM v_messages WHERE \"$type\" = 'WorkstationPresenceSession' ORDER BY \"$when\" DESC LIMIT 25"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "workstation": "Workstation ID",
+          "primary_camera": "Primary Authority Camera",
+          "dwell_seconds": "Duration (Seconds)",
+          "session_minutes": "Focus Time (Minutes)",
+          "clothing": "Clothing Color",
+          "status": "Session Status"
+        },
+        "view": {
+          "type": "table",
+          "title": "Authoritative Workstation Focus Sessions",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "dwell_seconds"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "multi-camera-vision-stream-audit",
+      "$id": "multi-camera-vision-stream-audit",
+      "fields": {
+        "id": "multi-camera-vision-stream-audit",
+        "name": "👁️ Raw Multi-Camera Detection Stream & Overlap Feed",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.camera_id') AS camera, json_extract(raw_json, '$.fields.class_name') AS detected_class, CAST(json_extract(raw_json, '$.fields.confidence') AS REAL) AS confidence, CAST(json_extract(raw_json, '$.fields.bbox_area') AS REAL) AS bbox_area, json_extract(raw_json, '$.fields.dominant_color') AS color FROM v_messages WHERE \"$type\" = 'AppearedClass' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "camera": "Camera ID",
+          "detected_class": "Class",
+          "confidence": "Confidence",
+          "bbox_area": "Bounding Box Area",
+          "color": "Dominant Color"
+        },
+        "view": {
+          "type": "table",
+          "title": "Raw Camera Sightings & Overlap Telemetry",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "confidence"
+          ]
+        }
+      }
+    }
+  ]
+}

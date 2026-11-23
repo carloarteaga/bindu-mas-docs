@@ -1,0 +1,65 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "raw-ingress-telemetry-monitor",
+      "$id": "raw-ingress-telemetry-monitor",
+      "fields": {
+        "id": "raw-ingress-telemetry-monitor",
+        "name": "📥 Heterogeneous RFID Ingress & CEL Normalization Monitor",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.reader_vendor') AS vendor, json_extract(raw_json, '$.fields.reader_id') AS reader_id, json_extract(raw_json, '$.fields.dock_portal') AS dock_portal, json_extract(raw_json, '$.fields.epc') AS epc, CAST(json_extract(raw_json, '$.fields.antenna') AS INTEGER) AS antenna, CAST(json_extract(raw_json, '$.fields.rssi') AS REAL) AS rssi_dbm, CAST(json_extract(raw_json, '$.fields.read_count') AS INTEGER) AS read_count FROM v_messages WHERE \"$type\" = 'RawTagRead' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "vendor": "Reader Vendor",
+          "reader_id": "Device Identifier",
+          "dock_portal": "Dock Portal / Subpath",
+          "epc": "Normalized Tag EPC",
+          "antenna": "Antenna Port",
+          "rssi_dbm": "RSSI (dBm)",
+          "read_count": "Read Count"
+        },
+        "view": {
+          "type": "table",
+          "title": "Normalized Edge RFID Ingress Stream (Hopeland, Zebra, Chafon, Marktrace)",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "rssi_dbm"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "reader-health-incident-monitor",
+      "$id": "reader-health-incident-monitor",
+      "fields": {
+        "id": "reader-health-incident-monitor",
+        "name": "⚠️ Edge RFID Reader Health & Weak Signal Incident Board",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.reader_vendor') AS vendor, json_extract(raw_json, '$.fields.dock_portal') AS dock_portal, json_extract(raw_json, '$.fields.alert_code') AS alert_code, json_extract(raw_json, '$.fields.details') AS details FROM v_messages WHERE \"$type\" = 'ReaderHealthAlert' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "vendor": "Reader Vendor",
+          "dock_portal": "Dock Portal",
+          "alert_code": "Alert Code",
+          "details": "Incident Diagnosis & Action"
+        },
+        "view": {
+          "type": "table",
+          "title": "Edge Antenna Health & Weak Signal Alerts (< -75 dBm)",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "alert_code"
+          ]
+        }
+      }
+    }
+  ]
+}

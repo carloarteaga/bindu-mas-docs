@@ -1,0 +1,99 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "rfid-dock-portal-transit-monitor",
+      "$id": "rfid-dock-portal-transit-monitor",
+      "fields": {
+        "id": "rfid-dock-portal-transit-monitor",
+        "name": "🚚 RFID Dock Portal Transit & Directionality Monitor",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.portal_id') AS portal, json_extract(raw_json, '$.fields.direction') AS direction, json_extract(raw_json, '$.fields.pallet_sscc') AS pallet_sscc, CAST(json_extract(raw_json, '$.fields.item_count') AS INTEGER) AS items, CAST(json_extract(raw_json, '$.fields.estimated_velocity_mps') AS REAL) AS velocity_mps, CAST(json_extract(raw_json, '$.fields.mean_transit_rssi_dbm') AS REAL) AS rssi_dbm, json_extract(raw_json, '$.fields.status') AS status FROM v_messages WHERE \"$type\" = 'PortalTransitEvent' ORDER BY \"$when\" DESC LIMIT 25"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "portal": "Dock Portal",
+          "direction": "Direction",
+          "pallet_sscc": "Pallet SSCC-18",
+          "items": "Item Count",
+          "velocity_mps": "Velocity (m/s)",
+          "rssi_dbm": "Mean RSSI (dBm)",
+          "status": "Transit Status"
+        },
+        "view": {
+          "type": "table",
+          "title": "4-Antenna Directional Transit Velocity & Pallet Tracking",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "velocity_mps"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "rfid-epc-standards-breakdown",
+      "$id": "rfid-epc-standards-breakdown",
+      "fields": {
+        "id": "rfid-epc-standards-breakdown",
+        "name": "🏷️ 11-Standard EPC Global Tag Stream & Bit-Decoder",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$type\" AS message_type, json_extract(raw_json, '$.fields.standard') AS epc_standard, json_extract(raw_json, '$.fields.canonical_urn') AS canonical_urn, json_extract(raw_json, '$.fields.company_prefix') AS company_prefix, CAST(json_extract(raw_json, '$.fields.antenna_id') AS INTEGER) AS antenna, CAST(json_extract(raw_json, '$.fields.peak_rssi_dbm') AS REAL) AS rssi_dbm FROM v_messages WHERE \"$type\" LIKE 'Epc%Read' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "message_type": "MessageType",
+          "epc_standard": "EPC Standard",
+          "canonical_urn": "Canonical URN",
+          "company_prefix": "Company Prefix",
+          "antenna": "Antenna ID",
+          "rssi_dbm": "RSSI (dBm)"
+        },
+        "view": {
+          "type": "table",
+          "title": "Multi-Standard GS1 EPC Ingress Stream (SGTIN, SSCC, SGLN, GRAI, GIAI...)",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "rssi_dbm"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "rfid-antenna-rf-health-matrix",
+      "$id": "rfid-antenna-rf-health-matrix",
+      "fields": {
+        "id": "rfid-antenna-rf-health-matrix",
+        "name": "📡 4-Antenna RF Physical Layer & Health Telemetry",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.antenna_name') AS antenna_name, CAST(json_extract(raw_json, '$.fields.antenna_id') AS INTEGER) AS antenna_id, CAST(json_extract(raw_json, '$.fields.tx_power_cdbm') AS REAL) / 100.0 AS tx_power_dbm, CAST(json_extract(raw_json, '$.fields.mean_rssi_dbm') AS REAL) AS mean_rssi, CAST(json_extract(raw_json, '$.fields.reflection_vswr') AS REAL) AS vswr, CAST(json_extract(raw_json, '$.fields.read_rate_tps') AS REAL) AS tag_rate_tps, json_extract(raw_json, '$.fields.status') AS health FROM v_messages WHERE \"$type\" = 'RfidAntennaTelemetry' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "antenna_name": "Antenna Name",
+          "antenna_id": "Antenna #",
+          "tx_power_dbm": "Tx Power (dBm)",
+          "mean_rssi": "Mean RSSI (dBm)",
+          "vswr": "VSWR",
+          "tag_rate_tps": "Tags / Sec",
+          "health": "RF Health"
+        },
+        "view": {
+          "type": "table",
+          "title": "4-Antenna Portal RF Power, Noise Floor, VSWR & Throughput",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "tag_rate_tps"
+          ]
+        }
+      }
+    }
+  ]
+}

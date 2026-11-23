@@ -1,0 +1,41 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "raw-ingress-normalization-solution",
+  "$user": "console",
+  "$when": "2026-11-11T12:00:00Z",
+  "fields": {
+    "solution_id": "raw-ingress-normalization-solution",
+    "name": "Heterogeneous Raw Ingress Normalization & Edge RFID Digital Twin",
+    "version": "1.0.0",
+    "description": "High-throughput non-semantic MQTT ingress bridge (bindu/in/raw/#), ephemeral in-memory RawIngressEvent routing, zero-allocation Horn-clause CEL normalization for heterogeneous RFID hardware (Hopeland, Zebra, Chafon, Marktrace binary frames), and real-time antenna health monitoring.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root"
+      ],
+      "message_types": [
+        "RawTagRead@1.0.0",
+        "ReaderHealthAlert@1.0.0"
+      ],
+      "cel_reactors": [
+        "hopeland_rfid_normalizer",
+        "zebra_rfid_normalizer",
+        "chafon_rfid_normalizer",
+        "marktrace_binary_rfid_normalizer",
+        "weak_signal_health_guard"
+      ],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": [],
+      "access_roles": [],
+      "dashboards": [
+        "raw-ingress-telemetry-monitor",
+        "reader-health-incident-monitor"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

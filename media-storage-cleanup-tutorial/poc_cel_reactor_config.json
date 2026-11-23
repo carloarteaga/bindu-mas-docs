@@ -1,0 +1,29 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-29T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "minio-orphan-media-inspector",
+        "input_message_type": "",
+        "cron": "0 0 4 * * *",
+        "output_message_type": "MediaPruneCandidate",
+        "context_query": "SELECT j.value AS media_uri, v.\"$type\" AS source_type, v.\"$when\" AS msg_when FROM v_messages v, json_tree(v.raw_json, '$.fields') j WHERE j.type = 'text' AND (j.value LIKE 'minio_%://%' OR j.value LIKE 's3_%://%') ORDER BY v.\"$when\" ASC LIMIT 1",
+        "trigger_condition": "has(db.rows) && size(db.rows) > 0 && schema.is_registered(string(db.rows[0].fields.source_type))",
+        "transformation_expression": {
+          "media_uri": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.media_uri) : 'minio_local://raw/PatioMonitorMedia/plant-1/plant-1.jpeg'",
+          "provider": "has(db.rows) && size(db.rows) > 0 ? (string(db.rows[0].fields.media_uri).contains('://') ? string(db.rows[0].fields.media_uri).split('://')[0] : 'minio_local') : 'minio_local'",
+          "bucket": "has(db.rows) && size(db.rows) > 0 ? (string(db.rows[0].fields.media_uri).contains('://') ? string(db.rows[0].fields.media_uri).split('://')[1].split('/')[0] : 'raw') : 'raw'",
+          "object_key": "has(db.rows) && size(db.rows) > 0 ? (string(db.rows[0].fields.media_uri).contains('://') ? string(db.rows[0].fields.media_uri).split('://')[1].substring(string(db.rows[0].fields.media_uri).split('://')[1].indexOf('/') + 1) : 'PatioMonitorMedia/plant-1/plant-1.jpeg') : 'PatioMonitorMedia/plant-1/plant-1.jpeg'",
+          "source_message_type": "has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.source_type) : 'UnknownMediaType'",
+          "reason": "'SEMANTIC_TTL_POST_MAINTENANCE_PRUNING'"
+        }
+      }
+    ]
+  }
+}

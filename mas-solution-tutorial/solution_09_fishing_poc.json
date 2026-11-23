@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "industrial-fishing-trinity-poc",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "industrial-fishing-trinity-poc",
+    "name": "Industrial Fishing Trinity POC (NUNEGAL-77)",
+    "version": "1.0.0",
+    "description": "End-to-end maritime trinity pipeline combining GPS telemetry, Copernicus ocean REST integration, SLM fishing zone prediction, and CEL drift alerts.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-dell-2"],
+      "message_types": ["VesselGPSPosition@1.0.0", "RawMarineData@1.0.0", "PredictedFishingZone@1.0.0", "RouteAlert@1.0.0"],
+      "cel_reactors": ["trajectory-deviation-guardian"],
+      "rest_reactors": ["nunegal77-weather-fetcher"],
+      "semantic_ai_reactors": ["oceanographic-ai-brain"],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": ["captain-nunegal77"],
+      "access_roles": ["operator"],
+      "dashboards": ["nunegal77-ocean-telemetry-trend", "nunegal77-ai-fishing-zone-monitor", "nunegal77-route-alert-feed", "nunegal77-full-pipeline-trace"],
+      "system_config_keys": []
+    }
+  }
+}

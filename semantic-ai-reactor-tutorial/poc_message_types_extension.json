@@ -1,0 +1,98 @@
+{
+  "message_types": [
+    {
+      "name": "FreezerMaintenanceTelemetry",
+      "description": "Compressor physical integrity and mechanical telemetry (vibration, motor temp, refrigerant pressure)",
+      "emoji": "⚙️",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "vibration_amplitude_g",
+          "type": "number",
+          "required": true,
+          "description": "Vibration acceleration rate in G units"
+        },
+        {
+          "name": "motor_temperature",
+          "type": "number",
+          "required": true,
+          "description": "Temperature of the electric compressor motor in Celsius degrees"
+        },
+        {
+          "name": "refrigerant_pressure_psi",
+          "type": "number",
+          "required": true,
+          "description": "Pressure of the coolant/refrigerant line in PSI"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "MachineryHealthAssessment",
+      "description": "Calibrated System One AI structural and mechanical health analysis for cooling hardware",
+      "emoji": "🛠️",
+      "version": "1.0.0",
+      "persist": true,
+      "properties": [
+        {
+          "name": "health_status",
+          "type": "string",
+          "required": true,
+          "description": "Mechanical health status of the asset (System One Choice primitive)",
+          "enum": [
+            "NOMINAL",
+            "DEGRADED",
+            "CRITICAL",
+            "FAILURE_IMMINENT"
+          ]
+        },
+        {
+          "name": "predicted_days_to_failure",
+          "type": "integer",
+          "required": true,
+          "minimum": 0,
+          "maximum": 60,
+          "description": "Estimated remaining days before critical mechanical shutdown (System One Score primitive scaled to 0..60)"
+        },
+        {
+          "name": "action_priority",
+          "type": "string",
+          "required": true,
+          "description": "Recommended scheduling speed for repair technicians (System One Choice primitive)",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "IMMEDIATE"
+          ]
+        },
+        {
+          "name": "fault_prediction",
+          "type": "string",
+          "required": true,
+          "description": "Deterministic mechanical fault diagnostic synthesized via CEL from Jev decisions and sensor thresholds"
+        },
+        {
+          "name": "target_producer",
+          "type": "string",
+          "required": false,
+          "description": "Identifier of the target machinery asset/producer being analyzed"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "longevity": "P14D"
+    }
+  ]
+}

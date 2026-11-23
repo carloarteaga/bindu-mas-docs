@@ -1,0 +1,47 @@
+{
+  "exported_at": "2026-10-04T12:00:00Z",
+  "message_types": [
+    "AISemanticReactorSet"
+  ],
+  "reactors_sets": [
+    {
+      "$type": "AISemanticReactorSet",
+      "$group": "mesh",
+      "$producer": "root",
+      "$user": "admin",
+      "$when": "2026-10-04T12:00:00Z",
+      "fields": {
+        "gateway_node_id": "root",
+        "reactors": [
+          {
+            "reactor_id": "potato-llava-optical-analyzer",
+            "api_endpoint": "http://192.168.12.160:11434/v1/chat/completions",
+            "api_key_secret": "secret:POTATO_VISION_API_KEY",
+            "model_id": "llava-phi3:latest",
+            "max_concurrency": 1,
+            "inference_timeout": 300,
+            "trigger_message_types": [
+              "PotatoBatchIngress"
+            ],
+            "history_count": 0,
+            "context_query": "",
+            "response_message_type": "PotatoOpticalAnalysis",
+            "confidence_threshold": 0.5,
+            "cognitive_profile": true,
+            "mapping_template": {
+              "lot_id": "{{.fields.lot_id}}",
+              "reducing_sugar_index_crs": "{{.fields.reducing_sugar_index_crs}}",
+              "sugar_risk_level": "{{.fields.sugar_risk_level}}",
+              "starch_uniformity_score": "{{.fields.starch_uniformity_score}}",
+              "translucent_defect_percent": "{{.fields.translucent_defect_percent}}",
+              "optical_model_confidence": "{{.fields.optical_model_confidence}}",
+              "rationale": "{{.fields.rationale}}"
+            },
+            "system_instruction": "You are a specialized industrial computer vision analyzer for agricultural potato processing. You inspect raw sliced potato images and transit datalogger history to detect Cold-Induced Sweetening (CIS). You MUST return a single raw JSON object with EXACTLY these 7 keys: lot_id, reducing_sugar_index_crs, sugar_risk_level, starch_uniformity_score, translucent_defect_percent, optical_model_confidence, rationale. Do not output markdown, preambles, or backticks. Rules: 1. If the slice has dark, water-soaked, or translucent rings (high sugar) or avg_transit_temp_c is < 8.0°C, set reducing_sugar_index_crs between 0.30 and 0.80, and sugar_risk_level to HIGH or CRITICAL. 2. If the slice is uniform cream/opaque (low sugar) and avg_transit_temp_c >= 8.0°C, set reducing_sugar_index_crs between 0.05 and 0.18, and sugar_risk_level to LOW. 3. optical_model_confidence must be a float between 0.80 and 1.0.",
+            "semantic_prompt_template": "Analyze the incoming potato batch slice for lot '{{index .trigger_event \"$producer\"}}'.\n\nTransit Temperature: {{index .trigger_event \"fields\" \"avg_transit_temp_c\"}} °C\nTransit Duration: {{index .trigger_event \"fields\" \"transit_duration_hours\"}} hours\nSlice Image URI: {{index .trigger_event \"fields\" \"optical_slice_image_uri\"}}\n\nOutput strictly a raw JSON object with:\n{\n  \"lot_id\": \"{{index .trigger_event \"fields\" \"lot_id\"}}\",\n  \"reducing_sugar_index_crs\": <float between 0.0 and 1.0>,\n  \"sugar_risk_level\": \"LOW\" | \"MODERATE\" | \"HIGH\" | \"CRITICAL\",\n  \"starch_uniformity_score\": <float between 0.0 and 1.0>,\n  \"translucent_defect_percent\": <float>,\n  \"optical_model_confidence\": 0.95,\n  \"rationale\": \"<concise observation of starch opacity vs translucent sugar defect>\"\n}"
+          }
+        ]
+      }
+    }
+  ]
+}

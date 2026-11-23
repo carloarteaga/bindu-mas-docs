@@ -1,0 +1,28 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "EpcGiaiRead",
+  "$user": "exampleUser",
+  "$when": "2026-10-13T21:58:53Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "antenna_id": 0,
+    "canonical_urn": "",
+    "channel_index": 0,
+    "company_prefix": "",
+    "epc_hex": "",
+    "filter_desc": "",
+    "filter_value": 0,
+    "first_seen_utc": "",
+    "individual_asset_reference": "",
+    "last_seen_utc": "",
+    "peak_rssi_dbm": 0,
+    "read_count": 1,
+    "reader_id": "",
+    "standard": ""
+  }
+}

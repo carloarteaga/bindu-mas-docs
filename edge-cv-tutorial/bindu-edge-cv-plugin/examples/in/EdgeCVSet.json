@@ -1,0 +1,53 @@
+{
+  "$type": "EdgeCVSet",
+  "$id": "msg-edge-cv-set-001",
+  "$group": "config",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-28T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "plugin_id": "bindu-edge-cv-plugin",
+    "global_settings": {
+      "inference_engine": "onnx_yolox_nano",
+      "confidence_threshold": 0.5,
+      "worker_pool_size": 2,
+      "frame_cadence_fps": 5,
+      "classes_of_interest": [
+        "person"
+      ],
+      "color_extraction_enabled": true,
+      "snapshot_storage_provider": "minio_local",
+      "snapshot_bucket": "cv-snapshots"
+    },
+    "cameras": [
+      {
+        "camera_id": "cam-usb-root",
+        "station_id": "carlos-dev-workstation",
+        "name": "Local USB Webcam on Root (V4L2)",
+        "source_kind": "usb",
+        "source_ref": "/dev/video0",
+        "adjacent_camera_ids": [
+          "cam-tapo-room"
+        ],
+        "min_presence_frames": 3,
+        "lost_debounce_frames": 5,
+        "enabled": true
+      },
+      {
+        "camera_id": "cam-tapo-room",
+        "station_id": "room-ambient-overview",
+        "name": "TP-Link Tapo IP Camera at Angle (RTSP TCP/IP)",
+        "source_kind": "tcp_ip",
+        "source_ref": "rtsp://binducv:abubindu@192.168.12.177:554/stream2",
+        "rtsp_transport": "tcp",
+        "adjacent_camera_ids": [
+          "cam-usb-root"
+        ],
+        "min_presence_frames": 3,
+        "lost_debounce_frames": 5,
+        "enabled": true
+      }
+    ]
+  }
+}

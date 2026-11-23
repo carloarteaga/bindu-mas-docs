@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "financial-regulatory-audit",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "financial-regulatory-audit",
+    "name": "Financial Regulatory Audit & Fleet Compliance Pipeline",
+    "version": "1.0.0",
+    "description": "On-demand topological compliance auditing across multi-node mesh infrastructure using Google CEL and celext extensions.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-dell-1", "node-dell-2"],
+      "message_types": ["MeshAuditTrigger@1.0.0", "MeshTopologyInspection@1.0.0", "MeshTopologyCloudSync@1.0.0"],
+      "cel_reactors": ["mesh-topology-auditor", "proactive-mesh-sentinel"],
+      "rest_reactors": ["fleet-cloud-telemetry-bridge"],
+      "semantic_ai_reactors": [],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": ["compliance-officer"],
+      "access_roles": ["auditor"],
+      "dashboards": ["financial-audit-compliance-matrix", "financial-node-health-scores"],
+      "system_config_keys": []
+    }
+  }
+}

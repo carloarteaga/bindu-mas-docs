@@ -1,0 +1,31 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-10-19T14:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mesh-message-state-retention-auditor",
+        "input_message_type": "MessageState",
+        "output_message_type": "MessageStateAudit",
+        "trigger_condition": "\"storage\" in payload && \"message_counts_by_type\" in payload.storage",
+        "context_query": "SELECT COALESCE(json_extract(raw_json, '$.fields.total_stored_messages'), 0) as prev_total, COALESCE(json_extract(raw_json, '$.fields.health_score'), 100) as prev_score, \"$when\" as prev_when FROM v_messages WHERE \"$type\" = 'MessageStateAudit' ORDER BY \"$when\" DESC LIMIT 1",
+        "transformation_expression": {
+          "node_id": "\"$producer\" in head ? string(head[\"$producer\"]) : (\"identity\" in payload && \"node_id\" in payload.identity ? string(payload.identity.node_id) : 'unknown-node')",
+          "node_role": "\"identity\" in payload && \"role\" in payload.identity ? string(payload.identity.role) : (\"role\" in payload ? string(payload.role) : 'node')",
+          "total_stored_messages": "\"storage\" in payload && \"message_total\" in payload.storage ? int(payload.storage.message_total) : (\"storage\" in payload && \"message_counts_by_type\" in payload.storage ? size(dyn(payload.storage.message_counts_by_type)) : 0)",
+          "health_score": "int(ai.clamp(double(100 - (\"storage\" in payload && \"message_counts_by_type\" in payload.storage && dyn(payload.storage.message_counts_by_type).exists(m, m.total > 200) ? 30 : 0) - (\"bpr_plugins\" in payload && dyn(payload.bpr_plugins).exists(p, p.status == 'error') ? 25 : 0) - (\"system_resources\" in payload && \"disk_pct\" in payload.system_resources && double(payload.system_resources.disk_pct) > 85.0 ? 30 : 0)), 0.0, 100.0))",
+          "irregularity_count": "int((\"storage\" in payload && \"message_counts_by_type\" in payload.storage && dyn(payload.storage.message_counts_by_type).exists(m, m.total > 200) ? 1 : 0) + (\"bpr_plugins\" in payload && dyn(payload.bpr_plugins).exists(p, p.status == 'error') ? 1 : 0) + (\"system_resources\" in payload && \"disk_pct\" in payload.system_resources && double(payload.system_resources.disk_pct) > 85.0 ? 1 : 0))",
+          "status_summary": "string((\"bpr_plugins\" in payload && dyn(payload.bpr_plugins).exists(p, p.status == 'error') ? 'CRITICAL: Detected crashed BPR plugin. ' : '') + (\"storage\" in payload && \"message_counts_by_type\" in payload.storage && dyn(payload.storage.message_counts_by_type).exists(m, m.total > 200) ? 'WARNING: Message type accumulation threshold exceeded. Review retention policy. ' : '') + 'Storage audit complete for node ' + (\"$producer\" in head ? string(head[\"$producer\"]) : 'node'))",
+          "top_accumulating_types": "\"storage\" in payload && \"message_counts_by_type\" in payload.storage ? dyn(payload.storage.message_counts_by_type) : []",
+          "irregularities_detected": "\"bpr_plugins\" in payload && dyn(payload.bpr_plugins).exists(p, p.status == 'error') ? [{'category': 'PLUGIN_CRASH_STALE', 'detail': 'BPR plugin error state detected on node', 'recommendation': 'Verify host controller permissions or restart plugin', 'severity': 'CRITICAL', 'type_name': 'BPR_PLUGIN'}] : []",
+          "audited_at": "now()"
+        }
+      }
+    ]
+  }
+}

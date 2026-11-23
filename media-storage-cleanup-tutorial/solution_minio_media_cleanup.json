@@ -1,0 +1,45 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "minio-media-storage-cleanup",
+  "$user": "console",
+  "$when": "2026-09-28T04:00:00Z",
+  "fields": {
+    "solution_id": "minio-media-storage-cleanup",
+    "name": "MinIO Media Storage Retention & Automatic Cleanup Pipeline",
+    "version": "1.0.0",
+    "description": "Autonomous 2-stage garbage collection pipeline (4:00 AM Post-Maintenance CEL Inspector + Reactive REST Egress) using semantic URL paths and schema-driven retention to prune expired out-of-band MinIO media assets.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root"
+      ],
+      "message_types": [
+        "MediaPruneCandidate@1.0.0",
+        "MediaPruneAudit@1.0.0"
+      ],
+      "cel_reactors": [
+        "minio-orphan-media-inspector"
+      ],
+      "rest_reactors": [
+        "minio-media-http-pruner"
+      ],
+      "semantic_ai_reactors": [],
+      "plugins": [],
+      "media_storage_providers": [
+        "minio_local"
+      ],
+      "access_users": [
+        "media-storage-operator"
+      ],
+      "access_roles": [
+        "admin"
+      ],
+      "dashboards": [
+        "minio-storage-reclaim-telemetry",
+        "media-prune-candidate-feed"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

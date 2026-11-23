@@ -1,0 +1,115 @@
+{
+  "message_types": [
+    {
+      "name": "PatioMonitorMedia",
+      "description": "Patio monitoring media capture telemetry",
+      "retentionMode": "days",
+      "retentionValue": 7,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "patio_view",
+          "type": "media-storage",
+          "required": true,
+          "description": "Out-of-band media reference pointing to patio camera frame capture"
+        }
+      ],
+      "persist": true,
+      "longevity": "P7D"
+    },
+    {
+      "name": "CountFlowersByColor",
+      "description": "Output of local moondream model counting flowers by color",
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "yellow_flowers",
+          "type": "integer",
+          "required": true,
+          "description": "Number of yellow flowers counted"
+        },
+        {
+          "name": "orange_light_flowers",
+          "type": "integer",
+          "required": true,
+          "description": "Number of light orange flowers counted"
+        },
+        {
+          "name": "orange_dark_flowers",
+          "type": "integer",
+          "required": true,
+          "description": "Number of dark orange flowers counted"
+        },
+        {
+          "name": "total_flowers",
+          "type": "integer",
+          "required": true,
+          "description": "Total number of flowers counted"
+        },
+        {
+          "name": "analysis_summary",
+          "type": "string",
+          "required": true,
+          "description": "Summary descriptive analysis from the vision model"
+        }
+      ],
+      "persist": true,
+      "longevity": "P7D"
+    },
+    {
+      "name": "AIExecutionCognivityAuditory",
+      "description": "System One Cognitive Audit assessing AI execution efficiency and latency metrics",
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "model_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique identifier of the audited AI model"
+        },
+        {
+          "name": "audit_status",
+          "type": "string",
+          "required": true,
+          "description": "Status level of the execution (compiled as a System One Choice primitive)",
+          "enum": [
+            "OPTIMAL",
+            "ACCEPTABLE",
+            "DEGRADED",
+            "ANOMALOUS",
+            "TIMEOUT"
+          ]
+        },
+        {
+          "name": "avg_latency_ms",
+          "type": "integer",
+          "required": true,
+          "minimum": 0,
+          "maximum": 5000,
+          "description": "Average latency computed during the audit period in milliseconds (compiled as a System One Score primitive)"
+        },
+        {
+          "name": "efficiency_summary",
+          "type": "string",
+          "required": true,
+          "description": "Deterministic audit critique evaluating latency trends, cold starts, or token efficiency synthesized via Google CEL"
+        }
+      ],
+      "persist": true,
+      "longevity": "P30D"
+    }
+  ]
+}

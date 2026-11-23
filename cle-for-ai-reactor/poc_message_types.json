@@ -1,0 +1,120 @@
+{
+  "message_types": [
+    {
+      "name": "SensorVineyardReading",
+      "description": "Microclimate & soil telemetry from smart vineyard sensor stations",
+      "emoji": "\ud83c\udf47",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 50,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "vineyard_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique identifier of the vineyard property"
+        },
+        {
+          "name": "parcel_name",
+          "type": "string",
+          "required": true,
+          "description": "Specific agricultural parcel or plot name"
+        },
+        {
+          "name": "ambient_temp_c",
+          "type": "number",
+          "required": true,
+          "description": "Air temperature in degrees Celsius"
+        },
+        {
+          "name": "humidity_pct",
+          "type": "number",
+          "required": true,
+          "description": "Relative atmospheric humidity percentage"
+        },
+        {
+          "name": "soil_moisture_pct",
+          "type": "number",
+          "required": true,
+          "description": "Volumetric soil moisture percentage"
+        },
+        {
+          "name": "solar_radiation_w_m2",
+          "type": "number",
+          "required": true,
+          "description": "Solar radiation intensity in Watts per square meter"
+        },
+        {
+          "name": "leaf_wetness_hours",
+          "type": "number",
+          "required": true,
+          "description": "Continuous duration of leaf wetness in hours"
+        }
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "VineyardHarvestAdvisory",
+      "description": "Autonomous agronomic assessment and harvest advice produced by Semantic AI Reactor with CEL post-processing",
+      "emoji": "\ud83c\udf77",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 20,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "vineyard_id",
+          "type": "string",
+          "required": true,
+          "description": "Identifier of the target vineyard"
+        },
+        {
+          "name": "botanical_health_score",
+          "type": "number",
+          "required": true,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Calculated vine vitality score clamped between 0.0 and 1.0 (compiled as a System One Score primitive)"
+        },
+        {
+          "name": "fungal_risk_score",
+          "type": "number",
+          "required": true,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Mildew and botrytis disease probability clamped between 0.0 and 1.0 (compiled as a System One Noul probability)"
+        },
+        {
+          "name": "frost_alert",
+          "type": "boolean",
+          "required": true,
+          "description": "Immediate frost protection flag when ambient temperature approaches freezing thresholds (compiled as a System One Noul primitive)"
+        },
+        {
+          "name": "harvest_readiness_index",
+          "type": "number",
+          "required": true,
+          "minimum": 0.0,
+          "maximum": 100.0,
+          "description": "Sugar/acid maturation balance index from 0.0 to 100.0 (compiled as a System One Score primitive)"
+        },
+        {
+          "name": "action_recommendation",
+          "type": "string",
+          "required": true,
+          "description": "Deterministic agronomic action synthesized via Google CEL from calibrated System One decisions"
+        }
+      ],
+      "longevity": "P14D"
+    }
+  ]
+}

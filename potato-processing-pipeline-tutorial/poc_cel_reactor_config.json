@@ -1,0 +1,75 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-10-04T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "potato-quarantine-scheduler",
+        "input_message_type": "PotatoOpticalAnalysis",
+        "cron": "",
+        "trigger_condition": "has(payload.reducing_sugar_index_crs) && double(payload.reducing_sugar_index_crs) > 0.20",
+        "context_query": "",
+        "output_message_type": "SystemScheduledEvent",
+        "transformation_expression": {
+          "action": "'recondition_wakeup'",
+          "schedule_type": "'delay'",
+          "delay_seconds": "30",
+          "custom_payload": "'{\"lot_id\":\"' + string(payload.lot_id) + '\",\"silo_id\":\"silo-01\",\"target_oil_temp\":178.5,\"target_belt_speed\":32.0}'"
+        }
+      },
+      {
+        "reactor_id": "potato-silo-climate-actuator",
+        "input_message_type": "PotatoOpticalAnalysis",
+        "cron": "",
+        "trigger_condition": "has(payload.reducing_sugar_index_crs) && double(payload.reducing_sugar_index_crs) > 0.20",
+        "context_query": "",
+        "output_message_type": "ModbusSet",
+        "transformation_expression": {
+          "target_device": "'silo_controller'",
+          "register_type": "'holding'",
+          "register_address": "100",
+          "value": "18.0",
+          "scale_factor": "10.0",
+          "description": "'Silo climate reconditioning temperature setpoint (18.0 C)'"
+        }
+      },
+      {
+        "reactor_id": "potato-immediate-fryer-actuator",
+        "input_message_type": "PotatoOpticalAnalysis",
+        "cron": "",
+        "trigger_condition": "has(payload.reducing_sugar_index_crs) && double(payload.reducing_sugar_index_crs) <= 0.20",
+        "context_query": "",
+        "output_message_type": "ModbusSet",
+        "transformation_expression": {
+          "target_device": "'fryer_controller'",
+          "register_type": "'holding'",
+          "register_address": "200",
+          "value": "ai.clamp(185.0 - (double(payload.reducing_sugar_index_crs) * 30.0), 165.0, 185.0)",
+          "scale_factor": "10.0",
+          "description": "'Optimal direct frying oil temperature calculated via Arrhenius kinetics'"
+        }
+      },
+      {
+        "reactor_id": "potato-silo-awakening-fryer-actuator",
+        "input_message_type": "SystemCronJob",
+        "cron": "",
+        "trigger_condition": "(has(payload.scheduled_event_id) && payload.scheduled_event_id.startsWith('silo-quarantine-')) || (has(payload.job_id) && payload.job_id.startsWith('silo-quarantine-')) || (has(payload.action) && payload.action == 'recondition_wakeup')",
+        "context_query": "",
+        "output_message_type": "ModbusSet",
+        "transformation_expression": {
+          "target_device": "'fryer_controller'",
+          "register_type": "'holding'",
+          "register_address": "200",
+          "value": "178.5",
+          "scale_factor": "10.0",
+          "description": "'Post-reconditioning fryer oil temperature setpoint (178.5 C)'"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "message_types": [
+    {
+      "name": "MediaPruneCandidate",
+      "description": "Emitted by CEL Inspector when a media object in MinIO is orphaned or expired after maintenance retention",
+      "retentionMode": "count",
+      "retentionValue": 10,
+      "routing": [
+        "local"
+      ],
+      "properties": [
+        {
+          "name": "media_uri",
+          "type": "string",
+          "required": true,
+          "description": "Full semantic URI e.g. minio_local://raw/plant-1.jpeg"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "required": true,
+          "description": "Storage provider ID e.g. minio_local"
+        },
+        {
+          "name": "bucket",
+          "type": "string",
+          "required": true,
+          "description": "Target S3 bucket name"
+        },
+        {
+          "name": "object_key",
+          "type": "string",
+          "required": true,
+          "description": "File key inside bucket"
+        },
+        {
+          "name": "source_message_type",
+          "type": "string",
+          "required": true,
+          "description": "Originating MessageType"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "required": true,
+          "description": "Reason for pruning (RETENTION_PRE_MAINTENANCE_PRUNING, ORPHAN_RECONCILIATION)"
+        }
+      ],
+      "persist": false,
+      "longevity": "PT6H"
+    },
+    {
+      "name": "MediaPruneAudit",
+      "description": "Audit telemetry emitted by REST Call Reactor upon executing HTTP DELETE against MinIO S3 API",
+      "retentionMode": "days",
+      "retentionValue": 30,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "media_uri",
+          "type": "string",
+          "required": true,
+          "description": "Full semantic URI of the deleted object"
+        },
+        {
+          "name": "bucket",
+          "type": "string",
+          "required": true,
+          "description": "S3 bucket from which the object was deleted"
+        },
+        {
+          "name": "object_key",
+          "type": "string",
+          "required": true,
+          "description": "Object key that was physically deleted"
+        },
+        {
+          "name": "http_status",
+          "type": "integer",
+          "required": true,
+          "description": "HTTP status code returned by MinIO REST API (200, 204, 404)"
+        },
+        {
+          "name": "execution_status",
+          "type": "string",
+          "required": true,
+          "enum": [
+            "SUCCESS",
+            "FAILED",
+            "SKIPPED"
+          ],
+          "description": "Execution status outcome"
+        },
+        {
+          "name": "freed_at",
+          "type": "string",
+          "required": true,
+          "description": "Timestamp when physical space was reclaimed"
+        }
+      ],
+      "persist": true,
+      "longevity": "P30D"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "patio-plant-media-vision",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "patio-plant-media-vision",
+    "name": "Patio Botanical Media Storage & Vision AI Pipeline",
+    "version": "1.0.0",
+    "description": "Automated S3/MinIO media storage frame ingestion, flower counting via local vision SLM (Moondream/LLaVA), and cognitive auditing.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-dell-1", "bindu-minis"],
+      "message_types": ["PatioMonitorMedia@1.0.0", "CountFlowersByColor@1.0.0", "AIExecutionCognivityAuditory@1.0.0"],
+      "cel_reactors": ["cognitive-execution-auditor-cel-patio"],
+      "rest_reactors": [],
+      "semantic_ai_reactors": ["patio-flower-counter", "cognitive-execution-auditor"],
+      "plugins": [],
+      "media_storage_providers": ["minio_local"],
+      "access_users": ["botanist-analyst"],
+      "access_roles": ["operator"],
+      "dashboards": ["patio-vision-defect-monitor", "patio-ai-model-latency-audit"],
+      "system_config_keys": []
+    }
+  }
+}

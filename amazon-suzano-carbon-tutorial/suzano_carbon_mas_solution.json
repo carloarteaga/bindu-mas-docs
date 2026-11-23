@@ -1,0 +1,45 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "amazon-suzano-carbon-solution",
+  "$user": "console",
+  "$when": "2026-11-08T12:00:00Z",
+  "fields": {
+    "solution_id": "amazon-suzano-carbon-solution",
+    "name": "Amazon Suzano Airborne Precision Forestry & Cryptographic Carbon Credit Auditing MAS",
+    "version": "1.0.0",
+    "description": "Sub-canopy solar BLE sentinel stations, airborne drone data-mule fly-by harvesting, perceptual canopy foliage evaluation, deterministic bio-chemical stoichiometric carbon/oxygen yield deduction, and cryptographic ESG proof tree auditing for 1.6M hectares.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root"
+      ],
+      "message_types": [
+        "SubCanopySoilTelemetry@1.0.0",
+        "CanopyFoliageInspection@1.0.0",
+        "HectareCarbonOxygenYield@1.0.0",
+        "ForestThreatAlert@1.0.0",
+        "CarbonCreditAuditBatch@1.0.0"
+      ],
+      "cel_reactors": [
+        "suzano-canopy-deforestation-guard",
+        "suzano-stoichiometric-carbon-yield"
+      ],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [
+        "suzano-canopy-optical-evaluator"
+      ],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": [],
+      "access_roles": [],
+      "dashboards": [
+        "suzano-hectare-yield-dashboard",
+        "suzano-subcanopy-telemetry-dashboard",
+        "suzano-forest-threat-dashboard",
+        "suzano-canopy-inspection-dashboard"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

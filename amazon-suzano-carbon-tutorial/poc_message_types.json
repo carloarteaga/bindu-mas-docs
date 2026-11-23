@@ -1,0 +1,384 @@
+{
+  "$type": "MessageTypeSet",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "console",
+  "$when": "2026-11-08T12:00:00Z",
+  "fields": {
+    "message_types": [
+      {
+        "name": "SubCanopySoilTelemetry",
+        "description": "Sub-canopy microclimate readings gathered via vertical BLE fly-by from solar-harvesting understory sentinel stations",
+        "emoji": "🌱",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 100,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "station_id": {
+              "type": "string",
+              "description": "Unique understory sentinel station identifier (e.g. SOL-STA-0841)"
+            },
+            "zone_id": {
+              "type": "string",
+              "description": "Ecological management zone (e.g. AMAZON-SECTOR-B)"
+            },
+            "hectare_id": {
+              "type": "string",
+              "description": "GIS hectare polygon code (e.g. hectare-poly-AMZ-0841)"
+            },
+            "soil_moisture_pct": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0,
+              "description": "Volumetric soil moisture percentage in top 15cm"
+            },
+            "ambient_temp_c": {
+              "type": "number",
+              "minimum": -10.0,
+              "maximum": 60.0,
+              "description": "Ambient understory air temperature in Celsius"
+            },
+            "understory_co2_ppm": {
+              "type": "number",
+              "minimum": 200.0,
+              "maximum": 2000.0,
+              "description": "Sub-canopy ambient carbon dioxide concentration in parts per million"
+            },
+            "par_solar_flux_umol": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 3000.0,
+              "description": "Photosynthetically Active Radiation (PAR) reaching the forest floor in µmol/m²/s"
+            },
+            "battery_mv": {
+              "type": "integer",
+              "minimum": 1500,
+              "maximum": 5000,
+              "description": "Supercapacitor or LiFePO4 battery terminal voltage in mV"
+            },
+            "sample_timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp when reading was logged into sensor circular buffer"
+            }
+          },
+          "required": [
+            "station_id",
+            "zone_id",
+            "hectare_id",
+            "soil_moisture_pct",
+            "ambient_temp_c",
+            "understory_co2_ppm",
+            "par_solar_flux_umol"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "CanopyFoliageInspection",
+        "description": "Edge optical inspection of the tree crown canopy performed aboard drone via lightweight VLM/ONNX perception",
+        "emoji": "🚁",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 50,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "drone_id": {
+              "type": "string",
+              "description": "Airborne drone or patrol craft node identifier (e.g. DRONE-AMZ-01)"
+            },
+            "zone_id": {
+              "type": "string",
+              "description": "Ecological management zone (e.g. AMAZON-SECTOR-B)"
+            },
+            "hectare_id": {
+              "type": "string",
+              "description": "GIS hectare polygon code (e.g. hectare-poly-AMZ-0841)"
+            },
+            "foliage_density_index": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "Fraction of crown foliage coverage (0.0=cleared, 1.0=dense intact primary canopy)"
+            },
+            "canopy_health_factor": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "Photosynthetic vitality coefficient derived from multispectral greenness"
+            },
+            "illegal_clearing_detected": {
+              "type": "boolean",
+              "description": "True if recent deforestation, logging gap, or canopy collapse is detected"
+            },
+            "clearing_area_m2": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 10000.0,
+              "description": "Estimated deforested area in square meters within the hectare"
+            },
+            "canopy_color_variance": {
+              "type": "number",
+              "description": "Variance of canopy chromatic spectrum indicating species diversity"
+            },
+            "inspection_notes": {
+              "type": "string",
+              "description": "Diagnostic rationale or visual observations"
+            },
+            "inspection_timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Exact RFC3339 timestamp of optical aerial capture"
+            }
+          },
+          "required": [
+            "drone_id",
+            "zone_id",
+            "hectare_id",
+            "foliage_density_index",
+            "canopy_health_factor",
+            "illegal_clearing_detected"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "HectareCarbonOxygenYield",
+        "description": "Deterministic bio-chemical stoichiometric deduction of net CO2 sequestered and O2 released per hectare",
+        "emoji": "🌳",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 1,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "hectare_id": {
+              "type": "string",
+              "description": "GIS hectare polygon code ($producer of this state record)"
+            },
+            "zone_id": {
+              "type": "string",
+              "description": "Ecological management zone (e.g. AMAZON-SECTOR-B)"
+            },
+            "station_id": {
+              "type": "string",
+              "description": "Source understory sentinel station"
+            },
+            "drone_id": {
+              "type": "string",
+              "description": "Airborne node that executed the deduction"
+            },
+            "gpp_base_g_c_m2": {
+              "type": "number",
+              "description": "Gross Primary Productivity base in grams of Carbon per m2 per year"
+            },
+            "respiration_loss_g_c_m2": {
+              "type": "number",
+              "description": "Plant autotrophic respiration loss Ra in grams of Carbon per m2 per year"
+            },
+            "net_primary_productivity_g_c_m2": {
+              "type": "number",
+              "description": "Net Primary Productivity (NPP = GPP - Ra) in g C/m2/yr"
+            },
+            "co2_sequestered_kg_yr": {
+              "type": "number",
+              "description": "Net carbon dioxide absorption in kg CO2 per hectare per year"
+            },
+            "o2_produced_kg_yr": {
+              "type": "number",
+              "description": "Net oxygen release in kg O2 per hectare per year via 6CO2+6H2O->C6H12O6+6O2"
+            },
+            "co2_metric_tons_yr": {
+              "type": "number",
+              "description": "Net carbon dioxide absorption in metric tons CO2/ha/yr"
+            },
+            "o2_metric_tons_yr": {
+              "type": "number",
+              "description": "Net oxygen release in metric tons O2/ha/yr"
+            },
+            "audit_verified": {
+              "type": "boolean",
+              "description": "Cryptographically auditable verification flag"
+            },
+            "audit_rationale": {
+              "type": "string",
+              "description": "CEL stoichiometric formula trace and validation proof"
+            },
+            "calculation_timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "RFC3339 timestamp of deductive evaluation"
+            }
+          },
+          "required": [
+            "hectare_id",
+            "zone_id",
+            "station_id",
+            "drone_id",
+            "net_primary_productivity_g_c_m2",
+            "co2_metric_tons_yr",
+            "o2_metric_tons_yr",
+            "audit_verified"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "ForestThreatAlert",
+        "description": "Real-time ecological threat alarm triggered when illegal logging, canopy collapse, or abnormal drought is deduced",
+        "emoji": "🚨",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 50,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "hectare_id": {
+              "type": "string",
+              "description": "Affected GIS hectare polygon code"
+            },
+            "zone_id": {
+              "type": "string",
+              "description": "Ecological management zone (e.g. AMAZON-SECTOR-B)"
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "WARNING",
+                "CRITICAL"
+              ],
+              "description": "Severity level of environmental threat"
+            },
+            "alert_type": {
+              "type": "string",
+              "enum": [
+                "DEFORESTATION_DETECTED",
+                "CANOPY_DIEBACK",
+                "SENSOR_OFFLINE",
+                "ABNORMAL_DROUGHT"
+              ],
+              "description": "Classification of the ecological threat"
+            },
+            "description": {
+              "type": "string",
+              "description": "Human-readable operational description of the threat"
+            },
+            "clearing_area_m2": {
+              "type": "number",
+              "minimum": 0.0,
+              "description": "Estimated deforested area in m2"
+            },
+            "coordinates_lat": {
+              "type": "number",
+              "description": "Latitude coordinate of hectare center"
+            },
+            "coordinates_lon": {
+              "type": "number",
+              "description": "Longitude coordinate of hectare center"
+            },
+            "alert_timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "RFC3339 timestamp when alert was triggered"
+            }
+          },
+          "required": [
+            "hectare_id",
+            "zone_id",
+            "severity",
+            "alert_type",
+            "description"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "CarbonCreditAuditBatch",
+        "description": "Aggregated certified carbon credit audit batch for international ESG registries (Verra / Gold Standard)",
+        "emoji": "📜",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 20,
+        "routing": [
+          "local"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "batch_id": {
+              "type": "string",
+              "description": "Unique audit batch serial code (e.g. SUZ-AMZ-2026-Q4-01)"
+            },
+            "zone_id": {
+              "type": "string",
+              "description": "Ecological management zone"
+            },
+            "hectares_audited": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Total number of hectares covered by this audit batch"
+            },
+            "total_co2_sequestered_tons": {
+              "type": "number",
+              "description": "Sum of CO2 absorbed across all audited hectares in metric tons"
+            },
+            "total_o2_produced_tons": {
+              "type": "number",
+              "description": "Sum of O2 released across all audited hectares in metric tons"
+            },
+            "carbon_credits_certified": {
+              "type": "integer",
+              "description": "Verified carbon units (1 credit = 1 metric ton CO2 sequestered)"
+            },
+            "verifier_registry": {
+              "type": "string",
+              "description": "Target international standard (e.g. Verra VCS, Gold Standard, Brazilian RenovaBio)"
+            },
+            "proof_tree_root_hash": {
+              "type": "string",
+              "description": "Cryptographic hash of the SQLite WAL derivation proof tree"
+            },
+            "certification_date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "RFC3339 timestamp of audit certification"
+            }
+          },
+          "required": [
+            "batch_id",
+            "zone_id",
+            "hectares_audited",
+            "total_co2_sequestered_tons",
+            "total_o2_produced_tons",
+            "carbon_credits_certified"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}

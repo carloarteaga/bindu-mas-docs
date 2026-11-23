@@ -1,0 +1,6 @@
+# Native C++ runtime libraries and neural weights (downloaded on-demand via setup_runtime.sh)
+runtime/lib/*.so
+runtime/lib/*.so.*
+runtime/models/*.onnx
+runtime/models/*.onnx.data
+certify-report.json

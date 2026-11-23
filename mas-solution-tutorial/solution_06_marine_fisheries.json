@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "marine-fisheries-harvester",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "marine-fisheries-harvester",
+    "name": "Marine Fisheries & Oceanic REST Data Harvester",
+    "version": "1.0.0",
+    "description": "Vessel GPS telemetry ingestion, external Copernicus/NOAA sea-surface temperature REST harvesting, and zone optimization.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-dell-2"],
+      "message_types": ["VesselGPSPosition@1.0.0", "RawMarineData@1.0.0", "HaulRegistered@1.0.0", "HaulQuotaValidation@1.0.0"],
+      "cel_reactors": [],
+      "rest_reactors": ["nunegal77-oceanographic-weather-poller", "nunegal77-haul-quota-validator"],
+      "semantic_ai_reactors": [],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": ["fleet-captain"],
+      "access_roles": ["operator"],
+      "dashboards": ["nunegal77-ocean-telemetry-trend", "nunegal77-rest-reactor-trace", "nunegal77-haul-quota-summary", "nunegal77-vessel-navigation-log"],
+      "system_config_keys": []
+    }
+  }
+}

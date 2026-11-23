@@ -1,0 +1,276 @@
+{
+  "message_types": [
+    {
+      "name": "EdgeCVSet",
+      "description": "Configuration schema for Bindu Edge Computer Vision BPR Plugin and multi-camera stream orchestration",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local",
+        "child"
+      ],
+      "properties": [
+        {
+          "name": "gateway_node_id",
+          "type": "string",
+          "required": true,
+          "description": "Target gateway node identifier"
+        },
+        {
+          "name": "plugin_id",
+          "type": "string",
+          "required": true,
+          "description": "Plugin identifier (bindu-edge-cv-plugin)"
+        },
+        {
+          "name": "global_settings",
+          "type": "json",
+          "required": true,
+          "description": "Global inference, cadence, and model parameters"
+        },
+        {
+          "name": "cameras",
+          "type": "json",
+          "required": true,
+          "description": "List of configured physical USB and network IP cameras"
+        }
+      ]
+    },
+    {
+      "name": "EdgeCVSetStatus",
+      "description": "Dynamic control and runtime capture state for Bindu Edge Computer Vision BPR Plugin",
+      "emoji": "\u23ef\ufe0f",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local",
+        "child"
+      ],
+      "properties": [
+        {
+          "name": "capture",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether camera frame capture and vision analysis is actively enabled"
+        }
+      ],
+      "longevity": "P1D"
+    },
+    {
+      "name": "AppearedClass",
+      "description": "Emitted by Edge CV BPR Plugin when a tracked class of interest is verified and enters a camera FOV",
+      "emoji": "\ud83d\udc41\ufe0f",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "days",
+      "retentionValue": 7,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "camera_id",
+          "type": "string",
+          "required": true,
+          "description": "Observing camera identifier"
+        },
+        {
+          "name": "station_id",
+          "type": "string",
+          "required": true,
+          "description": "Assigned station/workstation identifier"
+        },
+        {
+          "name": "track_id",
+          "type": "string",
+          "required": true,
+          "description": "Local 2D camera tracking session ID"
+        },
+        {
+          "name": "class_name",
+          "type": "string",
+          "required": true,
+          "description": "Detected COCO class (person, car, truck)"
+        },
+        {
+          "name": "confidence",
+          "type": "number",
+          "required": true,
+          "description": "Detection confidence score (0.0 to 1.0)"
+        },
+        {
+          "name": "dominant_color",
+          "type": "string",
+          "required": true,
+          "description": "Extracted dominant clothing/object color"
+        },
+        {
+          "name": "bbox_area",
+          "type": "number",
+          "required": true,
+          "description": "Normalized bounding box area (w * h) [0.0..1.0]"
+        },
+        {
+          "name": "bbox_centroid",
+          "type": "json",
+          "required": true,
+          "description": "Normalized centroid coordinates [cx, cy]"
+        },
+        {
+          "name": "snapshot_uri",
+          "type": "media-storage",
+          "required": false,
+          "description": "MinIO snapshot frame URI"
+        }
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "DisappearedClass",
+      "description": "Emitted by Edge CV BPR Plugin when a tracked class exits the camera FOV or stands up from station",
+      "emoji": "\ud83d\udca8",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "days",
+      "retentionValue": 7,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "camera_id",
+          "type": "string",
+          "required": true,
+          "description": "Observing camera identifier"
+        },
+        {
+          "name": "station_id",
+          "type": "string",
+          "required": true,
+          "description": "Assigned station identifier"
+        },
+        {
+          "name": "track_id",
+          "type": "string",
+          "required": true,
+          "description": "Local 2D camera tracking session ID"
+        },
+        {
+          "name": "class_name",
+          "type": "string",
+          "required": true,
+          "description": "Detected class name (person)"
+        },
+        {
+          "name": "dwell_duration_seconds",
+          "type": "number",
+          "required": true,
+          "description": "Total duration person remained at desk/station in seconds"
+        },
+        {
+          "name": "final_dominant_color",
+          "type": "string",
+          "required": true,
+          "description": "Consolidated clothing/object color"
+        },
+        {
+          "name": "avg_confidence",
+          "type": "number",
+          "required": true,
+          "description": "Average detection confidence over entire session"
+        },
+        {
+          "name": "max_bbox_area",
+          "type": "number",
+          "required": true,
+          "description": "Maximum bounding box area observed"
+        }
+      ],
+      "longevity": "P7D"
+    },
+    {
+      "name": "WorkstationPresenceSession",
+      "description": "Authoritative consolidated desk presence session emitted after multi-camera overlap arbitration",
+      "emoji": "\ud83d\udcbb",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "days",
+      "retentionValue": 30,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "session_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique consolidated session identifier"
+        },
+        {
+          "name": "station_id",
+          "type": "string",
+          "required": true,
+          "description": "Physical workstation (carlos-dev-workstation)"
+        },
+        {
+          "name": "primary_camera_id",
+          "type": "string",
+          "required": true,
+          "description": "Winning camera declared as Primary Authority (cam-usb-root)"
+        },
+        {
+          "name": "supporting_camera_ids",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "description": "Adjacent cameras observing person concurrently (cam-tapo-room)"
+        },
+        {
+          "name": "target_class",
+          "type": "string",
+          "required": true,
+          "description": "Class identifier (person)"
+        },
+        {
+          "name": "clothing_color",
+          "type": "string",
+          "required": true,
+          "description": "Validated dominant clothing color"
+        },
+        {
+          "name": "dwell_duration_seconds",
+          "type": "number",
+          "required": true,
+          "description": "Total authoritative focus/work time at desk in seconds"
+        },
+        {
+          "name": "authority_score",
+          "type": "number",
+          "required": true,
+          "description": "Computed primary visual authority score"
+        },
+        {
+          "name": "session_status",
+          "type": "string",
+          "required": true,
+          "enum": [
+            "COMPLETED",
+            "IN_PROGRESS",
+            "ABORTED"
+          ],
+          "description": "Session outcome"
+        }
+      ],
+      "longevity": "P30D"
+    }
+  ]
+}

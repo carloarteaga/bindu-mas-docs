@@ -1,0 +1,49 @@
+{
+  "$type": "RESTReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-22T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mascl-rest-occurrence-emitter",
+        "telemetry_profile": true,
+        "input_message_type": "MASclTrigger",
+        "cron": "0 */15 * * * *",
+        "context_query": "SELECT json_extract(raw_json, '$.fields.trigger_id') AS last_trigger_id FROM v_messages WHERE \"$type\" = 'MASclTrigger' ORDER BY \"$when\" DESC LIMIT 1",
+        "output_message_type": "MASclOcurrence",
+        "request": {
+          "method": "GET",
+          "url": "'https://httpbin.org/get?agent=mascl-rest&node=' + string(has(payload.source) ? payload.source : 'scheduler')",
+          "headers": {
+            "Accept": "'application/json'",
+            "X-Client-Node": "head['$producer']"
+          },
+          "timeout": "10s"
+        },
+        "retry_policy": {
+          "max_retries": 3,
+          "initial_interval": "1s",
+          "backoff_multiplier": 2.0,
+          "max_interval": "10s",
+          "jitter": true,
+          "retryable_statuses": [408, 429, 500, 502, 503, 504]
+        },
+        "response_map": {
+          "occurrence_id": "'occ-rest-' + (has(payload.trigger_id) ? string(payload.trigger_id) : (has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.last_trigger_id) : 'default'))",
+          "agent_type": "'REST'",
+          "agent_name": "'mascl-rest-occurrence-emitter'",
+          "execution_mode": "has(payload.trigger_id) ? 'TRIGGER' : 'CRON'",
+          "node_id": "has(mesh.self.id) && mesh.self.id != '' ? string(mesh.self.id) : 'root'",
+          "timestamp": "string(head['$when'])",
+          "status": "resp.status_code == 200 ? 'SUCCESS' : 'DEGRADED'",
+          "latency_ms": "double(resp.latency_ms)",
+          "details": "'REST Webhook reactor invoked external HTTP endpoint with status: ' + string(resp.status_code)"
+        }
+      }
+    ]
+  }
+}

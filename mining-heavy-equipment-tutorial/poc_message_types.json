@@ -1,0 +1,387 @@
+{
+  "$type": "MessageTypeSet",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "console",
+  "$when": "2026-11-07T12:00:00Z",
+  "fields": {
+    "message_types": [
+      {
+        "name": "MachineVibrationSample",
+        "description": "1-minute edge vibration and operating state sample from non-invasive bolt-on triaxial BLE beacon",
+        "emoji": "🚜",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 100,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "machine_id": {
+              "type": "string",
+              "description": "Unique heavy machinery identifier (e.g. CAT-390F-01)"
+            },
+            "machine_model": {
+              "type": "string",
+              "description": "OEM model and description (e.g. CAT 390F Hydraulic Excavator)"
+            },
+            "machine_type": {
+              "type": "string",
+              "enum": [
+                "EXCAVATOR",
+                "HAUL_TRUCK",
+                "ROCK_BREAKER",
+                "DOZER",
+                "WHEEL_LOADER"
+              ],
+              "description": "Category of heavy equipment"
+            },
+            "operating_state": {
+              "type": "string",
+              "enum": [
+                "OFF",
+                "IDLE",
+                "WORKING"
+              ],
+              "description": "Classified operational state from vibration dynamics"
+            },
+            "vibration_rms": {
+              "type": "number",
+              "description": "Root Mean Square acceleration in g"
+            },
+            "peak_g": {
+              "type": "number",
+              "description": "Peak instantaneous acceleration in g-force"
+            },
+            "crest_factor": {
+              "type": "number",
+              "description": "Ratio of Peak G to RMS acceleration (peak_g / vibration_rms)"
+            },
+            "kurtosis": {
+              "type": "number",
+              "description": "Statistical peakedness of vibration distribution (Gaussian = 3.0)"
+            },
+            "sample_timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Physical observation timestamp in RFC3339 format"
+            },
+            "battery_millivolts": {
+              "type": "integer",
+              "description": "Beacon battery voltage in millivolts (e.g. 3600)"
+            },
+            "beacon_id": {
+              "type": "string",
+              "description": "BLE beacon hardware MAC / serial ID"
+            },
+            "ingest_mode": {
+              "type": "string",
+              "enum": [
+                "REALTIME",
+                "DRIVE_BY_BURST"
+              ],
+              "description": "Ingestion delivery transport"
+            }
+          },
+          "required": [
+            "machine_id",
+            "operating_state",
+            "vibration_rms",
+            "peak_g",
+            "crest_factor",
+            "kurtosis",
+            "sample_timestamp"
+          ]
+        }
+      },
+      {
+        "name": "MachineVibrationBatchIngress",
+        "description": "Drive-by burst packet holding circular buffer of 1-minute samples collected opportunistically",
+        "emoji": "📦",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 20,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "machine_id": {
+              "type": "string",
+              "description": "Unique heavy machinery identifier"
+            },
+            "beacon_id": {
+              "type": "string",
+              "description": "BLE beacon hardware ID"
+            },
+            "gateway_id": {
+              "type": "string",
+              "description": "Drive-by collector vehicle or stationary gateway identifier"
+            },
+            "burst_timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp when the drive-by gateway acquired the burst"
+            },
+            "batch_count": {
+              "type": "integer",
+              "description": "Number of sample records contained in this burst"
+            },
+            "samples": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Array of chronologically ordered 1-minute vibration samples"
+            }
+          },
+          "required": [
+            "machine_id",
+            "gateway_id",
+            "burst_timestamp",
+            "batch_count",
+            "samples"
+          ]
+        }
+      },
+      {
+        "name": "EquipmentAbuseIncident",
+        "description": "Critical structural shock or abusive mechanical impact detected by bare-metal CEL kinetics",
+        "emoji": "💥",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 50,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "incident_id": {
+              "type": "string",
+              "description": "Unique incident identifier"
+            },
+            "machine_id": {
+              "type": "string",
+              "description": "Heavy equipment identifier"
+            },
+            "machine_model": {
+              "type": "string",
+              "description": "Equipment model"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Incident timestamp"
+            },
+            "peak_g": {
+              "type": "number",
+              "description": "Measured peak g-force that breached the safety threshold"
+            },
+            "vibration_rms": {
+              "type": "number",
+              "description": "Baseline RMS at incident"
+            },
+            "crest_factor": {
+              "type": "number",
+              "description": "Crest factor at incident"
+            },
+            "abuse_severity": {
+              "type": "string",
+              "enum": [
+                "WARNING",
+                "SEVERE",
+                "CRITICAL"
+              ],
+              "description": "Categorized severity of abusive event"
+            },
+            "incident_type": {
+              "type": "string",
+              "description": "Classification of abusive event"
+            },
+            "recommendation": {
+              "type": "string",
+              "description": "Immediate operator or supervisor instruction"
+            }
+          },
+          "required": [
+            "incident_id",
+            "machine_id",
+            "timestamp",
+            "peak_g",
+            "abuse_severity",
+            "incident_type"
+          ]
+        }
+      },
+      {
+        "name": "BearingDefectSuspected",
+        "description": "Early-stage mechanical bearing degradation flagged by dual Crest Factor + Kurtosis CEL gating",
+        "emoji": "⚠️",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 50,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "alert_id": {
+              "type": "string",
+              "description": "Unique defect alert identifier"
+            },
+            "machine_id": {
+              "type": "string",
+              "description": "Heavy equipment identifier"
+            },
+            "machine_model": {
+              "type": "string",
+              "description": "Equipment model"
+            },
+            "component_monitored": {
+              "type": "string",
+              "description": "Mechanical component under surveillance (e.g. Main Hydraulic Pump)"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Detection timestamp"
+            },
+            "crest_factor": {
+              "type": "number",
+              "description": "Calculated Crest Factor triggering the alert"
+            },
+            "kurtosis": {
+              "type": "number",
+              "description": "Calculated Kurtosis triggering the alert"
+            },
+            "vibration_rms": {
+              "type": "number",
+              "description": "Current RMS vibration level"
+            },
+            "peak_g": {
+              "type": "number",
+              "description": "Current peak g-force"
+            },
+            "defect_stage": {
+              "type": "string",
+              "enum": [
+                "STAGE_1_MICRO_PITTING",
+                "STAGE_2_INCIPIENT_SPALLING",
+                "STAGE_3_SEVERE_DEFECT"
+              ],
+              "description": "Estimated bearing defect stage according to ISO 13373 vibration standards"
+            }
+          },
+          "required": [
+            "alert_id",
+            "machine_id",
+            "component_monitored",
+            "timestamp",
+            "crest_factor",
+            "kurtosis",
+            "defect_stage"
+          ]
+        }
+      },
+      {
+        "name": "PredictiveMaintenanceDiagnosis",
+        "description": "Cognitive diagnostic work order emitted by Semantic AI Reactor with dynamic context hydration",
+        "emoji": "🛠️",
+        "version": "1.0.0",
+        "persist": true,
+        "retentionMode": "count",
+        "retentionValue": 50,
+        "routing": [
+          "local",
+          "parent"
+        ],
+        "schema": {
+          "type": "object",
+          "properties": {
+            "diagnosis_id": {
+              "type": "string",
+              "description": "Unique diagnostic work order identifier"
+            },
+            "machine_id": {
+              "type": "string",
+              "description": "Heavy equipment identifier"
+            },
+            "machine_model": {
+              "type": "string",
+              "description": "Equipment model"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Diagnosis generation timestamp"
+            },
+            "component": {
+              "type": "string",
+              "description": "Diagnosed sub-system or component"
+            },
+            "diagnosed_failure_mode": {
+              "type": "string",
+              "description": "Specific failure mode identified from historical vibration drift"
+            },
+            "defect_severity": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ],
+              "description": "Overall operational risk severity"
+            },
+            "estimated_remaining_useful_life_hours": {
+              "type": "integer",
+              "description": "Estimated remaining operating hours before catastrophic failure (RUL)"
+            },
+            "confidence_score": {
+              "type": "number",
+              "description": "Model confidence between 0.0 and 1.0"
+            },
+            "recommended_action": {
+              "type": "string",
+              "description": "Prescriptive corrective action for pit mechanics"
+            },
+            "work_order_priority": {
+              "type": "string",
+              "enum": [
+                "ROUTINE",
+                "NEXT_SHIFT",
+                "IMMEDIATE_STOP"
+              ],
+              "description": "Priority for dispatching maintenance crew"
+            }
+          },
+          "required": [
+            "diagnosis_id",
+            "machine_id",
+            "timestamp",
+            "component",
+            "diagnosed_failure_mode",
+            "defect_severity",
+            "estimated_remaining_useful_life_hours",
+            "confidence_score",
+            "recommended_action",
+            "work_order_priority"
+          ]
+        }
+      }
+    ]
+  }
+}

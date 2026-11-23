@@ -1,0 +1,73 @@
+{
+  "exported_at": "2026-10-23T12:00:00Z",
+  "message_types": [
+    "AISemanticReactorSet"
+  ],
+  "reactors_sets": [
+    {
+      "$type": "AISemanticReactorSet",
+      "$group": "mesh",
+      "$producer": "root",
+      "$user": "admin",
+      "$when": "2026-10-23T12:00:00Z",
+      "fields": {
+        "gateway_node_id": "root",
+        "reactors": [
+          {
+            "reactor_id": "rfid-slm-manifest-reconciler",
+            "provider": "typesafe",
+            "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+            "api_key_secret": "secret:TYPESAFE_API_KEY",
+            "model_id": "jev-latest",
+            "max_concurrency": 4,
+            "inference_timeout": 30,
+            "trigger_message_types": [
+              "PortalTransitEvent"
+            ],
+            "trigger_condition": "payload.item_count != 48 || payload.estimated_velocity_mps > 2.5 || payload.mean_transit_rssi_dbm < -68.0",
+            "history_count": 0,
+            "context_query": "",
+            "response_message_type": "LogisticsDiscrepancyAlert",
+            "confidence_threshold": 0.80,
+            "cognitive_profile": true,
+            "questions": {
+              "discrepancy_type": {
+                "type": "choice",
+                "instructions": "Classify the primary logistics discrepancy observed during the RAIN RFID dock door portal transit.",
+                "criteria": {
+                  "MISSING_ITEMS": "Observed item_count is strictly below the expected 48 carton cases on the pallet",
+                  "UNEXPECTED_SKU": "Observed item_count exceeds expected 48 carton cases or contains unmanifested items",
+                  "DUPLICATE_PALLET": "Repeated SSCC transit read within the same dock portal direction window",
+                  "EXPIRED_BATCH": "Shipment batch or lot window has expired",
+                  "ANOMALOUS_RF": "Forklift velocity exceeds 2.5 m/s or mean transit RSSI is weaker than -68.0 dBm causing incomplete RF reads"
+                }
+              },
+              "severity": {
+                "type": "choice",
+                "instructions": "Classify the operational severity of the dock door transit discrepancy.",
+                "criteria": {
+                  "LOW": "Minor RF attenuation or borderline velocity with full 48-carton count",
+                  "MEDIUM": "Moderate RF signal degradation or minor count variance (1-2 cartons)",
+                  "HIGH": "Significant missing carton count (<46 cartons) or unsafe forklift transit velocity (>2.5 m/s)",
+                  "CRITICAL": "Severe manifest discrepancy (<40 cartons) or critical safety/security breach at dock portal"
+                }
+              }
+            },
+            "mapping_template": {
+              "alert_id": "'alert-' + string(payload.transit_id)",
+              "portal_id": "string(payload.portal_id)",
+              "pallet_sscc": "string(payload.pallet_sscc)",
+              "discrepancy_type": "string(resp.discrepancy_type)",
+              "severity": "string(resp.severity)",
+              "confidence_score": "ai.clamp(ai.round(double(resp.confidence), 4), 0.0, 1.0)",
+              "analysis_summary": "string(resp.discrepancy_type) == 'MISSING_ITEMS' ? 'ASN manifest mismatch: observed ' + string(payload.item_count) + ' cartons vs expected 48 cartons on pallet ' + string(payload.pallet_sscc) : (string(resp.discrepancy_type) == 'ANOMALOUS_RF' ? 'High-velocity or weak-RSSI portal transit anomaly detected (' + string(payload.estimated_velocity_mps) + ' m/s, ' + string(payload.mean_transit_rssi_dbm) + ' dBm)' : 'Logistics manifest discrepancy (' + string(resp.discrepancy_type) + ') detected at portal ' + string(payload.portal_id))",
+              "recommended_action": "string(resp.severity) == 'CRITICAL' || string(resp.severity) == 'HIGH' ? 'Divert pallet ' + string(payload.pallet_sscc) + ' to QA quarantine bay and trigger physical carton recount' : 'Log transit advisory and verify ASN manifest at destination berth'"
+            },
+            "system_instruction": "You are a warehouse logistics System One decision evaluator for RAIN RFID dock door verification auditing physical RFID pallet transits against electronic Advance Ship Notices (ASN, expected 48 cartons/pallet).",
+            "semantic_prompt_template": "Audit RFID Portal Transit event '{{index .trigger_event \"fields\" \"transit_id\"}}' at portal '{{index .trigger_event \"fields\" \"portal_id\"}}'.\n\nTransit Direction: {{index .trigger_event \"fields\" \"direction\"}}\nPallet SSCC: {{index .trigger_event \"fields\" \"pallet_sscc\"}}\nObserved Item Count: {{index .trigger_event \"fields\" \"item_count\"}} (Expected ASN: 48 cartons)\nEstimated Velocity: {{index .trigger_event \"fields\" \"estimated_velocity_mps\"}} m/s (Max Safe: 2.5 m/s)\nMean RSSI: {{index .trigger_event \"fields\" \"mean_transit_rssi_dbm\"}} dBm"
+          }
+        ]
+      }
+    }
+  ]
+}

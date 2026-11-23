@@ -1,0 +1,18 @@
+{
+  "id": "bindu-mascl-plugin",
+  "name": "MAS Complete Lifecycle BPR Agent",
+  "version": "1.0.0",
+  "runtime": "bpr",
+  "in": [
+    "MASclTrigger"
+  ],
+  "out": [
+    "MASclOcurrence"
+  ],
+  "schedules": [
+    {
+      "cron": "0 */15 * * * *",
+      "trigger": "cron"
+    }
+  ]
+}

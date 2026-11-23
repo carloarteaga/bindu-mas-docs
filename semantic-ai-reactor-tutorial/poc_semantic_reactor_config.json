@@ -1,0 +1,194 @@
+{
+  "exported_at": "2026-10-22T15:00:00Z",
+  "message_types": [
+    "AISemanticReactorSet"
+  ],
+  "reactors_sets": [
+    {
+      "$type": "AISemanticReactorSet",
+      "$group": "mesh",
+      "$producer": "bindu-minis",
+      "$user": "admin",
+      "$when": "2026-10-22T15:00:00Z",
+      "fields": {
+        "gateway_node_id": "bindu-minis",
+        "reactors": [
+          {
+            "reactor_id": "freezer-cold-chain-guard",
+            "provider": "typesafe",
+            "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+            "api_key_secret": "secret:TYPESAFE_API_KEY",
+            "model_id": "jev-latest",
+            "max_concurrency": 4,
+            "trigger_message_types": [
+              "FreezerTelemetry"
+            ],
+            "history_count": 5,
+            "context_query": "SELECT raw_json FROM v_messages WHERE \"$type\" = 'FreezerTelemetry' AND \"$producer\" = ? ORDER BY \"$when\" DESC LIMIT 5",
+            "response_message_type": "StorageRiskAssessment",
+            "confidence_threshold": 0.85,
+            "cognitive_profile": true,
+            "questions": {
+              "risk_level": {
+                "type": "choice",
+                "instructions": "Classify the cold-chain operational risk level for this pharmaceutical vaccine freezer.",
+                "criteria": {
+                  "NOMINAL": "Temperature at or below -18.0 C with door closed and normal compressor current (~8A)",
+                  "LOW": "Minor transient fluctuation between -18.0 C and -16.5 C",
+                  "MEDIUM": "Door open or temperature warming between -16.5 C and -15.0 C",
+                  "HIGH": "Sustained warming trend approaching -15.0 C with high compressor load (>12A)",
+                  "CRITICAL": "Temperature above -15.0 C or prolonged door open state under high compressor load (>14A)"
+                }
+              },
+              "estimated_minutes_to_spoilage": {
+                "type": "score",
+                "instructions": "Estimate the remaining time cushion before vaccine spoilage occurs (scaled 0 to 120 minutes).",
+                "criteria": [
+                  "0 minutes remaining: imminent or active thermal spoilage (> -10 C)",
+                  "15-30 minutes remaining: rapid thermal runaway with open door (-14 C to -11 C)",
+                  "45-60 minutes remaining: moderate warming trend (-16 C to -14 C)",
+                  "75-90 minutes remaining: early drift below critical threshold (-17.5 C to -16 C)",
+                  "120 minutes remaining: stable deep-freeze operation (<= -18 C)"
+                ]
+              }
+            },
+            "mapping_template": {
+              "is_thermal_runaway": "resp.is_thermal_runaway",
+              "risk_level": "resp.risk_level",
+              "estimated_minutes_to_spoilage": "resp.estimated_minutes_to_spoilage",
+              "recommended_action_code": "resp.recommended_action_code",
+              "root_cause_prediction": "resp.is_thermal_runaway ? 'Thermal runaway due to prolonged door open state under load' : 'Nominal thermal envelope'",
+              "target_producer": "{{index .trigger_event \"$producer\"}}"
+            },
+            "system_instruction": "You are a pharmaceutical cold-chain System One decision evaluator protecting mRNA and vaccine storage chambers.",
+            "semantic_prompt_template": "Evaluate Freezer '{{index .trigger_event \"$producer\"}}' at locagram '{{index .trigger_event \"$where\"}}'.\n\nLatest Trigger Event:\n- Temperature: {{index .trigger_event \"fields\" \"temperature\"}} C\n- Door Open: {{index .trigger_event \"fields\" \"door_open\"}}\n- Compressor Current: {{index .trigger_event \"fields\" \"compressor_current_amps\"}} Amps\n\nHistorical trend of FreezerTelemetry events (newest first):\n{{range .history}}\n- At {{index . \"$when\"}}: Temp: {{index . \"fields\" \"temperature\"}} C, Door Open: {{index . \"fields\" \"door_open\"}}, Compressor: {{index . \"fields\" \"compressor_current_amps\"}} Amps\n{{end}}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "AISemanticReactorSet",
+      "$group": "mesh",
+      "$producer": "node-1",
+      "$user": "admin",
+      "$when": "2026-10-22T15:00:01Z",
+      "fields": {
+        "gateway_node_id": "node-1",
+        "reactors": [
+          {
+            "reactor_id": "freezer-cold-chain-guard",
+            "provider": "typesafe",
+            "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+            "api_key_secret": "secret:TYPESAFE_API_KEY",
+            "model_id": "jev-latest",
+            "max_concurrency": 4,
+            "trigger_message_types": [
+              "FreezerTelemetry"
+            ],
+            "history_count": 5,
+            "context_query": "SELECT raw_json FROM v_messages WHERE \"$type\" = 'FreezerTelemetry' AND \"$producer\" = ? ORDER BY \"$when\" DESC LIMIT 5",
+            "response_message_type": "StorageRiskAssessment",
+            "confidence_threshold": 0.85,
+            "cognitive_profile": true,
+            "questions": {
+              "risk_level": {
+                "type": "choice",
+                "instructions": "Classify the cold-chain operational risk level for this pharmaceutical vaccine freezer.",
+                "criteria": {
+                  "NOMINAL": "Temperature at or below -18.0 C with door closed and normal compressor current (~8A)",
+                  "LOW": "Minor transient fluctuation between -18.0 C and -16.5 C",
+                  "MEDIUM": "Door open or temperature warming between -16.5 C and -15.0 C",
+                  "HIGH": "Sustained warming trend approaching -15.0 C with high compressor load (>12A)",
+                  "CRITICAL": "Temperature above -15.0 C or prolonged door open state under high compressor load (>14A)"
+                }
+              },
+              "estimated_minutes_to_spoilage": {
+                "type": "score",
+                "instructions": "Estimate the remaining time cushion before vaccine spoilage occurs (scaled 0 to 120 minutes).",
+                "criteria": [
+                  "0 minutes remaining: imminent or active thermal spoilage (> -10 C)",
+                  "15-30 minutes remaining: rapid thermal runaway with open door (-14 C to -11 C)",
+                  "45-60 minutes remaining: moderate warming trend (-16 C to -14 C)",
+                  "75-90 minutes remaining: early drift below critical threshold (-17.5 C to -16 C)",
+                  "120 minutes remaining: stable deep-freeze operation (<= -18 C)"
+                ]
+              }
+            },
+            "mapping_template": {
+              "is_thermal_runaway": "resp.is_thermal_runaway",
+              "risk_level": "resp.risk_level",
+              "estimated_minutes_to_spoilage": "resp.estimated_minutes_to_spoilage",
+              "recommended_action_code": "resp.recommended_action_code",
+              "root_cause_prediction": "resp.is_thermal_runaway ? 'Thermal runaway due to prolonged door open state under load' : 'Nominal thermal envelope'",
+              "target_producer": "{{index .trigger_event \"$producer\"}}"
+            },
+            "system_instruction": "You are a pharmaceutical cold-chain System One decision evaluator protecting mRNA and vaccine storage chambers.",
+            "semantic_prompt_template": "Evaluate Freezer '{{index .trigger_event \"$producer\"}}' at locagram '{{index .trigger_event \"$where\"}}'.\n\nLatest Trigger Event:\n- Temperature: {{index .trigger_event \"fields\" \"temperature\"}} C\n- Door Open: {{index .trigger_event \"fields\" \"door_open\"}}\n- Compressor Current: {{index .trigger_event \"fields\" \"compressor_current_amps\"}} Amps\n\nHistorical trend of FreezerTelemetry events (newest first):\n{{range .history}}\n- At {{index . \"$when\"}}: Temp: {{index . \"fields\" \"temperature\"}} C, Door Open: {{index . \"fields\" \"door_open\"}}, Compressor: {{index . \"fields\" \"compressor_current_amps\"}} Amps\n{{end}}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "AISemanticReactorSet",
+      "$group": "mesh",
+      "$producer": "bindu-pi3-uno",
+      "$user": "admin",
+      "$when": "2026-10-22T15:00:02Z",
+      "fields": {
+        "gateway_node_id": "bindu-pi3-uno",
+        "reactors": [
+          {
+            "reactor_id": "freezer-cold-chain-guard",
+            "provider": "typesafe",
+            "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+            "api_key_secret": "secret:TYPESAFE_API_KEY",
+            "model_id": "jev-latest",
+            "max_concurrency": 4,
+            "trigger_message_types": [
+              "FreezerTelemetry"
+            ],
+            "history_count": 5,
+            "context_query": "SELECT raw_json FROM v_messages WHERE \"$type\" = 'FreezerTelemetry' AND \"$producer\" = ? ORDER BY \"$when\" DESC LIMIT 5",
+            "response_message_type": "StorageRiskAssessment",
+            "confidence_threshold": 0.85,
+            "cognitive_profile": true,
+            "questions": {
+              "risk_level": {
+                "type": "choice",
+                "instructions": "Classify the cold-chain operational risk level for this pharmaceutical vaccine freezer.",
+                "criteria": {
+                  "NOMINAL": "Temperature at or below -18.0 C with door closed and normal compressor current (~8A)",
+                  "LOW": "Minor transient fluctuation between -18.0 C and -16.5 C",
+                  "MEDIUM": "Door open or temperature warming between -16.5 C and -15.0 C",
+                  "HIGH": "Sustained warming trend approaching -15.0 C with high compressor load (>12A)",
+                  "CRITICAL": "Temperature above -15.0 C or prolonged door open state under high compressor load (>14A)"
+                }
+              },
+              "estimated_minutes_to_spoilage": {
+                "type": "score",
+                "instructions": "Estimate the remaining time cushion before vaccine spoilage occurs (scaled 0 to 120 minutes).",
+                "criteria": [
+                  "0 minutes remaining: imminent or active thermal spoilage (> -10 C)",
+                  "15-30 minutes remaining: rapid thermal runaway with open door (-14 C to -11 C)",
+                  "45-60 minutes remaining: moderate warming trend (-16 C to -14 C)",
+                  "75-90 minutes remaining: early drift below critical threshold (-17.5 C to -16 C)",
+                  "120 minutes remaining: stable deep-freeze operation (<= -18 C)"
+                ]
+              }
+            },
+            "mapping_template": {
+              "is_thermal_runaway": "resp.is_thermal_runaway",
+              "risk_level": "resp.risk_level",
+              "estimated_minutes_to_spoilage": "resp.estimated_minutes_to_spoilage",
+              "recommended_action_code": "resp.recommended_action_code",
+              "root_cause_prediction": "resp.is_thermal_runaway ? 'Thermal runaway due to prolonged door open state under load' : 'Nominal thermal envelope'",
+              "target_producer": "{{index .trigger_event \"$producer\"}}"
+            },
+            "system_instruction": "You are a pharmaceutical cold-chain System One decision evaluator protecting mRNA and vaccine storage chambers.",
+            "semantic_prompt_template": "Evaluate Freezer '{{index .trigger_event \"$producer\"}}' at locagram '{{index .trigger_event \"$where\"}}'.\n\nLatest Trigger Event:\n- Temperature: {{index .trigger_event \"fields\" \"temperature\"}} C\n- Door Open: {{index .trigger_event \"fields\" \"door_open\"}}\n- Compressor Current: {{index .trigger_event \"fields\" \"compressor_current_amps\"}} Amps\n\nHistorical trend of FreezerTelemetry events (newest first):\n{{range .history}}\n- At {{index . \"$when\"}}: Temp: {{index . \"fields\" \"temperature\"}} C, Door Open: {{index . \"fields\" \"door_open\"}}, Compressor: {{index . \"fields\" \"compressor_current_amps\"}} Amps\n{{end}}"
+          }
+        ]
+      }
+    }
+  ]
+}

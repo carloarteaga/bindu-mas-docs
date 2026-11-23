@@ -1,0 +1,73 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-10-10T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "rfid-sgtin-transit-synthesizer",
+        "input_message_type": "EpcSgtinRead",
+        "cron": "",
+        "trigger_condition": "has(payload.peak_rssi_dbm) && double(payload.peak_rssi_dbm) >= -75.0",
+        "context_query": "",
+        "output_message_type": "PortalTransitEvent",
+        "transformation_expression": {
+          "portal_id": "'dock-portal-04'",
+          "transit_id": "'transit-' + string(payload.epc_hex)",
+          "direction": "int(payload.antenna_id) <= 2 ? 'INBOUND' : 'OUTBOUND'",
+          "pallet_sscc": "''",
+          "pallet_grai": "''",
+          "item_count": "1",
+          "estimated_velocity_mps": "1.45",
+          "mean_transit_rssi_dbm": "double(payload.peak_rssi_dbm)",
+          "inbound_peak_time_utc": "string(payload.first_seen_utc)",
+          "outbound_peak_time_utc": "string(payload.last_seen_utc)",
+          "status": "'CLEARED'"
+        }
+      },
+      {
+        "reactor_id": "rfid-sscc-pallet-transit-synthesizer",
+        "input_message_type": "EpcSsccRead",
+        "cron": "",
+        "trigger_condition": "has(payload.peak_rssi_dbm) && double(payload.peak_rssi_dbm) >= -75.0",
+        "context_query": "",
+        "output_message_type": "PortalTransitEvent",
+        "transformation_expression": {
+          "portal_id": "'dock-portal-04'",
+          "transit_id": "'pallet-' + string(payload.sscc18)",
+          "direction": "int(payload.antenna_id) <= 2 ? 'INBOUND' : 'OUTBOUND'",
+          "pallet_sscc": "string(payload.sscc18)",
+          "pallet_grai": "''",
+          "item_count": "48",
+          "estimated_velocity_mps": "1.52",
+          "mean_transit_rssi_dbm": "double(payload.peak_rssi_dbm)",
+          "inbound_peak_time_utc": "string(payload.first_seen_utc)",
+          "outbound_peak_time_utc": "string(payload.last_seen_utc)",
+          "status": "'CLEARED'"
+        }
+      },
+      {
+        "reactor_id": "rfid-antenna-health-guard",
+        "input_message_type": "RfidAntennaTelemetry",
+        "cron": "",
+        "trigger_condition": "has(payload.reflection_vswr) && (double(payload.reflection_vswr) > 1.8 || double(payload.mean_rssi_dbm) < -85.0)",
+        "context_query": "",
+        "output_message_type": "LogisticsDiscrepancyAlert",
+        "transformation_expression": {
+          "alert_id": "'rf-alert-' + string(payload.antenna_id)",
+          "portal_id": "'dock-portal-04'",
+          "pallet_sscc": "'N/A'",
+          "discrepancy_type": "'ANOMALOUS_RF'",
+          "severity": "'HIGH'",
+          "confidence_score": "0.98",
+          "analysis_summary": "'Antenna ' + string(payload.antenna_name) + ' RF degradation detected: VSWR=' + string(payload.reflection_vswr) + ', RSSI=' + string(payload.mean_rssi_dbm) + ' dBm'",
+          "recommended_action": "'Inspect physical coaxial cable connection and antenna alignment.'"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "HelloWorldStats",
+  "$user": "exampleUser",
+  "$when": "2026-10-14T23:20:37Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "count": 1,
+    "since": "2026-10-14T23:20:37Z",
+    "until": "2026-10-14T23:20:37Z"
+  }
+}

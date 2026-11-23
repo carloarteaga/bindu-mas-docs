@@ -1,0 +1,86 @@
+{
+  "$type": "RESTReactorSet",
+  "$node-dest": "node-dell-2",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-09T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "node-dell-2",
+    "reactors": [
+      {
+        "reactor_id": "nunegal77-oceanographic-weather-poller",
+        "telemetry_profile": true,
+        "input_message_type": "VesselGPSPosition",
+        "cron": "@every 10m",
+        "context_query": "SELECT json_extract(raw_json, '$.fields.latitude') AS lat, json_extract(raw_json, '$.fields.longitude') AS lon, json_extract(raw_json, '$.fields.vessel_id') AS vessel_id FROM v_messages WHERE \"$type\" = 'VesselGPSPosition' ORDER BY \"$when\" DESC LIMIT 1",
+        "output_message_type": "RawMarineData",
+        "request": {
+          "method": "GET",
+          "url": "'https://marine-api.open-meteo.com/v1/marine?latitude=' + string(has(payload.latitude) ? payload.latitude : (has(db.rows) && size(db.rows) > 0 ? db.rows[0].fields.lat : 43.3715)) + '&longitude=' + string(has(payload.longitude) ? payload.longitude : (has(db.rows) && size(db.rows) > 0 ? db.rows[0].fields.lon : -8.3960)) + '&current=wave_height,wave_direction,wave_period,ocean_current_velocity,sea_surface_temperature'",
+          "headers": {
+            "Accept": "'application/json'",
+            "X-Client-Node": "head['$producer']"
+          },
+          "timeout": "8s"
+        },
+        "retry_policy": {
+          "max_retries": 4,
+          "initial_interval": "1s",
+          "backoff_multiplier": 2.0,
+          "max_interval": "15s",
+          "jitter": true,
+          "retryable_statuses": [408, 429, 500, 502, 503, 504]
+        },
+        "response_map": {
+          "vessel_id": "has(payload.vessel_id) && size(string(payload.vessel_id)) > 0 ? string(payload.vessel_id) : (has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.vessel_id) : 'NUNEGAL-77')",
+          "latitude": "has(payload.latitude) ? double(payload.latitude) : (has(db.rows) && size(db.rows) > 0 ? double(db.rows[0].fields.lat) : 43.3715)",
+          "longitude": "has(payload.longitude) ? double(payload.longitude) : (has(db.rows) && size(db.rows) > 0 ? double(db.rows[0].fields.lon) : -8.3960)",
+          "sea_surface_temp_c": "has(resp.body.current.sea_surface_temperature) ? double(resp.body.current.sea_surface_temperature) : 18.4",
+          "chlorophyll_mg_m3": "0.42",
+          "wave_height_meters": "has(resp.body.current.wave_height) ? double(resp.body.current.wave_height) : 1.4",
+          "ocean_current_knots": "has(resp.body.current.ocean_current_velocity) ? double(resp.body.current.ocean_current_velocity) : 0.5",
+          "thermocline_depth_m": "35",
+          "fetch_status": "resp.status_code == 200 ? 'SUCCESS_NOMINAL' : 'DEGRADED_FETCH'"
+        }
+      },
+      {
+        "reactor_id": "nunegal77-haul-quota-validator",
+        "telemetry_profile": true,
+        "input_message_type": "HaulRegistered",
+        "cron": "",
+        "trigger_condition": "has(payload.catch_tonnage) && double(payload.catch_tonnage) > 0.0",
+        "context_query": "SELECT json_extract(raw_json, '$.fields.zone_id') AS last_zone FROM v_messages WHERE \"$type\" = 'VesselGPSPosition' ORDER BY \"$when\" DESC LIMIT 1",
+        "output_message_type": "HaulQuotaValidation",
+        "request": {
+          "method": "POST",
+          "url": "'https://httpbin.org/post'",
+          "headers": {
+            "Content-Type": "'application/json'",
+            "Authorization": "'Bearer ' + secret('VESSEL_AUTHORITY_TOKEN')",
+            "X-Vessel-Key": "secret('VESSEL_KEY')",
+            "X-Client-Node": "head['$producer']"
+          },
+          "body": "{ 'vessel_id': string(head['$producer']), 'species': string(has(payload.species) ? payload.species : 'MERLUZA_EUROPEA'), 'declared_metric_tons': double(has(payload.catch_tonnage) ? payload.catch_tonnage : 3.8), 'zone': has(db.rows) && size(db.rows) > 0 ? string(db.rows[0].fields.last_zone) : 'ZONE_CORUNA_NORTH' }",
+          "timeout": "10s"
+        },
+        "retry_policy": {
+          "max_retries": 3,
+          "initial_interval": "500ms",
+          "backoff_multiplier": 2.0,
+          "max_interval": "10s",
+          "jitter": true,
+          "retryable_statuses": [408, 429, 500, 502, 503, 504]
+        },
+        "response_map": {
+          "vessel_id": "has(payload.vessel_id) ? string(payload.vessel_id) : 'NUNEGAL-77'",
+          "haul_id": "has(payload.haul_id) ? string(payload.haul_id) : 'HAUL-2026-0909-01'",
+          "quota_authorized": "resp.status_code == 200",
+          "remaining_season_tons": "142.5",
+          "compliance_code": "resp.status_code == 200 ? 'AUTH_OK' : 'REJECTED'",
+          "rejection_reason": "'N/A'"
+        }
+      }
+    ]
+  }
+}

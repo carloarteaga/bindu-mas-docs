@@ -1,0 +1,18 @@
+{
+  "$type": "DisappearedClass",
+  "$id": "msg-disappeared-001",
+  "$group": "mesh",
+  "$producer": "cam-usb-root",
+  "$user": "bindu-edge-cv-plugin",
+  "$when": "2026-09-28T12:25:00Z",
+  "fields": {
+    "camera_id": "cam-usb-root",
+    "station_id": "carlos-dev-workstation",
+    "track_id": "track-usb-501",
+    "class_name": "person",
+    "dwell_duration_seconds": 1500.0,
+    "final_dominant_color": "NAVY_BLUE",
+    "avg_confidence": 0.95,
+    "max_bbox_area": 0.395
+  }
+}

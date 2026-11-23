@@ -1,0 +1,93 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "potato-reconditioning-schedule-dashboard",
+      "$id": "potato-reconditioning-schedule-dashboard",
+      "fields": {
+        "id": "potato-reconditioning-schedule-dashboard",
+        "name": "🥔 Potato Silo Reconditioning & Awakening Schedules",
+        "query": {
+          "sql": "SELECT \"$when\" AS scheduled_at, \"$producer\" AS lot_id, json_extract(raw_json, '$.fields.job_id') AS job_id, CAST(json_extract(raw_json, '$.fields.delay_seconds') AS INTEGER) AS duration_seconds, json_extract(raw_json, '$.fields.target_type') AS wakeup_target, 'ACTIVE_QUARANTINE' AS status FROM v_messages WHERE \"$type\" = 'SystemScheduledEvent' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "scheduled_at": "Scheduled At",
+          "lot_id": "Potato Batch (Lot ID)",
+          "job_id": "Timer Job ID",
+          "duration_seconds": "Duration (s)",
+          "wakeup_target": "Wakeup Message Type",
+          "status": "Quarantine Status"
+        },
+        "view": {
+          "type": "table",
+          "title": "Active Silo Reconditioning Schedules (Zero-RAG SQL)",
+          "chart_type": "table",
+          "x": "scheduled_at",
+          "y": [
+            "duration_seconds"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "potato-intake-and-optical-monitor",
+      "$id": "potato-intake-and-optical-monitor",
+      "fields": {
+        "id": "potato-intake-and-optical-monitor",
+        "name": "🔬 Inbound Potato Batches & Optical Sugar Analysis (C_RS)",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS lot_id, json_extract(raw_json, '$.fields.reducing_sugar_index_crs') AS crs_sugar, json_extract(raw_json, '$.fields.sugar_risk_level') AS risk_level, json_extract(raw_json, '$.fields.starch_uniformity_score') AS starch_uniformity, json_extract(raw_json, '$.fields.rationale') AS rationale FROM v_messages WHERE \"$type\" = 'PotatoOpticalAnalysis' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "lot_id": "Lot ID",
+          "crs_sugar": "Sugar Index (C_RS)",
+          "risk_level": "CIS Risk Level",
+          "starch_uniformity": "Starch Score",
+          "rationale": "Optical AI Rationale"
+        },
+        "view": {
+          "type": "table",
+          "title": "Optical Sugar Index (C_RS) vs CIS Risk Classification",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "crs_sugar"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "potato-plc-hardware-actuation-monitor",
+      "$id": "potato-plc-hardware-actuation-monitor",
+      "fields": {
+        "id": "potato-plc-hardware-actuation-monitor",
+        "name": "⚡ Modbus PLC Hardware Actuation & Digital Twin Awakening",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.target_device') AS device, CAST(json_extract(raw_json, '$.fields.register_address') AS INTEGER) AS reg_addr, json_extract(raw_json, '$.fields.written_value') AS written_val, json_extract(raw_json, '$.fields.status') AS status FROM v_messages WHERE \"$type\" = 'ModbusStatus' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "device": "Target PLC / Equipment",
+          "reg_addr": "Register Address",
+          "written_val": "Written Value",
+          "status": "Modbus Status"
+        },
+        "view": {
+          "type": "table",
+          "title": "Live Modbus PLC Holding Register Commands",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "written_val"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "$type": "EdgeCVSetStatus",
+  "$id": "msg-edge-cv-status-001",
+  "$group": "config",
+  "$producer": "node-dell-1",
+  "$user": "admin",
+  "$when": "2026-10-03T12:00:00Z",
+  "fields": {
+    "capture": true
+  }
+}

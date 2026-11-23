@@ -1,0 +1,25 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "PortalTransitEvent",
+  "$user": "exampleUser",
+  "$when": "2026-10-13T21:58:53Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "direction": "",
+    "estimated_velocity_mps": 0,
+    "inbound_peak_time_utc": "2026-10-13T21:58:53Z",
+    "item_count": 1,
+    "mean_transit_rssi_dbm": 0,
+    "outbound_peak_time_utc": "2026-10-13T21:58:53Z",
+    "pallet_grai": "",
+    "pallet_sscc": "",
+    "portal_id": "",
+    "status": "",
+    "transit_id": ""
+  }
+}

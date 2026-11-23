@@ -1,0 +1,64 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "freezer-ops-dashboard",
+      "$id": "freezer-ops-dashboard",
+      "fields": {
+        "id": "freezer-ops-dashboard",
+        "name": "❄️ Cold-Chain Freezer Telemetry & Door Status",
+        "query": {
+          "sql": "SELECT * FROM (SELECT \"$when\" AS timestamp, \"$producer\" AS freezer_id, CAST(json_extract(raw_json, '$.fields.temperature') AS REAL) AS temperature_c, CAST(json_extract(raw_json, '$.fields.compressor_current_amps') AS REAL) AS compressor_amps, json_extract(raw_json, '$.fields.door_open') AS door_open FROM v_messages WHERE \"$type\" = 'FreezerTelemetry' ORDER BY \"$when\" DESC LIMIT 50) ORDER BY timestamp ASC"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "freezer_id": "Freezer Unit",
+          "temperature_c": "Temperature (°C)",
+          "compressor_amps": "Compressor Amps (A)",
+          "door_open": "Door Open"
+        },
+        "view": {
+          "type": "line",
+          "title": "Cold-Chain Freezer Temperature & Compressor Current",
+          "chart_type": "line",
+          "x": "timestamp",
+          "y": [
+            "temperature_c",
+            "compressor_amps"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "freezer-risk-assessment-log",
+      "$id": "freezer-risk-assessment-log",
+      "fields": {
+        "id": "freezer-risk-assessment-log",
+        "name": "🚨 Freezer Spoilage Risk & Incident Log",
+        "query": {
+          "sql": "SELECT \"$when\" AS assessed_at, json_extract(raw_json, '$.fields.target_producer') AS target_freezer, json_extract(raw_json, '$.fields.risk_level') AS risk_level, CAST(json_extract(raw_json, '$.fields.estimated_minutes_to_spoilage') AS INTEGER) AS mins_to_spoilage, json_extract(raw_json, '$.fields.root_cause_prediction') AS root_cause, json_extract(raw_json, '$.fields.recommended_action_code') AS action_code FROM v_messages WHERE \"$type\" = 'StorageRiskAssessment' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "assessed_at": "Evaluation Timestamp",
+          "target_freezer": "Target Freezer Unit",
+          "risk_level": "Risk Level",
+          "mins_to_spoilage": "Est. Mins to Spoilage",
+          "root_cause": "Diagnosed Root Cause",
+          "action_code": "Action Recommendation"
+        },
+        "view": {
+          "type": "table",
+          "title": "Freezer Spoilage Risk & Incident Log",
+          "chart_type": "table",
+          "x": "assessed_at",
+          "y": [
+            "mins_to_spoilage"
+          ]
+        }
+      }
+    }
+  ]
+}

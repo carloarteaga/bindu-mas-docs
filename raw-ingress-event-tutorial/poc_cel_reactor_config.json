@@ -1,0 +1,95 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-11-11T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "hopeland_rfid_normalizer",
+        "input_message_type": "RawIngressEvent",
+        "cron": "",
+        "trigger_condition": "payload.subpath.startsWith('rfid/hopeland') && payload.content_type == 'json' && has(payload.payload.tags) && size(payload.payload.tags) > 0",
+        "context_query": "",
+        "output_message_type": "RawTagRead",
+        "transformation_expression": {
+          "epc": "string(payload.payload.tags[0].epc)",
+          "antenna": "int(payload.payload.antenna)",
+          "rssi": "double(payload.payload.tags[0].rssi)",
+          "read_count": "int(payload.payload.tags[0].read_count)",
+          "reader_vendor": "'Hopeland'",
+          "reader_id": "string(payload.payload.device_id)",
+          "dock_portal": "string(payload.subpath)"
+        }
+      },
+      {
+        "reactor_id": "zebra_rfid_normalizer",
+        "input_message_type": "RawIngressEvent",
+        "cron": "",
+        "trigger_condition": "payload.subpath.startsWith('rfid/zebra') && payload.content_type == 'json' && has(payload.payload.data)",
+        "context_query": "",
+        "output_message_type": "RawTagRead",
+        "transformation_expression": {
+          "epc": "string(payload.payload.data.idHex)",
+          "antenna": "int(payload.payload.data.antenna)",
+          "rssi": "double(payload.payload.data.peakRssi)",
+          "read_count": "int(payload.payload.data.reads)",
+          "reader_vendor": "'Zebra'",
+          "reader_id": "head['$producer'] != '' ? head['$producer'] : 'Zebra-FX9600'",
+          "dock_portal": "string(payload.subpath)"
+        }
+      },
+      {
+        "reactor_id": "chafon_rfid_normalizer",
+        "input_message_type": "RawIngressEvent",
+        "cron": "",
+        "trigger_condition": "payload.subpath.startsWith('rfid/chafon') && payload.content_type == 'json' && has(payload.payload.tag)",
+        "context_query": "",
+        "output_message_type": "RawTagRead",
+        "transformation_expression": {
+          "epc": "string(payload.payload.tag.epc)",
+          "antenna": "int(payload.payload.antenna)",
+          "rssi": "double(payload.payload.tag.rssi)",
+          "read_count": "1",
+          "reader_vendor": "'Chafon'",
+          "reader_id": "string(payload.payload.device_id)",
+          "dock_portal": "string(payload.subpath)"
+        }
+      },
+      {
+        "reactor_id": "marktrace_binary_rfid_normalizer",
+        "input_message_type": "RawIngressEvent",
+        "cron": "",
+        "trigger_condition": "payload.subpath.startsWith('rfid/marktrace') && payload.content_type == 'binary' && size(hex_decode(payload.raw_data)) >= 18",
+        "context_query": "",
+        "output_message_type": "RawTagRead",
+        "transformation_expression": {
+          "epc": "hex_encode(bytes_slice(hex_decode(payload.raw_data), 5, 17))",
+          "antenna": "int(uint8(hex_decode(payload.raw_data), 4))",
+          "rssi": "double(uint8(hex_decode(payload.raw_data), 17)) - 256.0",
+          "read_count": "1",
+          "reader_vendor": "'Marktrace'",
+          "reader_id": "'MR6034E-01'",
+          "dock_portal": "string(payload.subpath)"
+        }
+      },
+      {
+        "reactor_id": "weak_signal_health_guard",
+        "input_message_type": "RawTagRead",
+        "cron": "",
+        "trigger_condition": "double(payload.rssi) < -75.0",
+        "context_query": "",
+        "output_message_type": "ReaderHealthAlert",
+        "transformation_expression": {
+          "reader_vendor": "string(payload.reader_vendor)",
+          "dock_portal": "string(payload.dock_portal)",
+          "alert_code": "'WEAK_SIGNAL'",
+          "details": "'Tag ' + string(payload.epc) + ' read with marginal RSSI: ' + string(payload.rssi) + ' dBm on antenna ' + string(payload.antenna)"
+        }
+      }
+    ]
+  }
+}

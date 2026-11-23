@@ -1,0 +1,5 @@
+Design a Multi-Agent System (MAS) using Bindu (a Go-based decentralized Semantic Event Broker) to automate a potato processing pipeline. The architecture must handle the following workflow:
+1. A Cron-triggered agent that dispatches a `ModbusGet` message to read the average transportation temperature from a truck's PLC.
+2. A CEL-driven Reactor Agent that listens for the truck's temperature data. Using CEL expressions, it must apply food engineering formulas (First-order kinetics for reconditioning and Arrhenius equation for Maillard reaction) to calculate the required storage time, storage temperature, and the final frying oil temperature. It must then emit a `ModbusSet` message directed to the storage refrigerator's PLC to set the climate controls.
+3. A dynamic scheduling agent that sets a new cron job based on the calculated "storage time" from step 2. Once that time expires, it must emit a `ModbusSet` message to the frying machine's PLC, setting the exact oil temperature required for the perfect fry.
+Ensure the MAS architecture is generalized, using standard semantic events, so this exact pattern can be reused for other industrial PLC-controlled processes.

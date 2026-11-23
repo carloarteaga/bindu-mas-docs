@@ -1,0 +1,75 @@
+{
+  "message_types": [
+    {
+      "name": "MessageStateAudit",
+      "emoji": "🛡️",
+      "version": "1.0.0",
+      "category": "system",
+      "description": "Augmented operational audit of node message storage, retention health, and routing anomalies.",
+      "retentionMode": "count",
+      "retentionValue": 30,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "persist": true,
+      "properties": [
+        {
+          "name": "node_id",
+          "type": "string",
+          "required": true,
+          "description": "Origin gateway node ID being audited"
+        },
+        {
+          "name": "node_role",
+          "type": "string",
+          "required": true,
+          "description": "Cluster topology role (root or node)"
+        },
+        {
+          "name": "total_stored_messages",
+          "type": "integer",
+          "required": true,
+          "description": "Total messages stored on node disk ledger"
+        },
+        {
+          "name": "health_score",
+          "type": "integer",
+          "required": true,
+          "description": "Overall retention and routing health score (0-100)"
+        },
+        {
+          "name": "irregularity_count",
+          "type": "integer",
+          "required": true,
+          "description": "Total count of flagged routing or retention anomalies"
+        },
+        {
+          "name": "status_summary",
+          "type": "string",
+          "required": true,
+          "description": "Human and machine readable operational summary"
+        },
+        {
+          "name": "top_accumulating_types",
+          "type": "json",
+          "required": true,
+          "description": "Array of message types with highest stored counts"
+        },
+        {
+          "name": "irregularities_detected",
+          "type": "json",
+          "required": true,
+          "description": "List of flagged routing, retention, or churn anomalies"
+        },
+        {
+          "name": "audited_at",
+          "type": "string",
+          "format": "date-time",
+          "required": true,
+          "description": "ISO 8601 audit timestamp"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "system-email-bpr-gateway",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "system-email-bpr-gateway",
+    "name": "System Security Alert Email BPR Gateway",
+    "version": "1.0.0",
+    "description": "Edge security alert routing evaluated via CEL and delivered securely through the native Bindu System Email BPR plugin.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-1"],
+      "message_types": ["SendEmailRequest@1.0.0", "MessageState@1.0.0"],
+      "cel_reactors": ["mesh-health-email-reporter"],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [],
+      "plugins": ["bindu-email-plugin@1.0.0"],
+      "media_storage_providers": [],
+      "access_users": ["secops-admin"],
+      "access_roles": ["admin"],
+      "dashboards": ["email-dispatch-activity-log", "mesh-hardware-alert-status"],
+      "system_config_keys": ["smtp.host", "smtp.port", "smtp.user"]
+    }
+  }
+}

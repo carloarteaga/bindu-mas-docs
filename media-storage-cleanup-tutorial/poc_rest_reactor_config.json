@@ -1,0 +1,47 @@
+{
+  "$type": "RESTReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-28T04:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "minio-media-http-pruner",
+        "telemetry_profile": true,
+        "input_message_type": "MediaPruneCandidate",
+        "cron": "",
+        "context_query": "SELECT json_extract(raw_json, '$.fields.endpoint_url') AS endpoint_url FROM v_messages WHERE \"$type\" = 'MediaStorageSet' AND json_extract(raw_json, '$.fields.provider_id') = 'minio_local' ORDER BY \"$when\" DESC LIMIT 1",
+        "trigger_condition": "has(db.rows) && size(db.rows) > 0 && has(payload.bucket) && size(string(payload.bucket)) > 0 && has(payload.object_key) && size(string(payload.object_key)) > 0",
+        "output_message_type": "MediaPruneAudit",
+        "request": {
+          "method": "DELETE",
+          "url": "string(db.rows[0].fields.endpoint_url) + '/' + string(payload.bucket) + '/' + string(payload.object_key)",
+          "headers": {
+            "User-Agent": "'Bindu-Media-Cleanup-Reactor/1.0'",
+            "X-Client-Node": "head['$producer']"
+          },
+          "timeout": "5s"
+        },
+        "retry_policy": {
+          "max_retries": 3,
+          "initial_interval": "500ms",
+          "backoff_multiplier": 2.0,
+          "max_interval": "5s",
+          "jitter": true,
+          "retryable_statuses": [408, 429, 500, 502, 503, 504]
+        },
+        "response_map": {
+          "media_uri": "has(payload.media_uri) ? string(payload.media_uri) : ('minio_local://' + string(payload.bucket) + '/' + string(payload.object_key))",
+          "bucket": "string(payload.bucket)",
+          "object_key": "string(payload.object_key)",
+          "http_status": "resp.status_code",
+          "execution_status": "resp.status_code in [200, 204, 404] ? 'SUCCESS' : 'FAILED'",
+          "freed_at": "'$when' in head ? string(head['$when']) : now()"
+        }
+      }
+    ]
+  }
+}

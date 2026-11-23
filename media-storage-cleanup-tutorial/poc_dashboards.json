@@ -1,0 +1,62 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "minio-storage-reclaim-telemetry",
+      "$id": "minio-storage-reclaim-telemetry",
+      "fields": {
+        "id": "minio-storage-reclaim-telemetry",
+        "name": "🧹 MinIO Out-of-Band Media Prune & Audit Log",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.media_uri') AS media_uri, json_extract(raw_json, '$.fields.bucket') AS bucket, json_extract(raw_json, '$.fields.object_key') AS object_key, CAST(json_extract(raw_json, '$.fields.http_status') AS INTEGER) AS http_status, json_extract(raw_json, '$.fields.execution_status') AS status FROM v_messages WHERE \"$type\" = 'MediaPruneAudit' ORDER BY \"$when\" DESC LIMIT 25"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "media_uri": "Semantic Media URI",
+          "bucket": "S3 Bucket",
+          "object_key": "Object Key",
+          "http_status": "HTTP Status",
+          "status": "Execution Status"
+        },
+        "view": {
+          "type": "table",
+          "title": "MinIO Physical Storage Reclaim Audit Log",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "http_status"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "media-prune-candidate-feed",
+      "$id": "media-prune-candidate-feed",
+      "fields": {
+        "id": "media-prune-candidate-feed",
+        "name": "🎯 Media Prune Candidates (4:00 AM CEL Pipeline)",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, json_extract(raw_json, '$.fields.media_uri') AS media_uri, json_extract(raw_json, '$.fields.source_message_type') AS source_type, json_extract(raw_json, '$.fields.reason') AS reason FROM v_messages WHERE \"$type\" = 'MediaPruneCandidate' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Detected At",
+          "media_uri": "Media URI",
+          "source_type": "Source Message Type",
+          "reason": "Detection Reason"
+        },
+        "view": {
+          "type": "table",
+          "title": "Detected Media Prune Candidates",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "media_uri"
+          ]
+        }
+      }
+    }
+  ]
+}

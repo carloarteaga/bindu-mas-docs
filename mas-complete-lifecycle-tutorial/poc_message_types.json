@@ -1,0 +1,115 @@
+{
+  "message_types": [
+    {
+      "name": "MASclTrigger",
+      "description": "Universal ingress trigger that activates all multi-paradigm agents (CEL, REST, AI, BPR) across the mesh",
+      "emoji": "\u26a1",
+      "version": "1.0.0",
+      "persist": false,
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "retentionTtlSeconds": 60,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "trigger_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique UUID or identifier for the trigger event"
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "required": true,
+          "description": "Source initiating the trigger (e.g. operator, simulator, scheduler)"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "required": true,
+          "description": "UTC timestamp of trigger issuance"
+        },
+        {
+          "name": "notes",
+          "type": "string",
+          "required": false,
+          "description": "Optional metadata or trigger payload notes"
+        }
+      ],
+      "longevity": "PT2H"
+    },
+    {
+      "name": "MASclOcurrence",
+      "description": "Standardized occurrence message emitted by all 4 agent paradigms upon periodic cron or reactive trigger execution",
+      "emoji": "\ud83d\udcca",
+      "version": "1.0.0",
+      "persist": true,
+      "retentionMode": "count",
+      "retentionValue": 20,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "occurrence_id",
+          "type": "string",
+          "required": true,
+          "description": "Unique identifier of this occurrence run"
+        },
+        {
+          "name": "agent_type",
+          "type": "string",
+          "required": true,
+          "description": "Execution paradigm of the emitting agent (CEL, REST, AI, BPR)"
+        },
+        {
+          "name": "agent_name",
+          "type": "string",
+          "required": true,
+          "description": "Logical name or reactor ID of the emitting agent"
+        },
+        {
+          "name": "execution_mode",
+          "type": "string",
+          "required": true,
+          "description": "Execution initiation mode (CRON or TRIGGER)"
+        },
+        {
+          "name": "node_id",
+          "type": "string",
+          "required": true,
+          "description": "Mesh node ID where the agent executed"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "required": true,
+          "description": "UTC execution timestamp"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "description": "Execution status code (e.g. OK, SUCCESS, NOMINAL)"
+        },
+        {
+          "name": "latency_ms",
+          "type": "number",
+          "required": true,
+          "description": "Execution duration in milliseconds"
+        },
+        {
+          "name": "details",
+          "type": "string",
+          "required": true,
+          "description": "Descriptive execution summary or model output"
+        }
+      ],
+      "longevity": "P7D"
+    }
+  ]
+}

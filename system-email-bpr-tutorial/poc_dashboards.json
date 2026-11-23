@@ -1,0 +1,63 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "email-dispatch-activity-log",
+      "$id": "email-dispatch-activity-log",
+      "fields": {
+        "id": "email-dispatch-activity-log",
+        "name": "📧 Email Dispatch & Security Alert Ledger",
+        "query": {
+          "sql": "SELECT \"$when\" AS dispatched_at, json_extract(raw_json, '$.fields.to') AS recipient, json_extract(raw_json, '$.fields.subject') AS email_subject, json_extract(raw_json, '$.fields.body_text') AS message_body, json_extract(raw_json, '$.fields.attachments') AS attachments FROM v_messages WHERE \"$type\" = 'SendEmailRequest' ORDER BY \"$when\" DESC LIMIT 25"
+        },
+        "labels": {
+          "dispatched_at": "Dispatched At",
+          "recipient": "Recipient",
+          "email_subject": "Email Subject",
+          "message_body": "Message Body Preview",
+          "attachments": "Attachments"
+        },
+        "view": {
+          "type": "table",
+          "title": "Email Dispatch & Security Alert Ledger",
+          "chart_type": "table",
+          "x": "dispatched_at",
+          "y": [
+            "recipient"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "mesh-hardware-alert-status",
+      "$id": "mesh-hardware-alert-status",
+      "fields": {
+        "id": "mesh-hardware-alert-status",
+        "name": "🖥️ Mesh Host Health & Resource Utilization",
+        "query": {
+          "sql": "WITH RankedState AS (SELECT \"$producer\" AS node_id, CAST(json_extract(raw_json, '$.fields.cpu.usage_pct') AS REAL) AS cpu_pct, CAST(json_extract(raw_json, '$.fields.memory.used_pct') AS REAL) AS mem_pct, CAST(json_extract(raw_json, '$.fields.disk_used_pct') AS REAL) AS disk_pct, ROW_NUMBER() OVER (PARTITION BY \"$producer\" ORDER BY \"$when\" DESC) as rn FROM v_messages WHERE \"$type\" = 'MessageState') SELECT node_id AS Node, cpu_pct AS CPU_Usage, mem_pct AS Memory_Usage, disk_pct AS Disk_Usage FROM RankedState WHERE rn = 1"
+        },
+        "labels": {
+          "Node": "Node ID",
+          "CPU_Usage": "CPU Usage (%)",
+          "Memory_Usage": "Memory Usage (%)",
+          "Disk_Usage": "Disk Usage (%)"
+        },
+        "view": {
+          "type": "bar",
+          "title": "Mesh Host Resource Utilization",
+          "chart_type": "bar",
+          "x": "Node",
+          "y": [
+            "CPU_Usage",
+            "Memory_Usage",
+            "Disk_Usage"
+          ]
+        }
+      }
+    }
+  ]
+}

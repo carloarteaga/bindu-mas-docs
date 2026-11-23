@@ -1,0 +1,45 @@
+{
+  "reactor_id": "compressor-maintenance-guard",
+  "provider": "typesafe",
+  "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+  "api_key_secret": "secret:TYPESAFE_API_KEY",
+  "model_id": "jev-latest",
+  "max_concurrency": 4,
+  "trigger_message_types": [
+    "FreezerMaintenanceTelemetry"
+  ],
+  "history_count": 5,
+  "context_query": "SELECT raw_json FROM v_messages WHERE \"$type\" = 'FreezerMaintenanceTelemetry' AND \"$producer\" = ? ORDER BY \"$when\" DESC LIMIT 5",
+  "response_message_type": "MachineryHealthAssessment",
+  "confidence_threshold": 0.85,
+  "cognitive_profile": true,
+  "questions": {
+    "health_status": {
+      "type": "choice",
+      "instructions": "Evaluate the mechanical health status of the cooling unit compressor.",
+      "criteria": {
+        "NOMINAL": "Vibration <= 1.2G, motor temperature <= 65C, and normal refrigerant pressure",
+        "DEGRADED": "Moderate vibration (1.2G to 1.8G) or motor warming (65C to 75C)",
+        "CRITICAL": "High vibration (1.8G to 2.0G) or motor temperature between 75C and 80C",
+        "FAILURE_IMMINENT": "Vibration > 2.0G or motor temperature > 80.0C indicating imminent bearing or stator failure"
+      }
+    }
+  },
+  "mapping_template": {
+    "health_status": "resp.health_status",
+    "predicted_days_to_failure": "resp.predicted_days_to_failure",
+    "action_priority": "resp.action_priority",
+    "fault_prediction": "payload.vibration_amplitude_g > 2.0 ? 'Bearing wear & excessive mechanical vibration' : (payload.motor_temperature > 80.0 ? 'Compressor stator thermal overload' : 'Mechanical degradation under load')",
+    "target_producer": "{{index .trigger_event \"$producer\"}}"
+  },
+  "system_instruction": "You are a mechanical predictive maintenance System One evaluator operating on a cooling unit compressor.",
+  "semantic_prompt_template": "Analyze the mechanical health of Compressor '{{index .trigger_event \"$producer\"}}' at locagram '{{index .trigger_event \"$where\"}}'.\n\nIncoming Event telemetry:\nVibration Amplitude: {{index .trigger_event \"fields\" \"vibration_amplitude_g\"}} Gs\nMotor Temperature: {{index .trigger_event \"fields\" \"motor_temperature\"}} C\nRefrigerant Pressure: {{index .trigger_event \"fields\" \"refrigerant_pressure_psi\"}} PSI\n\nHistorical trend of FreezerMaintenanceTelemetry events (newest first):\n{{range .history}}\n- At {{index . \"$when\"}}: Vib: {{index . \"fields\" \"vibration_amplitude_g\"}} Gs, Motor Temp: {{index . \"fields\" \"motor_temperature\"}} C, Pressure: {{index . \"fields\" \"refrigerant_pressure_psi\"}} PSI\n{{end}}",
+  "trigger_condition": "payload.vibration_amplitude_g > 1.2 || payload.motor_temperature > 65.0",
+  "wizard_copy_paste_helpers": {
+    "context_query": "SELECT raw_json FROM v_messages WHERE \"$type\" = 'FreezerMaintenanceTelemetry' AND \"$producer\" = ? ORDER BY \"$when\" DESC LIMIT 5",
+    "mapping_template": "{\n  \"health_status\": \"resp.health_status\",\n  \"predicted_days_to_failure\": \"resp.predicted_days_to_failure\",\n  \"action_priority\": \"resp.action_priority\",\n  \"fault_prediction\": \"payload.vibration_amplitude_g > 2.0 ? 'Bearing wear & excessive mechanical vibration' : (payload.motor_temperature > 80.0 ? 'Compressor stator thermal overload' : 'Mechanical degradation under load')\",\n  \"target_producer\": \"{{index .trigger_event \\\"$producer\\\"}}\"\n}",
+    "system_instruction": "You are a mechanical predictive maintenance System One evaluator operating on a cooling unit compressor.",
+    "semantic_prompt_template": "Analyze the mechanical health of Compressor '{{index .trigger_event \"$producer\"}}' at locagram '{{index .trigger_event \"$where\"}}'.\n\nIncoming Event telemetry:\nVibration Amplitude: {{index .trigger_event \"fields\" \"vibration_amplitude_g\"}} Gs\nMotor Temperature: {{index .trigger_event \"fields\" \"motor_temperature\"}} C\nRefrigerant Pressure: {{index .trigger_event \"fields\" \"refrigerant_pressure_psi\"}} PSI\n\nHistorical trend of FreezerMaintenanceTelemetry events (newest first):\n{{range .history}}\n- At {{index . \"$when\"}}: Vib: {{index . \"fields\" \"vibration_amplitude_g\"}} Gs, Motor Temp: {{index . \"fields\" \"motor_temperature\"}} C, Pressure: {{index . \"fields\" \"refrigerant_pressure_psi\"}} PSI\n{{end}}",
+    "trigger_condition": "payload.vibration_amplitude_g > 1.2 || payload.motor_temperature > 65.0"
+  }
+}

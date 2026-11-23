@@ -1,0 +1,28 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-08-14T11:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mesh-health-email-reporter",
+        "input_message_type": "",
+        "cron": "0 0 18 * * *",
+        "output_message_type": "SendEmailRequest",
+        "context_query": "SELECT strftime('%Y-%m-%dT%H:%M:%SZ', 'now') as report_time, (SELECT 'ROOT NODE STATUS:\n' || \"$producer\" || ' (Role: ' || COALESCE(json_extract(raw_json, '$.fields.identity.role'), 'root') || '): CPU=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.cpu.usage_pct') AS REAL)) || '%, Mem=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.memory.used_pct') AS REAL)) || '%, Disk=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.disk_used_pct') AS REAL)) || '%, MsgCounts=' || COALESCE(json_extract(raw_json, '$.fields.storage.message_counts_by_type'), '[]') FROM v_messages WHERE \"$type\" = 'MessageState' AND COALESCE(json_extract(raw_json, '$.fields.identity.role'), json_extract(raw_json, '$.fields.role')) = 'root' ORDER BY \"$when\" DESC LIMIT 1) as root_summary, (SELECT group_concat(summary, char(10)) FROM (SELECT \"$producer\" || ' (' || COALESCE(json_extract(raw_json, '$.fields.identity.role'), 'node') || '): CPU=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.cpu.usage_pct') AS REAL)) || '%, Mem=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.memory.used_pct') AS REAL)) || '%, Disk=' || printf('%.2f', CAST(json_extract(raw_json, '$.fields.disk_used_pct') AS REAL)) || '%, MsgCounts=' || COALESCE(json_extract(raw_json, '$.fields.storage.message_counts_by_type'), '[]') as summary FROM v_messages WHERE \"$type\" = 'MessageState' GROUP BY \"$producer\" HAVING MAX(\"$when\") ORDER BY \"$producer\" ASC)) as mesh_summary",
+        "trigger_condition": "true",
+        "transformation_expression": {
+          "to": "'alerts@example.com'",
+          "subject": "'Report Mesh State (' + string(db.rows[0].fields.report_time) + ')'",
+          "body_text": "'ROOT NODE HEALTH REPORT:\\n\\n' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.root_summary != null ? string(db.rows[0].fields.root_summary) : 'No root summary available') + '\\n\\n---------------------------------\\n\\nALL REGISTERED NODES:\\n\\n' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.mesh_summary != null ? string(db.rows[0].fields.mesh_summary) : 'No mesh summary available')",
+          "body_html": "'<h3>ROOT NODE HEALTH REPORT</h3><pre>' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.root_summary != null ? string(db.rows[0].fields.root_summary) : 'No root summary available') + '</pre><br/><h3>ALL REGISTERED NODES</h3><pre>' + (has(db.rows) && size(db.rows) > 0 && db.rows[0].fields.mesh_summary != null ? string(db.rows[0].fields.mesh_summary) : 'No mesh summary available') + '</pre>'",
+          "attachments": "['minio_local://raw/Bindu-AUM_AIM-HIM-KLIM.png']"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$type": "AISemanticReactorSet",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-11-08T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "suzano-canopy-optical-evaluator",
+        "api_endpoint": "http://localhost:11434/v1/chat/completions",
+        "api_key_secret": "secret:TYPESAFE_API_KEY",
+        "model_id": "qwen2.5-coder:0.5b",
+        "max_concurrency": 1,
+        "inference_timeout": 60,
+        "trigger_message_types": [
+          "SubCanopySoilTelemetry"
+        ],
+        "history_count": 0,
+        "context_query": "SELECT \"$when\" AS sample_time, json_extract(fields, '$.soil_moisture_pct') as moisture, json_extract(fields, '$.ambient_temp_c') as temp, json_extract(fields, '$.par_solar_flux_umol') as par FROM v_messages WHERE \"$type\" = 'SubCanopySoilTelemetry' AND json_extract(fields, '$.hectare_id') = '{{.fields.hectare_id}}' ORDER BY \"$when\" DESC LIMIT 5;",
+        "response_message_type": "CanopyFoliageInspection",
+        "confidence_threshold": 0.70,
+        "cognitive_profile": true,
+        "mapping_template": {
+          "drone_id": "'DRONE-AMZ-01'",
+          "zone_id": "{{.fields.zone_id}}",
+          "hectare_id": "{{.fields.hectare_id}}",
+          "foliage_density_index": "{{.fields.foliage_density_index}}",
+          "canopy_health_factor": "{{.fields.canopy_health_factor}}",
+          "illegal_clearing_detected": "{{.fields.illegal_clearing_detected}}",
+          "clearing_area_m2": "{{.fields.clearing_area_m2}}",
+          "canopy_color_variance": "{{.fields.canopy_color_variance}}",
+          "inspection_notes": "{{.fields.inspection_notes}}",
+          "inspection_timestamp": "{{.fields.inspection_timestamp}}"
+        },
+        "system_instruction": "You are an airborne forestry computer vision specialist evaluating aerial canopy frames over the Amazon basin aboard a 5W edge compute node. You assess crown foliage density, photosynthetic vitality, and detect illegal logging gaps. You MUST output strictly a single valid raw JSON object. Do not output markdown, preambles, or backticks. Rules: 1. foliage_density_index must be a float between 0.0 and 1.0 (e.g. 0.94 for intact primary canopy, 0.35 for deforested gap). 2. canopy_health_factor must be a float between 0.0 and 1.0 (e.g. 0.92 for lush tropical growth). 3. illegal_clearing_detected must be boolean true or false. 4. clearing_area_m2 must be a float (0.0 if intact, > 100.0 if clearing detected). 5. canopy_color_variance must be a float between 0.05 and 0.50. 6. inspection_notes must describe crown condition and understory solar penetration.",
+        "semantic_prompt_template": "Analyze the aerial canopy inspection over hectare '{{index .trigger_event \"fields\" \"hectare_id\"}}' (Zone: {{index .trigger_event \"fields\" \"zone_id\"}}):\n\nSub-Canopy Ground Telemetry (via Fly-By BLE):\n- Station: {{index .trigger_event \"fields\" \"station_id\"}}\n- Soil Moisture: {{index .trigger_event \"fields\" \"soil_moisture_pct\"}}%\n- Ambient Temperature: {{index .trigger_event \"fields\" \"ambient_temp_c\"}} °C\n- Sub-Canopy CO2: {{index .trigger_event \"fields\" \"understory_co2_ppm\"}} ppm\n- PAR Solar Flux: {{index .trigger_event \"fields\" \"par_solar_flux_umol\"}} µmol/m2/s\n\nRecent Ground History:\n{{range .state}}\n- Timestamp: {{index . \"sample_time\"}} | Moisture: {{index . \"moisture\"}}% | Temp: {{index . \"temp\"}}C | PAR: {{index . \"par\"}}\n{{end}}\n\nProduce the structured CanopyFoliageInspection JSON:\n{\n  \"zone_id\": \"{{index .trigger_event \"fields\" \"zone_id\"}}\",\n  \"hectare_id\": \"{{index .trigger_event \"fields\" \"hectare_id\"}}\",\n  \"foliage_density_index\": 0.94,\n  \"canopy_health_factor\": 0.92,\n  \"illegal_clearing_detected\": false,\n  \"clearing_area_m2\": 0.0,\n  \"canopy_color_variance\": 0.18,\n  \"inspection_notes\": \"Intact dense multi-strata emergent canopy. Uniform chlorophyll reflectance and optimal sub-canopy light attenuation.\",\n  \"inspection_timestamp\": \"{{index .trigger_event \"fields\" \"sample_timestamp\"}}\"\n}"
+      }
+    ]
+  }
+}

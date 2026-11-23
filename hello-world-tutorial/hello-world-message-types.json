@@ -1,0 +1,80 @@
+{
+  "message_types": [
+    {
+      "name": "HelloWorld",
+      "emoji": "\ud83d\udc4d\ud83c\udffc",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "greeting",
+          "type": "string",
+          "required": true,
+          "description": "Greeting field"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "persist": true,
+      "longevity": "PT1H"
+    },
+    {
+      "name": "HelloWorldConfig",
+      "emoji": "\ud83d\udc4d\ud83c\udffc",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "greeting_text",
+          "type": "string",
+          "required": true,
+          "description": "Gretting text for hello world msg"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local",
+        "child"
+      ],
+      "persist": true
+    },
+    {
+      "name": "HelloWorldStats",
+      "emoji": "\ud83d\udc4d\ud83c\udffc",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "count",
+          "type": "integer",
+          "required": true,
+          "description": "Number of HelloWord received."
+        },
+        {
+          "name": "since",
+          "type": "string",
+          "required": true,
+          "description": "Start of  the window time.",
+          "format": "date-time"
+        },
+        {
+          "name": "until",
+          "type": "string",
+          "required": true,
+          "description": "End of the window time.",
+          "format": "date-time"
+        }
+      ],
+      "retentionMode": "count",
+      "retentionValue": 1,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "persist": true,
+      "longevity": "PT6H"
+    }
+  ]
+}

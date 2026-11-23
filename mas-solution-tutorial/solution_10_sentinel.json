@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "sentinel-node-defense-matrix",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "sentinel-node-defense-matrix",
+    "name": "Sentinel Cognitive Security & Node Defense Matrix",
+    "version": "1.0.0",
+    "description": "Multi-agent cognitive security fabric calculating Risk Action Scores (RAS) and defending distributed edge mesh nodes.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-1"],
+      "message_types": ["RawNewsAlert@1.0.0", "AgentSubScore@1.0.0", "SentinelRAS@1.0.0", "SendEmailRequest@1.0.0", "SentinelCorrelationUpdate@1.0.0"],
+      "cel_reactors": ["sentinel-fusion-engine", "sentinel-decision-layer", "sentinel-proactive-correlation"],
+      "rest_reactors": [],
+      "semantic_ai_reactors": ["sentinel-geopolitical-refiner"],
+      "plugins": ["bindu-email-plugin@1.0.0"],
+      "media_storage_providers": [],
+      "access_users": ["secops-sentinel"],
+      "access_roles": ["admin"],
+      "dashboards": ["sentinel-pipeline-trace", "sentinel-risk-ledger", "sentinel-risk-comparison"],
+      "system_config_keys": []
+    }
+  }
+}

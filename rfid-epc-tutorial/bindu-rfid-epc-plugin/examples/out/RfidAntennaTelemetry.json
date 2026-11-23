@@ -1,0 +1,23 @@
+{
+  "$group": "defaultGroup",
+  "$node-dest": "/",
+  "$node-origin": "/",
+  "$producer": "exampleProducer",
+  "$type": "RfidAntennaTelemetry",
+  "$user": "exampleUser",
+  "$when": "2026-10-13T21:58:53Z",
+  "$where": {
+    "locagram": "/"
+  },
+  "fields": {
+    "antenna_id": 0,
+    "antenna_name": "item 1",
+    "mean_rssi_dbm": 0,
+    "noise_floor_dbm": 0,
+    "read_rate_tps": 0,
+    "reader_id": "",
+    "reflection_vswr": 0,
+    "status": "",
+    "tx_power_cdbm": 0
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "cold-chain-live-monitor",
+      "$id": "cold-chain-live-monitor",
+      "fields": {
+        "id": "cold-chain-live-monitor",
+        "name": "🌡️ Pharma Cold-Chain Dynamic Excursion Monitor",
+        "query": {
+          "sql": "SELECT * FROM (SELECT \"$when\" AS timestamp, \"$producer\" AS unit_id, CAST(json_extract(raw_json, '$.fields.temperature') AS REAL) AS temp_c, CAST(json_extract(raw_json, '$.fields.compressor_current_amps') AS REAL) AS current_amps, json_extract(raw_json, '$.fields.door_open') AS door_status FROM v_messages WHERE \"$type\" = 'FreezerTelemetry' ORDER BY \"$when\" DESC LIMIT 50) ORDER BY timestamp ASC"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "unit_id": "Freezer Unit",
+          "temp_c": "Temperature (°C)",
+          "current_amps": "Compressor Amps (A)",
+          "door_status": "Door Status"
+        },
+        "view": {
+          "type": "line",
+          "title": "Pharma Cold-Chain Excursion Monitor",
+          "chart_type": "line",
+          "x": "timestamp",
+          "y": [
+            "temp_c",
+            "current_amps"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "machinery-health-prediction-matrix",
+      "$id": "machinery-health-prediction-matrix",
+      "fields": {
+        "id": "machinery-health-prediction-matrix",
+        "name": "🛠️ Compressor & Cooling Machinery Health Matrix",
+        "query": {
+          "sql": "SELECT \"$when\" AS predicted_at, json_extract(raw_json, '$.fields.target_producer') AS asset_id, json_extract(raw_json, '$.fields.health_status') AS health_status, CAST(json_extract(raw_json, '$.fields.predicted_days_to_failure') AS INTEGER) AS days_to_failure, json_extract(raw_json, '$.fields.action_priority') AS priority, json_extract(raw_json, '$.fields.fault_prediction') AS fault_details FROM v_messages WHERE \"$type\" = 'MachineryHealthAssessment' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "predicted_at": "Evaluation Timestamp",
+          "asset_id": "Machinery Unit",
+          "health_status": "Health Status",
+          "days_to_failure": "Est. Days to Failure",
+          "priority": "Maintenance Priority",
+          "fault_details": "Fault Diagnosis"
+        },
+        "view": {
+          "type": "table",
+          "title": "Compressor & Cooling Machinery Health Matrix",
+          "chart_type": "table",
+          "x": "predicted_at",
+          "y": [
+            "days_to_failure"
+          ]
+        }
+      }
+    }
+  ]
+}

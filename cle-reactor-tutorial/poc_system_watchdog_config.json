@@ -1,0 +1,32 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-08-19T18:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "system_hardware_monitor",
+        "input_message_type": "MessageState",
+        "output_message_type": "ErrorEvent",
+        "context_query": "",
+        "trigger_condition": "((\"cpu\" in payload && \"usage_pct\" in payload.cpu && payload.cpu.usage_pct > 90.0) || (\"memory\" in payload && \"used_pct\" in payload.memory && payload.memory.used_pct > 90.0) || (\"disk\" in payload && \"used_pct\" in payload.disk && payload.disk.used_pct > 95.0) || (\"bpr_plugins\" in payload && dyn(payload.bpr_plugins).exists(p, p.status != \"running\")) || (\"ai_reactors\" in payload && dyn(payload.ai_reactors).exists(r, r.status != \"active\" && r.status != \"sleeping\")) || (\"system_plugins\" in payload && dyn(payload.system_plugins).exists(sp, sp.status != \"running\")))",
+        "transformation_expression": {
+          "group_id": "\"mesh\"",
+          "client_id": "head[\"$producer\"]",
+          "username": "\"system\"",
+          "origin_producer": "head[\"$producer\"]",
+          "topic": "head[\"$type\"]",
+          "reason": "((\"cpu\" in payload && payload.cpu.usage_pct > 90.0) || (\"memory\" in payload && payload.memory.used_pct > 90.0) || (\"disk\" in payload && payload.disk.used_pct > 95.0)) ? \"Host hardware resource threshold exceeded\" : \"Core system plugin or BPR process failure detected\"",
+          "payload": "head[\"$type\"]",
+          "error_type": "(\"cpu\" in payload && payload.cpu.usage_pct > 90.0) ? \"SYSTEM_HIGH_CPU\" : ((\"memory\" in payload && payload.memory.used_pct > 90.0) ? \"SYSTEM_HIGH_MEM\" : ((\"disk\" in payload && payload.disk.used_pct > 95.0) ? \"SYSTEM_HIGH_DISK\" : ((\"bpr_plugins\" in payload && dyn(payload.bpr_plugins).exists(p, p.status != \"running\")) ? \"BPR_PLUGIN_CRASH\" : ((\"ai_reactors\" in payload && dyn(payload.ai_reactors).exists(r, r.status != \"active\" && r.status != \"sleeping\")) ? \"AI_REACTOR_CRASH\" : \"SYSTEM_PLUGIN_CRASH\"))))",
+          "timestamp": "head[\"$when\"]"
+        },
+        "cron": ""
+      }
+    ]
+  }
+}

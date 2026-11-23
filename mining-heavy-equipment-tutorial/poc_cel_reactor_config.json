@@ -1,0 +1,53 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-11-07T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mining-equipment-abuse-guard",
+        "input_message_type": "MachineVibrationSample",
+        "cron": "",
+        "trigger_condition": "has(payload.peak_g) && double(payload.peak_g) >= 8.5 && string(payload.operating_state) == 'WORKING'",
+        "context_query": "",
+        "output_message_type": "EquipmentAbuseIncident",
+        "transformation_expression": {
+          "incident_id": "'INC-' + string(payload.machine_id) + '-' + string(payload.sample_timestamp)",
+          "machine_id": "string(payload.machine_id)",
+          "machine_model": "string(payload.machine_model)",
+          "timestamp": "string(payload.sample_timestamp)",
+          "peak_g": "double(payload.peak_g)",
+          "vibration_rms": "double(payload.vibration_rms)",
+          "crest_factor": "double(payload.crest_factor)",
+          "abuse_severity": "double(payload.peak_g) >= 12.0 ? 'CRITICAL' : 'SEVERE'",
+          "incident_type": "'ROCK_IMPACT_SHOCK_OVERLOAD'",
+          "recommendation": "'Inspect bucket teeth, pin bushings, and hydraulic cylinder dampeners for shock damage.'"
+        }
+      },
+      {
+        "reactor_id": "mining-crest-kurtosis-gating",
+        "input_message_type": "MachineVibrationSample",
+        "cron": "",
+        "trigger_condition": "has(payload.crest_factor) && has(payload.kurtosis) && double(payload.crest_factor) >= 4.8 && double(payload.kurtosis) >= 4.2",
+        "context_query": "",
+        "output_message_type": "BearingDefectSuspected",
+        "transformation_expression": {
+          "alert_id": "'ALT-' + string(payload.machine_id) + '-' + string(payload.sample_timestamp)",
+          "machine_id": "string(payload.machine_id)",
+          "machine_model": "string(payload.machine_model)",
+          "component_monitored": "'Main Hydraulic Pump / Slewing Bearing'",
+          "timestamp": "string(payload.sample_timestamp)",
+          "crest_factor": "double(payload.crest_factor)",
+          "kurtosis": "double(payload.kurtosis)",
+          "vibration_rms": "double(payload.vibration_rms)",
+          "peak_g": "double(payload.peak_g)",
+          "defect_stage": "double(payload.crest_factor) >= 7.0 ? 'STAGE_3_SEVERE_DEFECT' : 'STAGE_2_INCIPIENT_SPALLING'"
+        }
+      }
+    ]
+  }
+}

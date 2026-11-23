@@ -1,0 +1,24 @@
+{
+  "message_types": [
+    {
+      "name": "PatioMonitorMedia",
+      "description": "Patio monitoring media capture telemetry containing out-of-band MinIO image reference (Tutorial Test Fixture)",
+      "retentionMode": "count",
+      "retentionValue": 3,
+      "routing": [
+        "local",
+        "parent"
+      ],
+      "properties": [
+        {
+          "name": "patio_view",
+          "type": "media-storage",
+          "required": true,
+          "description": "Out-of-band media reference pointing to patio camera frame capture"
+        }
+      ],
+      "persist": true,
+      "longevity": "P7D"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$type": "RESTReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-09-12T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "fleet-cloud-telemetry-bridge",
+        "telemetry_profile": true,
+        "input_message_type": "MeshTopologyInspection",
+        "trigger_condition": "mesh.self.id != '' && schema.is_registered('MeshTopologyInspection')",
+        "output_message_type": "MeshTopologyCloudSync",
+        "request": {
+          "method": "POST",
+          "url": "'https://httpbin.org/anything/fleet/nodes' + (mesh.self.locagram == '/' ? '' : mesh.self.locagram) + '/inspection'",
+          "headers": {
+            "Content-Type": "'application/json'",
+            "X-Producer-Origin": "config.server.producer_id",
+            "X-Mesh-Root": "mesh.root_id",
+            "X-Schema-Version": "schema.types['MeshTopologyInspection'].version"
+          },
+          "body": "payload",
+          "timeout": "10s"
+        },
+        "retry_policy": {
+          "max_retries": 3,
+          "initial_interval": "1s",
+          "backoff_multiplier": 2.0,
+          "max_interval": "10s",
+          "jitter": true,
+          "retryable_statuses": [408, 429, 500, 502, 503, 504]
+        },
+        "response_map": {
+          "auditor_node_id": "has(payload.auditor_node_id) ? string(payload.auditor_node_id) : mesh.self.id",
+          "auditor_locagram": "has(payload.auditor_locagram) ? string(payload.auditor_locagram) : mesh.self.locagram",
+          "is_root_gateway": "has(payload.is_root_gateway) ? bool(payload.is_root_gateway) : mesh.self.is_root",
+          "parent_gateway_id": "has(payload.parent_gateway_id) ? string(payload.parent_gateway_id) : (mesh.is_parent('root') ? 'root' : 'mesh-root')",
+          "active_plugins": "has(payload.active_plugins) ? payload.active_plugins : mesh.self.plugins",
+          "runtime_producer": "has(payload.runtime_producer) ? string(payload.runtime_producer) : config.server.producer_id",
+          "runtime_log_level": "has(payload.runtime_log_level) ? string(payload.runtime_log_level) : config.logging.level",
+          "time_ntp_server": "has(payload.time_ntp_server) ? string(payload.time_ntp_server) : (config.time.ntp_server != '' ? config.time.ntp_server : 'pool.ntp.org')",
+          "schema_marine_registered": "has(payload.schema_marine_registered) ? bool(payload.schema_marine_registered) : schema.is_registered('RawMarineData')",
+          "marine_schema_badge": "has(payload.marine_schema_badge) ? string(payload.marine_schema_badge) : (schema.is_registered('RawMarineData') ? schema.types['RawMarineData'].emoji : '⚠️')",
+          "audit_summary": "resp.status_code == 200 ? ('Cloud ack: ' + (has(payload.audit_summary) ? string(payload.audit_summary) : 'Audit synced to cloud endpoint')) : ('Local fallback: ' + (has(payload.audit_summary) ? string(payload.audit_summary) : 'Unreachable cloud endpoint'))",
+          "health_score": "has(payload.health_score) ? int(payload.health_score) : 100"
+        }
+      }
+    ]
+  }
+}

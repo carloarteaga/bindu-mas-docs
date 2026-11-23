@@ -1,0 +1,645 @@
+[
+  {
+    "category_id": "message_type",
+    "category_name": "1. Message Type",
+    "category_description": "Strict Data Contracts ($when, $who, $where) and schemas.",
+    "documents": [
+      {
+        "file": "message_types_user_guide.md",
+        "title": "Operator — Message Types",
+        "description": "Canonical guide for Message Type schema, routing, retention, and persist semantics.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "ontology_user_guide.md",
+        "title": "Operator & AI — Dynamic Ontology & Deductive Knowledge Graph",
+        "description": "Canonical guide for dynamic ontology export (Mermaid, DOT, JSON, JSON-LD), Horn Clause DAG deduction, Kahn verification, and console visualizer.",
+        "date": "2026-11-10"
+      },
+      {
+        "file": "retention_policies_guide.md",
+        "title": "Operator — Retention Policies & Storage Partitions",
+        "description": "Canonical deterministic guide for retention policies, semantic partition triplet ($type, $group, $producer), and longevity.",
+        "date": "2026-10-08"
+      },
+      {
+        "file": "routing_and_directionality_guide.md",
+        "title": "Operator — Routing, Directionality & Mesh Flow Archetypes",
+        "description": "Canonical guide for message routing archetypes, Bottom-Up vs Top-Down directionality, and mesh delivery.",
+        "date": "2026-10-12"
+      },
+      {
+        "file": "Message Types for AI Agents.md",
+        "title": "AI — Message Types",
+        "description": "AI-oriented interpretation of Message Type semantics and constraints.",
+        "date": "2026-08-13"
+      },
+      {
+        "file": "publish_message_user_guide.md",
+        "title": "Operator — Publish Message",
+        "description": "How to publish semantic messages and validate payloads.",
+        "date": "2026-08-11"
+      },
+      {
+        "file": "message_user_guide.md",
+        "title": "Reference — Messages",
+        "description": "Envelope structure, core fields, and message-level conventions.",
+        "date": "2026-08-01"
+      },
+      {
+        "file": "Bindu Message Lifecycle — User Manual.md",
+        "title": "Reference — Message Lifecycle",
+        "description": "Supporting message lifecycle: ingress, local delivery, persistence, forwarding, and expiry.",
+        "date": "2026-08-01"
+      },
+      {
+        "file": "Bindu Messaging Architecture — Concepts & Rationale.md",
+        "title": "Reference — Messaging Architecture Rationale",
+        "description": "Supporting rationale for dispatcher, persistence, plugins, and routing separation.",
+        "date": "2026-08-01"
+      }
+    ]
+  },
+  {
+    "category_id": "channel",
+    "category_name": "2. Channel",
+    "category_description": "Routing engine, semantic topics, and mTLS mesh topology.",
+    "documents": [
+      {
+        "file": "mesh_user_guide.md",
+        "title": "Reference — Mesh Semantics",
+        "description": "Conceptual mesh semantics: topology, roles, responsibility split, and lifecycle meaning.",
+        "date": "2026-08-05"
+      },
+      {
+        "file": "Bindu Routing & Mesh Delivery — User Guid.md",
+        "title": "Reference — Canonical Routing Guide",
+        "description": "Primary public routing guide: ingress boundary, node-dest semantics, delivery behavior, and debugging rules.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "Bindu Routing Log Triage.md",
+        "title": "Reference — Routing Log Triage Cheat Sheet",
+        "description": "Supporting troubleshooting reference for interpreting routing and presence recovery logs.",
+        "date": "2026-08-09"
+      },
+      {
+        "file": "topics_user_guide.md",
+        "title": "Reference — Topics",
+        "description": "Topic naming, wildcards, and publish/subscribe addressing rules.",
+        "date": "2026-08-01"
+      },
+      {
+        "file": "raw_ingress_and_mqtt_adapters_guide.md",
+        "title": "Hardware & IoT — Raw MQTT Ingress & Dynamic CEL Normalization",
+        "description": "Architectural guide for ingesting untyped JSON, text, and binary byte streams from commercial IoT, RFID, and PLC hardware with in-memory CEL normalization into typed Bindu events.",
+        "date": "2026-11-11"
+      },
+      {
+        "file": "Bindu Presence Model.md",
+        "title": "Reference — Presence Model",
+        "description": "Minimal presence semantics: publication triggers, lane state, and recovery behavior.",
+        "date": "2026-08-04"
+      },
+      {
+        "file": "Bindu Bootstrap Schema.md",
+        "title": "Reference — Bootstrap Schema",
+        "description": "Schema and examples for bootstrap metadata used during first contact.",
+        "date": "2026-08-02"
+      },
+      {
+        "file": "Bindu Node Installation Guide.md",
+        "title": "Operator — Node Installation",
+        "description": "Node installation and first-contact enrollment using bindu-install-node.",
+        "date": "2026-08-08"
+      },
+      {
+        "file": "Bindu Studio Mesh User Manual.md",
+        "title": "Operator — Mesh Management",
+        "description": "How to inspect and manage mesh configuration using bindu-studio.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "Bindu Studio Mesh Node Deployment.md",
+        "title": "Operator — Mesh Node Deployment",
+        "description": "How mesh node-deploy builds per-node bundles from root runtime state.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "mtls_and_certificate_lifecycle_guide.md",
+        "title": "Operator & Security — mTLS & Certificate Lifecycle",
+        "description": "Comprehensive guide for mesh mTLS, Root CA hierarchy, automated renewal policies, and bindu-studio tls operations.",
+        "date": "2026-10-06"
+      }
+    ]
+  },
+  {
+    "category_id": "context",
+    "category_name": "3. Context",
+    "category_description": "Local SQLite database, spatial Locagrams, and media storage.",
+    "documents": [
+      {
+        "file": "queries_user_guide.md",
+        "title": "Operator — Queries",
+        "description": "Read-only SQL querying on v_messages with safe patterns and troubleshooting.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "media_storage_user_guide.md",
+        "title": "Operator — Media Storage User Guide",
+        "description": "Canonical guide for out-of-band S3/MinIO media storage control plane and REST APIs.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "Geo-Locagram-Query-Patterns.md",
+        "title": "Reference — Geo-Locagram Query Patterns",
+        "description": "Practical SELECT/CTE query patterns for world geometry, local planes, and CV-oriented spatial context.",
+        "date": "2026-08-09"
+      },
+      {
+        "file": "Geo-locagram-User-Guide.md",
+        "title": "Reference — Geo Locagram",
+        "description": "Spatial authoring model and geolocagram operations.",
+        "date": "2026-08-09"
+      },
+      {
+        "file": "bindu-studio-geo-locagram-user-guide.md",
+        "title": "Operator & AI — Geo-Locagram & Spatial Semantics",
+        "description": "Comprehensive guide for bindu-studio geo-locagram: global coordinates (NodeGeoLocation), indoor Cartesian planes (NodeLocalGeometry), batch import/export, and spatial queries.",
+        "date": "2026-10-09"
+      },
+      {
+        "file": "dashboards_user_guide.md",
+        "title": "Operator — Dashboard User Guide",
+        "description": "How to create, manage, and visualize mesh data through custom dashboards and widgets.",
+        "date": "2026-08-12"
+      },
+      {
+        "file": "viewer_user_manual.md",
+        "title": "Operator & IT — Standalone Kiosk Dashboard Viewer Manual",
+        "description": "Comprehensive manual for deploying the standalone Kiosk Dashboard Viewer on Root and Edge Nodes, station URL filtering, auto-refresh, and wall displays.",
+        "date": "2026-11-12"
+      }
+    ]
+  },
+  {
+    "category_id": "processing_agent",
+    "category_name": "4. Processing Agents",
+    "category_description": "Trinity: CEL expression evaluation, AI Reactors, and OS-level BPR plugins.",
+    "documents": [
+      {
+        "file": "cel_reactor_user_guide.md",
+        "title": "Operator — CEL Declarative Reactor Guide",
+        "description": "How to configure, validate, and deploy native Common Expression Language transformation rules.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "cel_context_and_functions_guide.md",
+        "title": "Reference — Google CEL Context & Functions Extensions",
+        "description": "Comprehensive reference for mesh, config, and schema in-memory context variables and custom CEL functions across all Bindu reactors.",
+        "date": "2026-09-12"
+      },
+      {
+        "file": "scheduled_events_user_guide.md",
+        "title": "Operator — Scheduled Events & Digital Twin Awakening Guide",
+        "description": "How to schedule time-based intentions, manage Min-Heap priority timers, and awaken digital twins with Zero-RAG CEL hydration.",
+        "date": "2026-10-04"
+      },
+      {
+        "file": "rest-reactor-user-manual.md",
+        "title": "Operator — REST Call Reactor Guide",
+        "description": "How to configure, validate, dry-run, and deploy declarative REST API call reactors and HTTP integration bridges.",
+        "date": "2026-09-09"
+      },
+      {
+        "file": "semantic_reactor_user_guide.md",
+        "title": "Operator — Semantic AI Reactor Guide",
+        "description": "How to configure and deploy the autonomous intelligence core on the Bindu mesh.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "bindu-bpr-go-sdk-developer-manual.md",
+        "title": "Plugin Dev — Go SDK Manual",
+        "description": "Developer manual for implementing BPR plugins with the Go SDK.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "plugin_execution_model_user_guide.md",
+        "title": "Plugin Dev — Execution Model",
+        "description": "How plugin processes execute, receive triggers, and emit messages.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "Bindu Plugins — BPR Runtime Spec (AI-Assisted, Deterministic).md",
+        "title": "Plugin Dev — BPR Runtime Spec",
+        "description": "Authoritative BPR runtime contract and deterministic behavior rules.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "Cron_Job_Strings_user_guide.md",
+        "title": "Plugin Dev — Cron Strings",
+        "description": "Cron expression syntax used by scheduled execution in Bindu.",
+        "date": "2026-08-01"
+      },
+      {
+        "file": "AISemanticReactorSet Schema & Authoring Guide for AI.md",
+        "title": "AI — AISemanticReactorSet Schema & Authoring",
+        "description": "Schema definition and authoring contract for configuring AI reactors across the Bindu mesh.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "prompting_strategies_local_llms.md",
+        "title": "AI — Prompting Strategies for Local LLMs",
+        "description": "Practical guide on prompting local LLMs under strict grammar validation and preventing type coercion failures.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "system_email_bpr_user_guide.md",
+        "title": "Operator — System BPR: Email & Monitoring Guide",
+        "description": "Learn about the isolated System BPR plugins for background SMTP dispatching and hardware platform monitoring.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "hello-world-plugin-and-spa-tutorial.md",
+        "title": "Plugin Dev — Hello World Plugin + SPA",
+        "description": "End-to-end tutorial: plugin init, hello-world plugin, and SPA using WSS, SQL, and Geo-Locagram.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "hello-world-tutorial/hello-world-plugin/README.md",
+        "title": "Tutorial — Hello World Plugin Code Detail",
+        "description": "Read-me technical review of the Hello World BPR plugin code.",
+        "date": "2026-08-11"
+      },
+      {
+        "file": "hello-world-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Hello World First Contact Flow",
+        "description": "Walkthrough to deploy the dual-cron hello world plugin and observe emitted metrics.",
+        "date": "2026-08-11"
+      },
+      {
+        "file": "cle-reactor-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Scheduled CEL Reactor & Audit",
+        "description": "Step-by-step walkthrough to deploy an autonomous, cron-triggered CEL Reactor that reads SQLite history to audit model latency metrics.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "cle-reactor-tutorial/system_watchdog_tutorial.md",
+        "title": "Tutorial — System Watchdog CEL Reactor & Alerts",
+        "description": "Explains how a built-in CEL Reactor monitors MessageState heartbeats and SystemVersion inventories to publish ErrorEvents.",
+        "date": "2026-08-19"
+      },
+      {
+        "file": "cleext-for-cle/tutorial_guide.md",
+        "title": "Tutorial — CEL & celext Extensions: Fleet Topology & Inspection",
+        "description": "Comprehensive tutorial showcasing Google CEL combined with live in-memory mesh topology, system config, and schema registry extensions.",
+        "date": "2026-09-12"
+      },
+      {
+        "file": "media-storage-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Out-of-Band Media & Multimodal AI",
+        "description": "Step-by-step walkthrough to configure MinIO, Moondream local vision model, simulate patio camera feeds, and view preview overlays.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "semantic-ai-reactor-tutorial/concepto.md",
+        "title": "Tutorial — Cold Chain AI Concept & Topology",
+        "description": "Geographical mesh representation and decentralized AI logic for the Cold Chain demo.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "semantic-ai-reactor-tutorial/cold_chain_ai_demo_plan.md",
+        "title": "Tutorial — Cold Chain Predictive AI Demo Plan",
+        "description": "Implementation plan for the smart cooling AI-Pushing demo over a 5-node mesh.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "semantic-ai-reactor-tutorial/poc_walkthrough.md",
+        "title": "Tutorial — Cold Chain AI PoC Walkthrough",
+        "description": "Step-by-step walkthrough to import schemas, config, simulate progressive faults, and verify local Qwen predictions.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "semantic-ai-reactor-tutorial/semantic-ai-reactor-tutorial-deployment.md",
+        "title": "Tutorial — Cold Chain AI Deployment & Architecture",
+        "description": "Architectural blueprints, local component stack, and end-to-end telemetry sequence for the reactor demo.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "semantic-ai-reactor-tutorial/semantic_ai_reactor_phase_3_plan.md",
+        "title": "Tutorial — Phase 3: The Semantic-Self-Aware AI Engine",
+        "description": "Implementation plan for integrating automated schema querying and compact Pseudo-TypeScript hydration.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "system-email-bpr-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Scheduled System Email BPR & Mesh Status",
+        "description": "Step-by-step walkthrough to deploy an autonomous CEL Reactor that audits node health status and dispatches email reports with diagrams.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "rest-reactor-tutorial/marine_fishery_tutorial_plan.md",
+        "title": "Tutorial — Marine Fishery REST Reactor & Weather Poller",
+        "description": "Comprehensive tutorial for marine fishing vessels combining periodic satellite weather polling with real-time catch quota validation via external REST APIs.",
+        "date": "2026-09-09"
+      },
+      {
+        "file": "mas-solution-tutorial/tutorial_guide.md",
+        "title": "Tutorial — MAS Solution Sets & Domain Manifests",
+        "description": "Master guide for packaging, validating, and deploying declarative Multi-Agent System (MASSolutionSet) solutions across the mesh.",
+        "date": "2026-09-18"
+      },
+      {
+        "file": "mas-complete-lifecycle-tutorial/tutorial_guide.md",
+        "title": "Tutorial — MAS 4-Paradigm Complete Lifecycle & Purge",
+        "description": "Comprehensive guide for deploying, validating, monitoring with SQL interval window functions, and purging a 4-paradigm (CEL, REST, AI, BPR) Multi-Agent System.",
+        "date": "2026-09-22"
+      },
+      {
+        "file": "media-storage-cleanup-tutorial/tutorial_guide.md",
+        "title": "Tutorial — MinIO Media Storage Retention & Auto Cleanup",
+        "description": "Step-by-step walkthrough to deploy an autonomous CEL & REST reactor pipeline that identifies expired media references and prunes MinIO/S3 storage.",
+        "date": "2026-09-28"
+      },
+      {
+        "file": "media-storage-cleanup-tutorial/tutorial-plan.md",
+        "title": "Tutorial Plan — MinIO Media Retention Architecture",
+        "description": "Engineering specification and 3:00 AM / 4:00 AM lifecycle architecture for out-of-band MinIO S3 media retention and automated pruning.",
+        "date": "2026-09-28"
+      },
+      {
+        "file": "edge-cv-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Edge CV Multi-Camera Authority & Workstation Presence",
+        "description": "Step-by-step guide for deploying multi-camera computer vision (USB & Tapo RTSP) with sub-microsecond CEL visual authority arbitration and BPR Go plugin.",
+        "date": "2026-09-28"
+      },
+      {
+        "file": "edge-cv-tutorial/tutorial-plan.md",
+        "title": "Tutorial Plan — Edge CV Authority Arbitration & BPR Architecture",
+        "description": "Master engineering specification for multi-camera overlap arbitration, pure CEL mathematics, and native Go BPR vision plugin architecture.",
+        "date": "2026-09-28"
+      },
+      {
+        "file": "potato-processing-pipeline-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Potato Processing Thermodynamic Pipeline & Digital Twin Awakening",
+        "description": "Comprehensive guide illustrating the 7-step Co-Creation Guide: optical AI sugar estimation, CEL kinetic equations, SystemScheduledEvent / SystemCronJob digital twin awakening, and Modbus PLC hardware control.",
+        "date": "2026-10-04"
+      },
+      {
+        "file": "potato-processing-pipeline-tutorial/tutorial-plan.md",
+        "title": "Tutorial Plan — Potato Processing Pipeline & Modbus Architecture",
+        "description": "Master engineering specification, contradiction analysis, kinetic derivations (Arrhenius, Fick's law), and Modbus register allocation table.",
+        "date": "2026-10-04"
+      },
+      {
+        "file": "rfid-epc-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Industrial RFID LLRP Dock Portal & 11-Standard EPC Bit-Decoder",
+        "description": "Comprehensive tutorial for deploying a high-throughput RAIN RFID LLRP Gateway, zero-allocation 11-standard EPC bit-decoder Go BPR plugin, 4-antenna spatial velocity tracking, and local SLM manifest audit.",
+        "date": "2026-10-10"
+      },
+      {
+        "file": "rfid-epc-tutorial/tutorial-plan.md",
+        "title": "Tutorial Plan — RFID EPC LLRP Architecture & 4-Antenna Portal Engineering Spec",
+        "description": "Master engineering specification, LLRP binary framing, 11 EPC partition tables, physical transit spatial math, and MAS declarative artifact blueprint.",
+        "date": "2026-10-10"
+      },
+      {
+        "file": "ble-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Bluetooth Low Energy (BLE) Spatial Presence & Reference Plane Digital Twin",
+        "description": "Comprehensive tutorial for deploying a 2.4 GHz physical BLE iBeacon scanner Go BPR plugin, dwell and absence debouncing, operation-room Cartesian reference plane ($where), and real-time operational map dashboards.",
+        "date": "2026-10-12"
+      },
+      {
+        "file": "ble-tutorial/ble_tutorial_plan.md",
+        "title": "Tutorial Plan — BLE Spatial Presence Architecture & Reference Plane Spec",
+        "description": "Master engineering specification, physical iBeacon radio framing, log-distance path loss, dwell/absence state machine, and Universal 5-Phase Deployment Pipeline.",
+        "date": "2026-10-12"
+      },
+      {
+        "file": "mining-heavy-equipment-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Heavy Equipment Non-Invasive Vibration CBM & Fleet Health MAS",
+        "description": "Comprehensive tutorial for bolt-on triaxial BLE beacons, drive-by store-and-forward timeline reconstruction in v_messages, Crest Factor + Kurtosis CEL gating, and SLM predictive maintenance RUL orders.",
+        "date": "2026-11-07"
+      },
+      {
+        "file": "mining-heavy-equipment-tutorial/tutorial-plan.md",
+        "title": "Tutorial Plan — Heavy Equipment Vibration Telemetry, Drive-By Ring Buffers & SLM Diagnostics",
+        "description": "Master engineering specification for non-invasive mining machinery health, structural shock abuse detection, ISO 13373 bearing spalling gating, and fleet utilization MAS architecture.",
+        "date": "2026-11-07"
+      },
+      {
+        "file": "amazon-suzano-carbon-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Amazon Suzano Airborne Precision Forestry & Cryptographic Carbon Credit Auditing MAS",
+        "description": "Comprehensive tutorial for autonomous drone data-mule fly-by harvesting, sub-canopy solar BLE sentinel stations, stoichiometric CEL Horn clauses, and verifiable ESG proof trees for 1.6M hectares.",
+        "date": "2026-11-08"
+      },
+      {
+        "file": "amazon-suzano-carbon-tutorial/tutorial-plan.md",
+        "title": "Tutorial Plan — Amazon Suzano Airborne Precision Forestry & Stoichiometric Carbon Deduction",
+        "description": "Master engineering specification for airborne fly-by data-mule harvesting, understory microclimate sensing, deterministic photosynthetic chemistry in CEL, and cryptographic ESG audit proof trees.",
+        "date": "2026-11-08"
+      },
+      {
+        "file": "raw-ingress-event-tutorial/tutorial_guide.md",
+        "title": "Tutorial — Heterogeneous Raw MQTT Ingress & Dynamic CEL Normalization",
+        "description": "Comprehensive tutorial for non-semantic MQTT ingress (bindu/in/raw/#), ephemeral in-memory RawIngressEvent routing, zero SQLite WAL bloat, and CEL binary frame unpacking for Hopeland, Zebra, Chafon, and Marktrace readers.",
+        "date": "2026-11-11"
+      },
+      {
+        "file": "raw-ingress-event-tutorial/tutorial-plan.md",
+        "title": "Tutorial Plan — Raw Ingress Normalization & Edge RFID Digital Twin MAS",
+        "description": "Architecture specification, hardware protocols (Hopeland, Zebra, Chafon, Marktrace binary), Horn clause CEL kinetics, and multi-reader simulator implementation.",
+        "date": "2026-11-11"
+      }
+    ]
+  },
+  {
+    "category_id": "message_consumer",
+    "category_name": "5. Message Consumer",
+    "category_description": "External ERP integrations, actuating logic, and downstream consumers.",
+    "documents": [
+      {
+        "file": "Bindu-Integration-User-Manual.md",
+        "title": "Reference — Canonical Integration Guide",
+        "description": "Primary public integration guide: MQTT, REST Query, BPR, security, and when to use each surface.",
+        "date": "2026-08-10"
+      },
+      {
+        "file": "mobile_and_leaf_client_guide.md",
+        "title": "Mobile & Leaf Client Integration Guide (Android & iOS)",
+        "description": "Architectural contract and reference wrappers for mobile apps, handheld terminals, real-time GPS projection ($where), and MQTT TLS.",
+        "date": "2026-11-19"
+      }
+    ]
+  },
+  {
+    "category_id": "message_producer",
+    "category_name": "6. Message Producer",
+    "category_description": "Sensory inputs, custom Python/Node scripts, and MQTT injectors.",
+    "documents": [
+      {
+        "file": "plugin-init-generated-code-tutor.md",
+        "title": "Plugin Dev — Init Generated Code Tutor",
+        "description": "Detailed map of files generated by plugin init and responsibilities per file.",
+        "date": "2026-08-11"
+      },
+      {
+        "file": "How to Train an AI Agent to Create a Bindu Plugin.md",
+        "title": "AI — Training for Bindu Plugins",
+        "description": "Canonical training guide for AI agents to use Bindu and build/deploy plugins safely.",
+        "date": "2026-08-13"
+      },
+      {
+        "file": "bindu-plugin-ai-author-mode.md",
+        "title": "AI — Plugin Author Mode",
+        "description": "Short operational profile for AI-assisted plugin authoring.",
+        "date": "2026-08-12"
+      },
+      {
+        "file": "AI Agent Fleet Deployment and Bulk Add Tutorial.md",
+        "title": "AI — Fleet Deployment & Bulk Add",
+        "description": "Guide for AI agents and scripts to register multiple nodes using pattern range expansions and deploy generic bundles.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "What Bindu Means to an AI Agent.md",
+        "title": "AI — What Bindu Means",
+        "description": "AI-first conceptual framing of Bindu semantics and operations.",
+        "date": "2026-08-13"
+      }
+    ]
+  },
+  {
+    "category_id": "runtime_artifacts",
+    "category_name": "7. Platform-Specific Runtime Artifacts",
+    "category_description": "Control plane operations, single native binary, Studio CLI, and global knobs.",
+    "documents": [
+      {
+        "file": "AGENTS.md",
+        "title": "Start Here (AI Agents) — The AI Architect & Operator Handbook (AGENTS.md / GEMINI.md)",
+        "description": "Master specification for Autonomous AI Models (Gemini, Antigravity, Claude, Codex): 3-Layer invariants, 6-Tier Whitelisted Curriculum, and the Universal 5-Phase Deployment Pipeline.",
+        "date": "2026-10-22"
+      },
+      {
+        "file": "Co-Creation Guide.md",
+        "title": "Start Here — Human & AI Co-Creation Guide",
+        "description": "Master blueprint for humans and AI agents co-creating sovereign edge solutions: 3 layers, 4 paradigms, 7-step lifecycle, and OTA deployment.",
+        "date": "2026-10-03"
+      },
+      {
+        "file": "Bindu in 3 Layers.md",
+        "title": "Start Here — Bindu Technical Mandala",
+        "description": "Bindu in 3 layers: Semantics, Runtime, and Operations as the core system mandala.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "Bindu Day 1 — Solution Workspace and AI Agent Setup Guide.md",
+        "title": "Start Here — Day 1 Solution & AI Agent Setup",
+        "description": "Essential Day 1 onboarding: workspace filesystem isolation, bindu-studio PATH linking, Git repo init, and AI Agent (agy) launch.",
+        "date": "2026-11-06"
+      },
+      {
+        "file": "how-to-build-a-bindu-solution.md",
+        "title": "Start Here — Solutions Architecture Blueprint",
+        "description": "Canonical 5-stage blueprint for humans & AI agents: schemas, MQTT ingress, CEL/AI reasoning, mesh sync, and SQL queries.",
+        "date": "2026-09-13"
+      },
+      {
+        "file": "Bindu Architecture Overview.md",
+        "title": "Start Here — Canonical Architecture Overview",
+        "description": "Primary public architecture map: layers, runtime loop, plugin model, and update planes.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "Bindu Docs Navigation by Profile.md",
+        "title": "Start Here — Docs by Profile",
+        "description": "Entry point: recommended reading order for Operator, Plugin Developer, and AI Agent profiles.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "Bindu legend.md",
+        "title": "Start Here — Navigation Legend",
+        "description": "Quick map of where to go in Console and Studio for each task.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "What is Bindu.md",
+        "title": "Start Here — What is Bindu",
+        "description": "High-level overview of Bindu as an event-centric distributed operating fabric.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "Bindu Studio — User Guide (Command Overview).md",
+        "title": "Operator — Studio Command Overview",
+        "description": "Command-level overview of bindu-studio for operational workflows.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "how-to.md",
+        "title": "Operator — How-To (Updates, Plugins, Nodes)",
+        "description": "Canonical operational procedures for runtime updates, plugins, and node lifecycle.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "lifecycle-user-manual.md",
+        "title": "Operator — Lifecycle User Guide",
+        "description": "Lifecycle status, staged artifacts, desired state, and delivery operations.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "how-to-manage-bindu-root-ssh.md",
+        "title": "Operator — Root SSH Access",
+        "description": "SSH access, Console tunneling, CA trust, and remote debugging.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "Bindu Runtime Logging Model.md",
+        "title": "Operator — Runtime Logging",
+        "description": "Logging guide: stdout/stderr, journald retention, and time-filtered debugging.",
+        "date": "2026-08-13"
+      },
+      {
+        "file": "bindu-studio-plugin-user-guide.md",
+        "title": "Operator — Studio Plugin Guide",
+        "description": "Single intent-first guide for plugin operations.",
+        "date": "2026-08-14"
+      },
+      {
+        "file": "Bindu Studio - System Configuration User Guide.md",
+        "title": "Operator — System Configuration",
+        "description": "Inspect and edit runtime configuration, including SMTP and logging.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "Bindu Access Control User Manual.md",
+        "title": "Operator — Access Control",
+        "description": "Manage users, roles, and access-control configuration.",
+        "date": "2026-08-15"
+      },
+      {
+        "file": "bindu_studio_solution_user_guide.md",
+        "title": "Operator & AI — MAS Solution Management & AI Cloner",
+        "description": "Declarative MAS solution manifests (MASSolutionSet), bundle packaging, selective export, and automated deployment.",
+        "date": "2026-09-16"
+      },
+      {
+        "file": "mas-deployment-guide.md",
+        "title": "Operator & AI — MAS Solution Deployment & Rollout Guide",
+        "description": "Definitive step-by-step guide for deploying Multi-Agent System (MAS) solutions: Pure Declarative vs Hybrid BPR Plugins, preflight checks, and the Universal Runtime OTA Triptych.",
+        "date": "2026-10-11"
+      },
+      {
+        "file": "bindu_root_factory_user_manual.md",
+        "title": "Reference — Root Factory",
+        "description": "Provisioning workflow from zero to operational root deployment.",
+        "date": "2026-08-05"
+      },
+      {
+        "file": "security_model_v1_user_manual.md",
+        "title": "Reference — Security Model",
+        "description": "Security model overview and trust boundaries.",
+        "date": "2026-08-05"
+      }
+    ]
+  }
+]

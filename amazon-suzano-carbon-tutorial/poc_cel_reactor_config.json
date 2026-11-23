@@ -1,0 +1,56 @@
+{
+  "$type": "CELReactorSet",
+  "$node-dest": "root",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-11-08T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "suzano-canopy-deforestation-guard",
+        "input_message_type": "CanopyFoliageInspection",
+        "cron": "",
+        "trigger_condition": "(has(payload.illegal_clearing_detected) && bool(payload.illegal_clearing_detected) == true) || (has(payload.canopy_health_factor) && double(payload.canopy_health_factor) < 0.45)",
+        "context_query": "",
+        "output_message_type": "ForestThreatAlert",
+        "transformation_expression": {
+          "hectare_id": "string(payload.hectare_id)",
+          "zone_id": "string(payload.zone_id)",
+          "severity": "(has(payload.illegal_clearing_detected) && bool(payload.illegal_clearing_detected) == true) ? 'CRITICAL' : 'WARNING'",
+          "alert_type": "(has(payload.illegal_clearing_detected) && bool(payload.illegal_clearing_detected) == true) ? 'DEFORESTATION_DETECTED' : 'CANOPY_DIEBACK'",
+          "description": "'Airborne optical sweep detected abnormal canopy disruption in hectare ' + string(payload.hectare_id) + ': CHF=' + string(payload.canopy_health_factor) + ' clearing_flag=' + string(payload.illegal_clearing_detected)",
+          "clearing_area_m2": "has(payload.clearing_area_m2) ? double(payload.clearing_area_m2) : 0.0",
+          "coordinates_lat": "-2.4281",
+          "coordinates_lon": "-54.7125",
+          "alert_timestamp": "string(payload.inspection_timestamp)"
+        }
+      },
+      {
+        "reactor_id": "suzano-stoichiometric-carbon-yield",
+        "input_message_type": "SubCanopySoilTelemetry",
+        "cron": "",
+        "trigger_condition": "has(payload.soil_moisture_pct) && double(payload.soil_moisture_pct) > 0.0 && has(payload.ambient_temp_c)",
+        "context_query": "",
+        "output_message_type": "HectareCarbonOxygenYield",
+        "transformation_expression": {
+          "hectare_id": "string(payload.hectare_id)",
+          "zone_id": "string(payload.zone_id)",
+          "station_id": "string(payload.station_id)",
+          "drone_id": "'DRONE-AMZ-01'",
+          "gpp_base_g_c_m2": "3200.0",
+          "respiration_loss_g_c_m2": "(double(payload.ambient_temp_c) * 18.0) + ((100.0 - double(payload.soil_moisture_pct)) * 5.0)",
+          "net_primary_productivity_g_c_m2": "3200.0 - ((double(payload.ambient_temp_c) * 18.0) + ((100.0 - double(payload.soil_moisture_pct)) * 5.0))",
+          "co2_sequestered_kg_yr": "((3200.0 - ((double(payload.ambient_temp_c) * 18.0) + ((100.0 - double(payload.soil_moisture_pct)) * 5.0))) * 3.67 * 10000.0) / 1000.0",
+          "o2_produced_kg_yr": "(((3200.0 - ((double(payload.ambient_temp_c) * 18.0) + ((100.0 - double(payload.soil_moisture_pct)) * 5.0))) * 3.67 * 10000.0) / 1000.0) * 0.727",
+          "co2_metric_tons_yr": "(((3200.0 - ((double(payload.ambient_temp_c) * 18.0) + ((100.0 - double(payload.soil_moisture_pct)) * 5.0))) * 3.67 * 10000.0) / 1000.0) / 1000.0",
+          "o2_metric_tons_yr": "((((3200.0 - ((double(payload.ambient_temp_c) * 18.0) + ((100.0 - double(payload.soil_moisture_pct)) * 5.0))) * 3.67 * 10000.0) / 1000.0) * 0.727) / 1000.0",
+          "audit_verified": "true",
+          "audit_rationale": "'Stoichiometric deduction: GPP_base=3200 g C/m2/yr, molecular CO2 multiplier=3.67, photosynthetic O2 factor=0.727'",
+          "calculation_timestamp": "string(payload.sample_timestamp)"
+        }
+      }
+    ]
+  }
+}

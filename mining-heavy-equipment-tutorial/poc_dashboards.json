@@ -1,0 +1,101 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "mining-fleet-utilization-dashboard",
+      "$id": "mining-fleet-utilization-dashboard",
+      "fields": {
+        "id": "mining-fleet-utilization-dashboard",
+        "name": "🚜 Mining Fleet Real-Time Health & Operating States",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS machine_id, json_extract(raw_json, '$.fields.machine_model') AS model, json_extract(raw_json, '$.fields.operating_state') AS state, json_extract(raw_json, '$.fields.vibration_rms') AS rms_g, json_extract(raw_json, '$.fields.crest_factor') AS crest_factor, json_extract(raw_json, '$.fields.kurtosis') AS kurtosis, json_extract(raw_json, '$.fields.battery_millivolts') AS battery_mv, json_extract(raw_json, '$.fields.ingest_mode') AS mode FROM v_messages WHERE \"$type\" = 'MachineVibrationSample' ORDER BY \"$when\" DESC LIMIT 30"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "machine_id": "Machine ID",
+          "model": "Equipment Model",
+          "state": "Operating State",
+          "rms_g": "RMS (g)",
+          "crest_factor": "Crest Factor",
+          "kurtosis": "Kurtosis",
+          "battery_mv": "Battery (mV)",
+          "mode": "Ingest Mode"
+        },
+        "view": {
+          "type": "table",
+          "title": "Continuous Fleet Vibration & Utilization Telemetry",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "rms_g"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "mining-abuse-incidents-dashboard",
+      "$id": "mining-abuse-incidents-dashboard",
+      "fields": {
+        "id": "mining-abuse-incidents-dashboard",
+        "name": "💥 Heavy Equipment Abuse & Severe Shock Incidents",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS machine_id, json_extract(raw_json, '$.fields.incident_id') AS incident_id, json_extract(raw_json, '$.fields.peak_g') AS peak_g, json_extract(raw_json, '$.fields.abuse_severity') AS severity, json_extract(raw_json, '$.fields.incident_type') AS incident_type, json_extract(raw_json, '$.fields.recommendation') AS recommendation FROM v_messages WHERE \"$type\" = 'EquipmentAbuseIncident' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "machine_id": "Machine ID",
+          "incident_id": "Incident ID",
+          "peak_g": "Peak Shock (g)",
+          "severity": "Severity",
+          "incident_type": "Incident Type",
+          "recommendation": "Mechanical Recommendation"
+        },
+        "view": {
+          "type": "table",
+          "title": "Structural Shock & Excessive G-Force Log (CEL Triggered)",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "peak_g"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "mining-predictive-maintenance-dashboard",
+      "$id": "mining-predictive-maintenance-dashboard",
+      "fields": {
+        "id": "mining-predictive-maintenance-dashboard",
+        "name": "🛠️ AI Predictive Maintenance Work Orders & RUL Matrix",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, \"$producer\" AS machine_id, json_extract(raw_json, '$.fields.component') AS component, json_extract(raw_json, '$.fields.diagnosed_failure_mode') AS failure_mode, json_extract(raw_json, '$.fields.defect_severity') AS severity, CAST(json_extract(raw_json, '$.fields.estimated_remaining_useful_life_hours') AS INTEGER) AS rul_hours, json_extract(raw_json, '$.fields.confidence_score') AS confidence, json_extract(raw_json, '$.fields.work_order_priority') AS priority, json_extract(raw_json, '$.fields.recommended_action') AS action FROM v_messages WHERE \"$type\" = 'PredictiveMaintenanceDiagnosis' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "machine_id": "Machine ID",
+          "component": "Component",
+          "failure_mode": "Diagnosed Failure Mode",
+          "severity": "Severity",
+          "rul_hours": "Estimated RUL (Hours)",
+          "confidence": "AI Confidence",
+          "priority": "Work Order Priority",
+          "action": "Prescribed Corrective Action"
+        },
+        "view": {
+          "type": "table",
+          "title": "Cognitive SLM Bearing Defect Diagnoses & Actionable Work Orders",
+          "chart_type": "table",
+          "x": "timestamp",
+          "y": [
+            "rul_hours"
+          ]
+        }
+      }
+    }
+  ]
+}

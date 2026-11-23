@@ -1,0 +1,44 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "mining-heavy-equipment-solution",
+  "$user": "console",
+  "$when": "2026-11-07T12:00:00Z",
+  "fields": {
+    "solution_id": "mining-heavy-equipment-solution",
+    "name": "Heavy Equipment Non-Invasive Vibration CBM & Utilization MAS",
+    "version": "1.0.0",
+    "description": "Non-invasive BLE triaxial vibration telemetry, drive-by store-and-forward timeline reconstruction, true utilization auditing, mechanical abuse gating (Crest Factor + Kurtosis), and SLM predictive maintenance diagnosis.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": [
+        "root"
+      ],
+      "message_types": [
+        "MachineVibrationSample@1.0.0",
+        "MachineVibrationBatchIngress@1.0.0",
+        "EquipmentAbuseIncident@1.0.0",
+        "BearingDefectSuspected@1.0.0",
+        "PredictiveMaintenanceDiagnosis@1.0.0"
+      ],
+      "cel_reactors": [
+        "mining-equipment-abuse-guard",
+        "mining-crest-kurtosis-gating"
+      ],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [
+        "mining-reliability-engineer"
+      ],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": [],
+      "access_roles": [],
+      "dashboards": [
+        "mining-fleet-utilization-dashboard",
+        "mining-abuse-incidents-dashboard",
+        "mining-predictive-maintenance-dashboard"
+      ],
+      "system_config_keys": []
+    }
+  }
+}

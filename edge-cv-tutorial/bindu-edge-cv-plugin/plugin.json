@@ -1,0 +1,17 @@
+{
+  "id": "bindu-edge-cv-plugin",
+  "name": "Bindu Edge CV Plugin",
+  "version": "1.0.0",
+  "runtime": "bpr",
+  "in": [
+    "EdgeCVSet",
+    "EdgeCVSetStatus"
+  ],
+  "out": [
+    "AppearedClass",
+    "DisappearedClass"
+  ],
+  "capabilities": [
+    "error:event"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$type": "MASSolutionSet",
+  "$group": "solution",
+  "$producer": "coldchain-safety-watchdog",
+  "$user": "console",
+  "$when": "2026-09-18T12:00:00Z",
+  "fields": {
+    "solution_id": "coldchain-safety-watchdog",
+    "name": "Cold-Chain Safety Watchdog & Anomaly Guardian",
+    "version": "1.0.0",
+    "description": "Deterministic edge telemetry rule evaluation for industrial freezers, emergency alert routing, and spoilage prevention.",
+    "status": "active",
+    "artifacts": {
+      "mesh_nodes": ["root", "node-1", "bindu-minis", "bindu-pi3-uno"],
+      "message_types": ["FreezerTelemetry@1.0.0", "StorageRiskAssessment@1.0.0", "ErrorEvent@1.0.0", "MessageState@1.0.0"],
+      "cel_reactors": ["freezer-cold-chain-guard-cel", "system_hardware_monitor"],
+      "rest_reactors": [],
+      "semantic_ai_reactors": [],
+      "plugins": [],
+      "media_storage_providers": [],
+      "access_users": ["coldchain-operator"],
+      "access_roles": ["operator"],
+      "dashboards": ["freezer-ops-dashboard", "freezer-risk-assessment-log"],
+      "system_config_keys": []
+    }
+  }
+}

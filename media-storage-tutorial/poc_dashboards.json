@@ -1,0 +1,66 @@
+{
+  "dashboards": [
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "patio-vision-defect-monitor",
+      "$id": "patio-vision-defect-monitor",
+      "fields": {
+        "id": "patio-vision-defect-monitor",
+        "name": "🌺 Patio Flower Count & Botanical Vision Feed",
+        "query": {
+          "sql": "SELECT \"$when\" AS timestamp, CAST(json_extract(raw_json, '$.fields.yellow_flowers') AS INTEGER) AS yellow, CAST(json_extract(raw_json, '$.fields.orange_light_flowers') AS INTEGER) AS orange_light, CAST(json_extract(raw_json, '$.fields.orange_dark_flowers') AS INTEGER) AS orange_dark, CAST(json_extract(raw_json, '$.fields.total_flowers') AS INTEGER) AS total_flowers, json_extract(raw_json, '$.fields.analysis_summary') AS vision_summary FROM v_messages WHERE \"$type\" = 'CountFlowersByColor' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "timestamp": "Timestamp",
+          "yellow": "Yellow Flowers",
+          "orange_light": "Light Orange Flowers",
+          "orange_dark": "Dark Orange Flowers",
+          "total_flowers": "Total Flowers Counted",
+          "vision_summary": "Vision Analysis"
+        },
+        "view": {
+          "type": "bar",
+          "title": "Patio Flower Count Distribution by Color",
+          "chart_type": "bar",
+          "x": "timestamp",
+          "y": [
+            "yellow",
+            "orange_light",
+            "orange_dark",
+            "total_flowers"
+          ]
+        }
+      }
+    },
+    {
+      "$type": "DashboardDefinition",
+      "$group": "dashboard",
+      "$producer": "patio-ai-model-latency-audit",
+      "$id": "patio-ai-model-latency-audit",
+      "fields": {
+        "id": "patio-ai-model-latency-audit",
+        "name": "⚡ Vision SLM Inference Latency & Efficiency",
+        "query": {
+          "sql": "SELECT \"$when\" AS audit_time, json_extract(raw_json, '$.fields.model_id') AS model, json_extract(raw_json, '$.fields.audit_status') AS status, CAST(json_extract(raw_json, '$.fields.avg_latency_ms') AS INTEGER) AS latency_ms, json_extract(raw_json, '$.fields.efficiency_summary') AS summary FROM v_messages WHERE \"$type\" = 'AIExecutionCognivityAuditory' ORDER BY \"$when\" DESC LIMIT 20"
+        },
+        "labels": {
+          "audit_time": "Audit Timestamp",
+          "model": "Target Model",
+          "status": "Efficiency Status",
+          "latency_ms": "Avg Latency (ms)",
+          "summary": "Efficiency Assessment"
+        },
+        "view": {
+          "type": "table",
+          "title": "Vision SLM Inference Latency & Efficiency",
+          "chart_type": "table",
+          "x": "audit_time",
+          "y": [
+            "latency_ms"
+          ]
+        }
+      }
+    }
+  ]
+}

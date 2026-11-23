@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment & Architecture: Semantic AI Reactor Cold Chain Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Urbanist:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #050b14;
+            --bg-card: #0b132b;
+            --border-color: rgba(0, 180, 216, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #00b4d8;
+            --accent-purple: #7209b7;
+        }
+
+        * { box-sizing: border-box; }
+        body { 
+            background-color: #020408; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 40px; 
+            padding: 40px 0;
+            font-family: 'Urbanist', sans-serif; 
+            color: var(--text-primary);
+        }
+
+        .page-slide {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-main);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            page-break-after: always;
+        }
+
+        .page-slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0, 180, 216, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 180, 216, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-number {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h1 span { color: var(--accent-cyan); }
+        h2 { font-size: 22px; color: var(--accent-cyan); margin: 0 0 15px 0; font-weight: 500; }
+        p { color: var(--text-secondary); font-size: 16px; line-height: 1.5; margin: 0 0 15px 0; }
+        
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            flex-grow: 1;
+            align-items: start;
+        }
+
+        .layout-grid.reverse {
+            grid-template-columns: 1.2fr 1fr;
+        }
+
+        .info-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            height: 100%;
+        }
+
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { font-size: 16px; color: #cbd5e1; margin-bottom: 12px; line-height: 1.4; padding-left: 24px; position: relative; }
+        li::before {
+            content: '➔';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+        }
+
+        .note-box {
+            margin-top: auto;
+            background: rgba(0, 180, 216, 0.05);
+            border-left: 3px solid var(--accent-cyan);
+            padding: 15px;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        .diagram-container {
+            background: #030712;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            min-height: 480px;
+            box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .mermaid {
+            width: 100%;
+            background: transparent !important;
+        }
+
+        .msg-tag {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(114, 9, 183, 0.2);
+            border: 1px solid var(--accent-purple);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #e0b1ff;
+            font-size: 14px;
+        }
+        .msg-tag.ingress {
+            background: rgba(0, 180, 216, 0.15);
+            border-color: var(--accent-cyan);
+            color: #e0f2fe;
+        }
+
+        @media print {
+            body { background-color: #000; padding: 0; margin: 0; }
+            .page-slide { 
+                border: none; 
+                border-radius: 0; 
+                box-shadow: none; 
+                width: 100vw; 
+                height: 100vh;
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE PAGE 1 -->
+<div class="page-slide" id="page1">
+    <div class="page-content">
+        <div class="page-header">
+            <h1>Deployment & Architecture: <span>Cold Chain Mesh Topology</span></h1>
+            <div class="page-number">PAGE 01 // ARCHITECTURE</div>
+        </div>
+        <div class="layout-grid">
+            <div class="info-card" style="display: flex; flex-direction: column;">
+                <h2>Geographical & Network Layout</h2>
+                <p>The cold chain logistics network is deployed as a hierarchical mesh architecture, cleanly isolating organizational entities from hardware compute gateways.</p>
+                
+                <ul style="margin-top: 15px;">
+                    <li><strong>Root Node:</strong> Located at Central HQ, performing global system orchestration and state synchronization.</li>
+                    <li><strong>Madrid Gateway (node-1):</strong> Manages telemetry ingestion for main storage facilities.</li>
+                    <li><strong>Barcelona Hub (bindu-minis):</strong> Hosts the localized AI edge inference stack running <strong>Ollama</strong> at <code>192.168.12.160</code>.</li>
+                    <li><strong>Valencia Gateway (bindu-pi3-uno):</strong> Monitors dynamic regional sub-compartments.</li>
+                </ul>
+
+                <div class="note-box">
+                    <strong>Architecture Moat:</strong> While Ollama is pooled at <code>bindu-minis</code>, each physical node executes its own isolated <strong>Semantic Reactor</strong>. Prompt synthesis is kept entirely local.
+                </div>
+            </div>
+            <div class="diagram-container">
+                <div class="mermaid">
+                graph TD
+                    subgraph CentralHQ ["Central Depot / HQ"]
+                        ROOT["root: Central Control Room"]
+                    end
+
+                    subgraph Madrid ["Madrid Central Warehouse"]
+                        NODE1["node-1: Gateway Node Central"]
+                        S1["Freezer Sensors Madrid"] -->|Telemetry| NODE1
+                    end
+
+                    subgraph Barcelona ["Barcelona Regional Hub"]
+                        MINIS["bindu-minis: Gateway Node Minis"]
+                        OLLAMA["Ollama Server: Qwen 2.5"]
+                        S2["Freezer Sensors Barcelona"] -->|Telemetry| MINIS
+                        MINIS <-->|Local API Host| OLLAMA
+                    end
+
+                    subgraph Valencia ["Valencia Regional Warehouse"]
+                        PI3["bindu-pi3-uno: Gateway Node Pi3"]
+                        S3["Freezer Sensors Valencia"] -->|Telemetry| PI3
+                    end
+
+                    ROOT <-->|Replicate & Route| NODE1
+                    ROOT <-->|Replicate & Route| MINIS
+                    ROOT <-->|Replicate & Route| PI3
+
+                    NODE1 -.->|Remote Inference HTTP| OLLAMA
+                    PI3 -.->|Remote Inference HTTP| OLLAMA
+
+                    style ROOT fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
+                    style NODE1 fill:#1e293b,stroke:#a855f7,stroke-width:1px,color:#cbd5e1
+                    style MINIS fill:#1e293b,stroke:#a855f7,stroke-width:1px,color:#cbd5e1
+                    style PI3 fill:#1e293b,stroke:#a855f7,stroke-width:1px,color:#cbd5e1
+                    style OLLAMA fill:#14532d,stroke:#22c55e,stroke-width:1px,color:#f0fdf4
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE PAGE 2 -->
+<div class="page-slide" id="page2">
+    <div class="page-content">
+        <div class="page-header">
+            <h1>Local Node Stack & <span>Sandbox Isolation</span></h1>
+            <div class="page-number">PAGE 02 // RUNTIME</div>
+        </div>
+        <div class="layout-grid reverse">
+            <div class="diagram-container">
+                <div class="mermaid">
+                graph LR
+                    subgraph Gateway ["Physical Gateway Node"]
+                        subgraph Core ["Bindu Core Runner"]
+                            Broker["MQTT Broker / bindu/in"]
+                            Router["Routing Engine"]
+                            DB[("SQLite DB: v_messages")]
+                        end
+                        subgraph Sandbox ["BPR Plugin Sandbox"]
+                            SDK["Go BPR SDK Context"]
+                            Reactor["bindu-semantic-reactor Subprocess"]
+                            SDK <--> Reactor
+                        end
+                    end
+
+                    OllamaEndpoint["Ollama API Server: 192.168.12.160"]
+
+                    Broker -->|Telemetry Event| Router
+                    Router -->|Store Message| DB
+                    Router -->|Republish / Trigger| SDK
+                    SDK -->|Read History SQL| DB
+                    Reactor -->|Send Prompt HTTP POST| OllamaEndpoint
+                    OllamaEndpoint -->|Return Structured JSON| Reactor
+                    Reactor -->|Emit Risk Assessment| SDK
+                    SDK -->|Publish Egress Event| Router
+
+                    style Core fill:#0f172a,stroke:#3b82f6,stroke-width:2px,color:#fff
+                    style Sandbox fill:#1e1b4b,stroke:#8b5cf6,stroke-width:1.5px,color:#e0e7ff
+                    style OllamaEndpoint fill:#14532d,stroke:#22c55e,stroke-width:1px,color:#f0fdf4
+                </div>
+            </div>
+            <div class="info-card" style="display: flex; flex-direction: column;">
+                <h2>Internal Sandbox Architecture</h2>
+                <p>Every single node implements the exact same lightweight software blueprint, enforcing absolute separation of concerns between raw routing and intelligence.</p>
+                
+                <ul style="margin-top: 10px; font-size: 15px;">
+                    <li><strong>Bindu Core Runner:</strong> Manages localized low-latency MQTT message distribution and constructs the <code>v_messages</code> view.</li>
+                    <li><strong>BPR Plugin Sandbox:</strong> Runs the <code>bindu-semantic-reactor</code> inside a non-blocking, isolated OS process.</li>
+                    <li><strong>Go BPR SDK:</strong> Secure IPC channel enabling read-only state hydration from the underlying storage primitives.</li>
+                    <li><strong>SQLite View (v_messages):</strong> Holds high-fidelity timeline facts for contextual prompts.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE PAGE 3 -->
+<div class="page-slide" id="page3">
+    <div class="page-content">
+        <div class="page-header">
+            <h1>Data Lifecycle: <span>Ingress, Inference & Egress</span></h1>
+            <div class="page-number">PAGE 03 // DATAFLOW</div>
+        </div>
+        <div class="layout-grid">
+            <div class="info-card" style="display: flex; flex-direction: column; padding: 20px;">
+                <h2>Semantic Processing Loop</h2>
+                <p>Data streams shift from basic data collection to proactive event processing without brittle hardcoded glue code layers.</p>
+                
+                <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <span class="msg-tag ingress"><i class="fa-solid fa-arrow-right-to-bracket"></i> FreezerTelemetry</span>
+                        <p style="font-size: 14px; margin: 5px 0 0 0;">Raw ingestion metrics directly from edge physical devices (<code>temperature</code>, <code>door_open</code>, <code>compressor_current_amps</code>).</p>
+                    </div>
+                    <div>
+                        <span class="msg-tag"><i class="fa-solid fa-brain"></i> StorageRiskAssessment</span>
+                        <p style="font-size: 14px; margin: 5px 0 0 0;">Cognitive output computed and pushed by the AI Reactor (<code>risk_level</code>, <code>estimated_minutes_to_spoilage</code>, <code>root_cause_prediction</code>).</p>
+                    </div>
+                </div>
+
+                <div class="note-box" style="font-size: 13px; margin-top: 20px;">
+                    <strong>Real-Time Learning:</strong> Because decisions are inherently tied to a Digital Twin ID, the system loops execution logs right back into the context engine automatically.
+                </div>
+            </div>
+            <div class="diagram-container" style="padding: 10px;">
+                <div class="mermaid">
+                sequenceDiagram
+                    autonumber
+                    participant Sensor as Freezer Sensors
+                    participant Node as Bindu Gateway Node
+                    participant DB as SQLite DB (v_messages)
+                    participant Reactor as BPR Semantic Reactor
+                    participant LLM as Ollama LLM Engine (Barcelona)
+                    participant Root as Central HQ Node
+
+                    Sensor->>Node: Publish FreezerTelemetry to 'bindu/in'
+                    Node->>DB: Store raw telemetry in v_messages
+                    Node->>Reactor: Trigger Reactor (Subscribed)
+
+                    Reactor->>DB: Query last 5 telemetry records for freezer
+                    DB-->>Reactor: Return historical temperature trends
+
+                    Reactor->>Reactor: Compile Prompt (Instructions + Schema + History)
+                    Reactor->>LLM: POST /v1/chat/completions (Send Prompt)
+                    Note over LLM: Qwen Engine Reasons - Temp Rising - Risk Critical
+                    LLM-->>Reactor: Return structured JSON (risk_level, root_cause)
+
+                    Reactor->>Node: Publish StorageRiskAssessment (via BPR SDK)
+                    Node->>DB: Store risk assessment record
+                    Node->>Root: Replicate StorageRiskAssessment to Central HQ
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.js';
+    mermaid.initialize({ 
+        startOnLoad: true, 
+        theme: 'dark',
+        themeVariables: {
+            background: '#030712',
+            primaryColor: '#0b132b',
+            clusterBkg: '#050b14',
+            clusterBorder: '#00b4d8'
+        }
+    });
+</script>
+
+</body>
+</html>

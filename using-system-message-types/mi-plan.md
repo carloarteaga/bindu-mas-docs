@@ -1,0 +1,9 @@
+¡Excelente Agy!!! Gracias!!! Comenzaremos por definir clara la intención de la próxima tarea, en este momento se están ruteando en Bindu mensajes de 15 soluciones, el objetivo es hacer un análisis de cada MessageState específicamente el campo message_counts_by_type, con la tarea de inspeccionar irregularidades en el ruteo de los mensajes, en la definición de rétention.
+No tengo la idea muy clara pero se que puedes aqui definir una lógica , que ofrezca optimizaciones y/o irregularidades, tomando en cuenta:
+1)La cantidad de  mensajes tipo que arriban de cada nodo.
+2)La retención definida en la semántica.
+3)La frecuencias con que están definidos los cron/jobs en los reactores cel/rest/ai/bpr si no productores del tipo de mensaje. Al analizar donde están las fuentes de esta información son los reactores están en los mensajes types que la configuran, las políticas de retención en las extensiones de cle que exponen la semántica de los message-types y los BPR plugin en su definición de plugin, existe una opción en bindu que determina el uso que tiene un mensaje type bindu-studio message-types use
+El punto clave a investigar es posible desde un reactor cle crear un Message type que sea una aumentación de  MessageStats específicamente el campo message_counts_by_type, que tenga los campos mencionados , este mensaje se crea cuando arriba un MessageState manteniendo su $group. $producer de manera que con el se pueda crear un dashboard que muestra el análisis esperado.?
+Por favor crea un directorio en public/console/docs/llamado using-system-message-types, que será un tutorial comencemos solo por el plan, teóricamente de ser posible resolverlo con un solo cel-reactor, el MAS sera un cel-reactor y uno o varios dashboards como tu concluyas.
+Estudia los otros tutoriales existentes en public/console/docs para que entiendas el formato, refresca tambien public/console/docs/AGENTS.md
+

@@ -1,0 +1,23 @@
+{
+  "id": "hello-world-plugin",
+  "name": "Hello World Plugin",
+  "version": "1.0.0",
+  "runtime": "bpr",
+  "in": [
+    "HelloWorldConfig"
+  ],
+  "out": [
+    "HelloWorld",
+    "HelloWorldStats"
+  ],
+  "schedules": [
+    {
+      "cron": "0 */5 * * * *",
+      "trigger": "cron"
+    },
+    {
+      "cron": "0 */15 * * * *",
+      "trigger": "cron.2"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$type": "AISemanticReactorSet",
+  "$group": "mesh",
+  "$producer": "root",
+  "$user": "admin",
+  "$when": "2026-11-07T12:00:00Z",
+  "fields": {
+    "gateway_node_id": "root",
+    "reactors": [
+      {
+        "reactor_id": "mining-reliability-engineer",
+        "api_endpoint": "http://localhost:11434/v1/chat/completions",
+        "api_key_secret": "ollama-local",
+        "model_id": "qwen2.5-coder:0.5b",
+        "max_concurrency": 1,
+        "inference_timeout": 60,
+        "trigger_message_types": [
+          "BearingDefectSuspected"
+        ],
+        "history_count": 0,
+        "context_query": "SELECT \"$when\" AS sample_time, json_extract(fields, '$.vibration_rms') as rms, json_extract(fields, '$.peak_g') as peak, json_extract(fields, '$.crest_factor') as crest, json_extract(fields, '$.kurtosis') as kurtosis FROM v_messages WHERE \"$type\" = 'MachineVibrationSample' AND json_extract(fields, '$.machine_id') = '{{.fields.machine_id}}' ORDER BY \"$when\" DESC LIMIT 10;",
+        "response_message_type": "PredictiveMaintenanceDiagnosis",
+        "confidence_threshold": 0.70,
+        "cognitive_profile": true,
+        "mapping_template": {
+          "diagnosis_id": "DIAG-{{.fields.machine_id}}-{{.fields.timestamp}}",
+          "machine_id": "{{.fields.machine_id}}",
+          "machine_model": "{{.fields.machine_model}}",
+          "timestamp": "{{.fields.timestamp}}",
+          "component": "{{.fields.component}}",
+          "diagnosed_failure_mode": "{{.fields.diagnosed_failure_mode}}",
+          "defect_severity": "{{.fields.defect_severity}}",
+          "estimated_remaining_useful_life_hours": "{{.fields.estimated_remaining_useful_life_hours}}",
+          "confidence_score": "{{.fields.confidence_score}}",
+          "recommended_action": "{{.fields.recommended_action}}",
+          "work_order_priority": "{{.fields.work_order_priority}}"
+        },
+        "system_instruction": "You are a Senior Machinery Reliability Engineer specializing in ISO 10816 / ISO 13373 vibration analysis for heavy open-pit mining equipment. You diagnose mechanical bearing defects and estimate Remaining Useful Life (RUL). You MUST output strictly a single valid raw JSON object. Do not output markdown, preambles, or backticks. Rules: 1. component must be 'Main Hydraulic Pump Bearing' or 'Slewing Ring Gear'. 2. diagnosed_failure_mode must describe the physical defect (e.g. 'Outer Race Micro-Spalling (Stage 2 Defect)', 'Rolling Element Pitting'). 3. defect_severity must be 'MEDIUM', 'HIGH', or 'CRITICAL'. 4. estimated_remaining_useful_life_hours must be an integer between 24 and 250. 5. confidence_score must be a float between 0.85 and 0.99. 6. work_order_priority must be 'NEXT_SHIFT' or 'IMMEDIATE_STOP'. 7. recommended_action must specify physical shop actions.",
+        "semantic_prompt_template": "Analyze the incipient bearing defect alert for heavy machine '{{index .trigger_event \"fields\" \"machine_id\"}}' (Model: {{index .trigger_event \"fields\" \"machine_model\"}}):\n\nAlert Details:\n- Monitored Component: {{index .trigger_event \"fields\" \"component_monitored\"}}\n- Instantaneous Crest Factor: {{index .trigger_event \"fields\" \"crest_factor\"}}\n- Instantaneous Kurtosis: {{index .trigger_event \"fields\" \"kurtosis\"}}\n- Baseline RMS: {{index .trigger_event \"fields\" \"vibration_rms\"}} g\n- Peak G-Force: {{index .trigger_event \"fields\" \"peak_g\"}} g\n- Suspected Defect Stage: {{index .trigger_event \"fields\" \"defect_stage\"}}\n\nRecent Historical Trend:\n{{range .state}}\n- Timestamp: {{index . \"sample_time\"}} | RMS: {{index . \"rms\"}}g | Peak: {{index . \"peak\"}}g | Crest: {{index . \"crest\"}} | Kurtosis: {{index . \"kurtosis\"}}\n{{end}}\n\nProduce the structured PredictiveMaintenanceDiagnosis JSON:\n{\n  \"component\": \"Main Hydraulic Pump Bearing\",\n  \"diagnosed_failure_mode\": \"Outer Race Micro-Spalling (Stage 2 Defect)\",\n  \"defect_severity\": \"HIGH\",\n  \"estimated_remaining_useful_life_hours\": 72,\n  \"confidence_score\": 0.94,\n  \"recommended_action\": \"Inspect hydraulic suction filter for metal flakes, grease bearing housing, and schedule pump replacement during the next 72-hour planned maintenance window.\",\n  \"work_order_priority\": \"NEXT_SHIFT\"\n}"
+      }
+    ]
+  }
+}
