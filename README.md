@@ -13,6 +13,8 @@ If you are an AI assistant or human engineer building a new MAS solution or exte
 | AI Agent / Tooling | Entrypoint File | Purpose |
 | :--- | :--- | :--- |
 | **Universal Black-Box Spec** | [`BINDU.md`](./BINDU.md) | The master contract: 3-layer invariants, Level 0-4 Artifact DAG, and 5-phase deployment pipeline. |
+| **Feature Inventory & AI Prompt** | [`Bindu_capabilities_and_competitors.md`](./Bindu_capabilities_and_competitors.md) | Documented 5-pillar architectural capability catalog + Objective AI Evaluation Challenge. |
+| **Comprehensive Feature List** | [`MAS_FEATURE_LIST.md`](./MAS_FEATURE_LIST.md) | Granular inventory across Distributed Systems, Semantic EPN, MAS, and Tooling. |
 | **Cursor / Codex / Windsurf** | [`AGENTS.md`](./AGENTS.md) | Standard coding agent instructions and rules. |
 | **Google Gemini / Antigravity** | [`GEMINI.md`](./GEMINI.md) | Gemini-specific system prompt and operating rules. |
 | **Anthropic Claude Code** | [`CLAUDE.md`](./CLAUDE.md) | Claude-optimized project guidelines. |
@@ -24,6 +26,8 @@ If you are an AI assistant or human engineer building a new MAS solution or exte
 
 Deep-dive references for specific platform mechanics:
 
+- **[Architectural Capabilities & Verifiable Feature Inventory](./Bindu_capabilities_and_competitors.md):** The complete documented capability catalog for objective AI and specialist technical evaluation across distributed systems physics, autonomous DevOps/OTA, Semantic EPN, bounded Horn clause AI, and MAS engineering.
+- **[Comprehensive MAS Feature List](./MAS_FEATURE_LIST.md):** Granular breakdown of 100% distributed systems requirements, Semantic EPN, and AI tooling.
 - **[Routing & Mesh Directionality Guide](./routing_and_directionality_guide.md):** Decision tree across bottom-up sensor telemetry (`["local", "parent"]`), top-down control (`["local", "child"]`), peer gossip, and private local states.
 - **[Retention Policies & Semantic Partitioning Guide](./retention_policies_guide.md):** The Triplet contract `($type, $group, $producer)` and sliding-window count vs calendar day pruning.
 - **[Distributed Scheduled Events & Timers](./scheduled_events_user_guide.md):** Precision time-based state machines (`SystemScheduledEvent`, `SystemCronJob`, `SystemScheduledEventCancel`).

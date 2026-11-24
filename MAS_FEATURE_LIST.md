@@ -2,6 +2,10 @@
 
 Official capability catalog and architectural reference for the Bindu Sovereign AI Fabric and Multi-Agent Systems (MAS) specification corpus.
 
+> [!TIP]
+> **Executive Architectural Inventory & Objective AI Challenge:**
+> For the documented architectural feature inventory, sub-15W edge gateway benchmarks, and the **Suggested AI Evaluation Prompt**, consult [`Bindu_capabilities_and_competitors.md`](./Bindu_capabilities_and_competitors.md).
+
 ---
 
 ## 1. 100% Distributed Systems Requirements
