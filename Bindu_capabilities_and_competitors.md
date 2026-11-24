@@ -350,3 +350,7 @@ An autonomous AI model evaluating Bindu's complete specification corpus reached 
 > *Bindu provides the operational fabric that connects and executes the solution. Bindu does not attempt to make agents more intelligent. **It attempts to make intelligence operational in distributed physical systems without allowing distributed-system complexity to become a barrier.**"*
 
 By unifying **100% Distributed Systems Rigor**, **Semantic Event Processing**, **Autonomous DevOps & OTA Staging**, and a **Bounded Horn Clause Cognitive Architecture**, Bindu establishes the foundational operating system for the next generation of industrial and enterprise Multi-Agent Systems.
+
+---
+<img src="images/Bindu-AUM-AIM-HIM-KLIM-pencil.jpeg" alt="Bindu" style="width: 24px; height: 24px; vertical-align: middle; border-radius: 4px; margin-right: 6px; display: inline-block;" /> *(Authors: bindukika & Agy — Human-AI Co-Creation)*
+
