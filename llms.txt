@@ -1,0 +1,39 @@
+# Bindu Sovereign AI Fabric — MAS Documentation Corpus
+
+> Official documentation, specifications, and pedagogical corpus for building deterministic Multi-Agent Systems (MAS) on the Bindu Sovereign AI Fabric.
+
+## Core Specifications
+- [MAS Feature List](MAS_FEATURE_LIST.md): Complete capability catalog across Distributed Systems, Semantic EPN, MAS Solutions, and bindu-studio AI Tooling.
+- [BINDU MAS Creator Specification](BINDU.md): The official specification for declarative solution creation, Level 0 DAG, and the Universal 5-Phase Deployment Pipeline.
+- [AI Software Agent Guardrails](AGENTS.md): Operating rules, Horn clause deductions, and code generation guidelines for autonomous coding assistants.
+- [Claude Instructions](CLAUDE.md): Adapter guidelines for Claude Code and Anthropic models.
+- [Gemini Instructions](GEMINI.md): Adapter guidelines for Gemini Code Assist and Google models.
+- [Co-Creation Guide](Co-Creation%20Guide.md): Human-AI pair programming workflow from intent to certified edge rollout.
+
+## Architectural Guides
+- [Architecture Overview](Bindu%20Architecture%20Overview.md): High-level system architecture, compile-time roles, and 3-layer model.
+- [Messaging Architecture](Bindu%20Messaging%20Architecture%20%E2%80%94%20Concepts%20%26%20Rationale.md): Epistemic mechanics of SEPN, event envelopes, and SQLite WAL storage.
+- [Routing & Directionality Guide](routing_and_directionality_guide.md): Invariant rules for local, parent, and child event propagation.
+- [Retention Policies Guide](retention_policies_guide.md): Declarative sliding-window retention semantics preventing edge storage bloat.
+- [Mobile & Leaf Client Guide](mobile_and_leaf_client_guide.md): Contract and architecture for Android (Kotlin) and iOS (Swift) leaf clients.
+- [Scheduled Events Guide](scheduled_events_user_guide.md): Dual-purge architecture, cron triggers, and semantic database cleanup.
+- [mTLS & Certificate Lifecycle](mtls_and_certificate_lifecycle_guide.md): Mesh dialing, internal CA, and cluster security contract.
+- [Raw Ingress & Adapters](raw_ingress_and_mqtt_adapters_guide.md): Memory-based binary frame ingestion and CEL translation.
+
+## Component Manuals
+- [Message Types User Guide](message_types_user_guide.md): Schema definition, validation rules, and lifecycle.
+- [CEL Reactor User Guide](cel_reactor_user_guide.md): Microsecond Google CEL kinetic execution and Horn clauses.
+- [Semantic AI Reactor User Guide](semantic_reactor_user_guide.md): 3-tier CEL+AI sandwich, dynamic hydration, and secret vaults.
+- [Plugin Execution Model User Guide](plugin_execution_model_user_guide.md): BPR external process JSON stdin/stdout isolation.
+- [REST Reactor User Guide](rest_reactor_user_guide.md): Declarative HTTP webhooks and external API orchestrators.
+- [Studio CLI Guide](Bindu%20Studio%20%E2%80%94%20User%20Guide%20(Command%20Overview).md): Studio command-line toolkit.
+
+## Tutorials & Reference Implementations
+- [Edge Computer Vision Tutorial](edge-cv-tutorial/tutorial_guide.md): YOLOX-S ONNX runtime BPR plugin with on-demand bootstrap.
+- [Industrial Potato Processing](potato-processing-pipeline-tutorial/tutorial_guide.md): Modbus PLC integration and predictive thermodynamic control.
+- [RFID EPC Logistics](rfid-epc-tutorial/tutorial_guide.md): Warehouse asset tracking and anti-collision event processing.
+- [BLE Beacons](ble-tutorial/tutorial_guide.md): Micro-location telemetry and personnel proximity monitoring.
+- [Agroforestry Carbon Credits](amazon-suzano-carbon-tutorial/tutorial_guide.md): Satellite telemetry and carbon sequestration verification.
+- [Heavy Mining Fleet](mining-heavy-equipment-tutorial/tutorial_guide.md): Predictive telemetry and maintenance dispatch.
+- [Hello World Plugin](hello-world-tutorial/tutorial_guide.md): Minimal standalone Go plugin and console integration.
+- [Complete MAS Lifecycle](mas-complete-lifecycle-tutorial/tutorial_guide.md): End-to-end bundling, certification, and rollout.

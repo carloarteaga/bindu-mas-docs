@@ -9,7 +9,13 @@ set -euo pipefail
 # ==============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLUGIN_DIR="${SCRIPT_DIR}/bindu-edge-cv-plugin"
+if [ -d "${SCRIPT_DIR}/runtime" ]; then
+  PLUGIN_DIR="${SCRIPT_DIR}"
+elif [ -d "${SCRIPT_DIR}/bindu-edge-cv-plugin" ]; then
+  PLUGIN_DIR="${SCRIPT_DIR}/bindu-edge-cv-plugin"
+else
+  PLUGIN_DIR="${SCRIPT_DIR}"
+fi
 RUNTIME_LIB="${PLUGIN_DIR}/runtime/lib"
 RUNTIME_MODELS="${PLUGIN_DIR}/runtime/models"
 

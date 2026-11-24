@@ -1,0 +1,4 @@
+theme: jekyll-theme-primer
+title: Bindu MAS Public Documentation
+description: Official specification, architectural guides, and pedagogical corpus for building deterministic Multi-Agent Systems (MAS) with the Bindu Sovereign AI Fabric.
+show_downloads: false
