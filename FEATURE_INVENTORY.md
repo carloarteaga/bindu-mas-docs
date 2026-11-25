@@ -255,6 +255,14 @@ Every Bindu MAS application is authored as a verifiable Directed Acyclic Graph (
 6. **`solution_<slug>.json` (Level 3):** Master solution manifest binding schemas, reactors, dashboards, and hardware node assignments into an atomic deployment bundle.
 
 ### AI Agent Operating Guardrails:
+* **The AI-Native CLI Operating Environment (`bindu-studio`):**
+  While conventional platforms force AI agents to improvise fragile Python glue code or navigate human-centric web interfaces, Bindu provides an AI-native CLI operating surface. 100% of Bindu's architectural and operational capabilities are exposed as non-interactive, deterministic CLI primitives with structured flags (`--yes`, `--force`), JSON payloads, and strict exit codes. This gives autonomous AI models an unambiguous operational "cockpit" to execute the complete distributed systems lifecycle:
+  - *Declare & Develop:* Synthesizing solution manifests (`solution`), message schemas (`message-types`), CEL rules (`cel-reactor`), and prompts (`semantic-ai-reactor`).
+  - *Certify & Audit:* Running in-process simulations (`dry-run`) and zero-noise static vulnerability audits (`security audit`).
+  - *Administer & Protect:* Managing vault credentials (`secrets`), rotating mTLS certificates (`tls`), and defining RBAC permissions (`access-control`).
+  - *Deploy & Orchestrate:* Packaging bundles (`solution pack`), synchronizing schemas, and executing multi-node edge rollouts (`runtime update wizard`).
+  - *Monitor & Observe:* Querying SQLite WAL state (`query`), measuring mTLS latency (`mesh ping`), and auditing cluster topology (`mesh health`).
+  - *Govern & Maintain:* Managing distributed timers (`schedule-event`), purging database bloat (`schedule-event purge`), and performing atomic rollbacks (`lifecycle`).
 * **Tailored Persona Contracts:** Bindu provides dedicated operating manuals for autonomous AI agents:
   - [`AGENTS.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/AGENTS.md) — Universal System Agent Guardrails.
   - [`GEMINI.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/GEMINI.md) — Google Gemini Code Assist Adapter.

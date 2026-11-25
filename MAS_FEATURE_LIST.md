@@ -115,8 +115,8 @@ Official capability catalog and architectural reference for the Bindu Sovereign 
   Strict developer contract requiring execution of `bindu-studio <cel-reactor|semantic-ai-reactor|rest-reactor|plugin> dry-run` to prove compilation and template hydration before deployment.
   * *Reference Docs:* [`bindu-studio-plugin-user-guide.md`](./bindu-studio-plugin-user-guide.md) · [`bindu_studio_solution_user_guide.md`](./bindu_studio_solution_user_guide.md)
 
-* **Studio CLI Command Arsenal:**
-  Industrial CLI suite for node provisioning, mesh topology inspection, real-time event sniffing, reactor certification, and scheduled event maintenance.
+* **AI-Native CLI UX for Autonomous Operating Control (`bindu-studio`):**
+  A complete, deterministic CLI operating surface engineered specifically for autonomous AI models and coding agents. Exposes 100% of Bindu's architectural and operational capabilities—declarative synthesis, in-memory certification (`dry-run`), secret vault administration, fleet deployment, live WAL queries, and health diagnostics—via non-interactive flags (`--yes`, `--force`), structured JSON payloads, and strict exit codes, eliminating human GUI bottlenecks and preventing AI execution drift.
   * *Reference Docs:* [`Bindu Studio — User Guide (Command Overview).md`](./Bindu Studio — User Guide (Command Overview).md) · [`Bindu Studio Mesh User Manual.md`](./Bindu Studio Mesh User Manual.md)
 
 * **Atomic Solution Bundling & Rollout Wizard:**
