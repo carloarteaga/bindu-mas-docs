@@ -127,6 +127,16 @@ Official capability catalog and architectural reference for the Bindu Sovereign 
   Static call-graph reachability auditing via the official Go vulnerability database (`govulncheck`). Analyzes compiled call paths to eliminate false alarms and detect reachable CVEs across the Go toolchain and third-party dependencies before release.
   * *Reference Docs:* [`Bindu Studio — User Guide (Command Overview).md`](./Bindu Studio — User Guide (Command Overview).md)
 
+* **Automated ISO/IEC Industrial Conformance Auditing (`iso audit`):**
+  Continuous technical verification harness auditing Bindu Core against 6 foundational international standards, generating living empirical compliance dossiers:
+  - **IEC 62443-4-1 (95% Automated Coverage):** Secure SDLC, SHA-256 verification, monotonic gating (`0.X.Y`), zero-symlink archives.
+  - **IEC 62443-4-2 / ISO 20922 (90% Automated Coverage):** Ingress restricted to MQTTS/WSS `bindu/in`, mutual mTLS 1.3 with autonomous Root CA, Leaf Client isolation.
+  - **ISO/IEC 25010 (95% Automated Coverage):** Live CEL kinetic probe (<2.0 µs), <46MB single-heap footprint, BadgerDB offline spooling.
+  - **ISO/IEC 42001 & 23894 (80% Automated Coverage):** 3-Tier CEL+AI Sandwich, Horn clause derivation proof logging in `v_messages`.
+  - **ISO/IEC 27001 (85% Automated Coverage):** Hardware-bound encrypted key vault, zero-plaintext wire, immutable WAL audit trail.
+  - **ISO 19111 (85% Automated Coverage):** WGS84 spatial envelope verification (`$where`) and real-time Geo-Locagram projection.
+  * *Reference Docs:* [`BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md`](./BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md) · [`Bindu Studio — User Guide (Command Overview).md`](./Bindu Studio — User Guide (Command Overview).md)
+
 * **Web Console Observability & SQL Dashboards:**
   Real-time browser-based dashboard engine (`public/console`) supporting live SQL queries against `v_messages`, configurable canvas zoom physics, and topological inspection.
   * *Reference Docs:* [`dashboards_user_guide.md`](./dashboards_user_guide.md) · [`ontology_user_guide.md`](./ontology_user_guide.md) · [`viewer_user_manual.md`](./viewer_user_manual.md)

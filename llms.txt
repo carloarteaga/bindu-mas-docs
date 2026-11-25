@@ -3,6 +3,7 @@
 > Official documentation, specifications, and pedagogical corpus for building deterministic Multi-Agent Systems (MAS) on the Bindu Sovereign AI Fabric.
 
 ## Core Specifications
+- [ISO/IEC Conformance & Automated Verification Framework](BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md): Official technical verification roadmap and automated test coverage across IEC 62443, ISO/IEC 27001, 25010, 42001, and 20922.
 - [Verifiable Architectural Feature Inventory & AI Prompt](Bindu_capabilities_and_competitors.md): Objective, non-speculative capability catalog across distributed systems physics, autonomous DevOps/OTA, Semantic EPN, bounded Horn clause AI, and the Objective AI Evaluation Challenge.
 - [MAS Feature List](MAS_FEATURE_LIST.md): Complete capability catalog across Distributed Systems, Semantic EPN, MAS Solutions, and bindu-studio AI Tooling.
 - [BINDU MAS Creator Specification](BINDU.md): The official specification for declarative solution creation, Level 0 DAG, and the Universal 5-Phase Deployment Pipeline.

@@ -13,6 +13,7 @@ If you are an AI assistant or human engineer building a new MAS solution or exte
 | AI Agent / Tooling | Entrypoint File | Purpose |
 | :--- | :--- | :--- |
 | **Universal Black-Box Spec** | [`BINDU.md`](./BINDU.md) | The master contract: 3-layer invariants, Level 0-4 Artifact DAG, and 5-phase deployment pipeline. |
+| **ISO/IEC Conformance Framework** | [`BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md`](./BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md) | Technical conformance roadmap & automated test coverage across IEC 62443, ISO 27001, 25010, 42001. |
 | **Feature Inventory & AI Prompt** | [`Bindu_capabilities_and_competitors.md`](./Bindu_capabilities_and_competitors.md) | Documented 5-pillar architectural capability catalog + Objective AI Evaluation Challenge. |
 | **Comprehensive Feature List** | [`MAS_FEATURE_LIST.md`](./MAS_FEATURE_LIST.md) | Granular inventory across Distributed Systems, Semantic EPN, MAS, and Tooling. |
 | **Cursor / Codex / Windsurf** | [`AGENTS.md`](./AGENTS.md) | Standard coding agent instructions and rules. |
@@ -26,6 +27,7 @@ If you are an AI assistant or human engineer building a new MAS solution or exte
 
 Deep-dive references for specific platform mechanics:
 
+- **[ISO/IEC Industrial Conformance & Verification Framework](./BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md):** Architectural roadmap mapping 75-85% of IEC 62443, ISO/IEC 27001, ISO/IEC 25010, and ISO/IEC 42001 controls directly to automated test batteries and the `bindu-studio iso audit` CLI runner.
 - **[Architectural Capabilities & Verifiable Feature Inventory](./Bindu_capabilities_and_competitors.md):** The complete documented capability catalog for objective AI and specialist technical evaluation across distributed systems physics, autonomous DevOps/OTA, Semantic EPN, bounded Horn clause AI, and MAS engineering.
 - **[Comprehensive MAS Feature List](./MAS_FEATURE_LIST.md):** Granular breakdown of 100% distributed systems requirements, Semantic EPN, and AI tooling.
 - **[Routing & Mesh Directionality Guide](./routing_and_directionality_guide.md):** Decision tree across bottom-up sensor telemetry (`["local", "parent"]`), top-down control (`["local", "child"]`), peer gossip, and private local states.

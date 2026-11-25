@@ -15,6 +15,7 @@ Current top-level commands:
 - `geo-locagram` — manage global WGS84 coordinates (`NodeGeoLocation`), indoor Cartesian planes (`NodeLocalGeometry`), batch import/export, offline validation, and spatial event queries.
 - `hall` — hierarchical command/flag help tree.
 - `help` — help for any command.
+- `iso` (alias `audit`, `check`) — automated technical conformance auditing against ISO/IEC industrial standards (IEC 62443, ISO 27001, ISO 25010, ISO 42001, ISO 20922, ISO 19111).
 - `license` — inspect/update installed license token.
 - `lifecycle` — product import and activation.
 - `mesh` — inspect/update mesh topology and node metadata.
@@ -65,7 +66,7 @@ bindu-studio hall --format json
 - Configuration and policy:
   `system-config`, `access-control`, `license`
 - Operational tooling & security:
-  `doctor`, `security`, `config-state`, `root-service`, `reset-bindu`, `self-update`
+  `doctor`, `security`, `iso`, `config-state`, `root-service`, `reset-bindu`, `self-update`
 
 ## Guide Map
 
@@ -192,4 +193,25 @@ bindu-studio security audit --show-all
 # 3. Machine-readable JSON output for automated CI/CD and DevOps ingestion
 bindu-studio security audit --format json
 ```
+
+## ISO/IEC Industrial Conformance Auditing
+
+`bindu-studio iso audit` executes an automated conformance test harness across the Bindu Core Engine, generating empirical audit dossiers mapped to official ISO/IEC standards:
+
+```bash
+# 1. Full automated ISO/IEC compliance audit
+bindu-studio iso audit
+
+# 2. Audit specific industrial standard
+bindu-studio iso audit --standard iec-62443
+bindu-studio iso audit --standard iso-25010
+bindu-studio iso audit --standard iso-42001
+
+# 3. Export official JSON audit evidence dossier for CISO/auditor review
+bindu-studio iso audit --format json --out ./dist/bindu-iso-report.json
+
+# 4. Generate living Markdown conformance dossier
+bindu-studio iso audit --format markdown --out ./docs/LIVE_ISO_AUDIT_REPORT.md
+```
+
 

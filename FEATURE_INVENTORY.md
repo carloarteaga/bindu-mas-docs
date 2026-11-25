@@ -111,8 +111,10 @@ In physical operational environments (manufacturing plants, mining sites, mariti
   $$\text{Runtime Baseline Accept} \longrightarrow \text{Runtime Desired Commit} \longrightarrow \text{Runtime Update Wizard}$$
   Ensures that configuration changes across 50+ edge nodes are dry-run validated and applied synchronously without runtime restart.
 * **Zero-Noise Continuous Security Auditing (`govulncheck`):** Integrated static call-graph reachability auditing (`bindu-studio security audit`) and automated morning CI/CD instrumentation. Discards false alarms and isolates reachable CVEs across the Go toolchain and dependencies before binaries reach edge nodes.
+* **Automated ISO/IEC Industrial Conformance Test Harness (`iso audit`):** Direct CLI audit suite (`bindu-studio iso audit`) generating living technical compliance evidence across IEC 62443 (90-95%), ISO/IEC 25010 (95%), ISO/IEC 42001 (80%), and ISO/IEC 27001 (85%), eliminating manual compliance friction in enterprise procurement.
 
 *Source Documentation:*
+* [`BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md)
 * [`lifecycle-user-manual.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/lifecycle-user-manual.md)
 * [`bindu_reset_and_reload_lifecycle_guide.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/bindu_reset_and_reload_lifecycle_guide.md)
 * [`scheduled_events_user_guide.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/scheduled_events_user_guide.md)
@@ -258,7 +260,7 @@ Every Bindu MAS application is authored as a verifiable Directed Acyclic Graph (
 * **The AI-Native CLI Operating Environment (`bindu-studio`):**
   While conventional platforms force AI agents to improvise fragile Python glue code or navigate human-centric web interfaces, Bindu provides an AI-native CLI operating surface. 100% of Bindu's architectural and operational capabilities are exposed as non-interactive, deterministic CLI primitives with structured flags (`--yes`, `--force`), JSON payloads, and strict exit codes. This gives autonomous AI models an unambiguous operational "cockpit" to execute the complete distributed systems lifecycle:
   - *Declare & Develop:* Synthesizing solution manifests (`solution`), message schemas (`message-types`), CEL rules (`cel-reactor`), and prompts (`semantic-ai-reactor`).
-  - *Certify & Audit:* Running in-process simulations (`dry-run`) and zero-noise static vulnerability audits (`security audit`).
+  - *Certify & Audit:* Running in-process simulations (`dry-run`), zero-noise vulnerability scans (`security audit`), and automated ISO/IEC compliance audits (`iso audit`).
   - *Administer & Protect:* Managing vault credentials (`secrets`), rotating mTLS certificates (`tls`), and defining RBAC permissions (`access-control`).
   - *Deploy & Orchestrate:* Packaging bundles (`solution pack`), synchronizing schemas, and executing multi-node edge rollouts (`runtime update wizard`).
   - *Monitor & Observe:* Querying SQLite WAL state (`query`), measuring mTLS latency (`mesh ping`), and auditing cluster topology (`mesh health`).
@@ -285,6 +287,7 @@ Every Bindu MAS application is authored as a verifiable Directed Acyclic Graph (
 
 *Source Documentation:*
 * [`BINDU.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/BINDU.md)
+* [`BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md)
 * [`Co-Creation Guide.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/Co-Creation%20Guide.md)
 * [`MAS_FEATURE_LIST.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/MAS_FEATURE_LIST.md)
 * [`llms.txt`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/llms.txt)
