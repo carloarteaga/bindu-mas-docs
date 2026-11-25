@@ -110,6 +110,7 @@ In physical operational environments (manufacturing plants, mining sites, mariti
 * **Declarative Runtime Desired-State Pipeline:** Mesh topology, channels, and reactor configurations follow a strict three-phase commit model:
   $$\text{Runtime Baseline Accept} \longrightarrow \text{Runtime Desired Commit} \longrightarrow \text{Runtime Update Wizard}$$
   Ensures that configuration changes across 50+ edge nodes are dry-run validated and applied synchronously without runtime restart.
+* **Zero-Noise Continuous Security Auditing (`govulncheck`):** Integrated static call-graph reachability auditing (`bindu-studio security audit`) and automated morning CI/CD instrumentation. Discards false alarms and isolates reachable CVEs across the Go toolchain and dependencies before binaries reach edge nodes.
 
 *Source Documentation:*
 * [`lifecycle-user-manual.md`](https://github.com/carloarteaga/bindu-mas-docs/blob/main/lifecycle-user-manual.md)

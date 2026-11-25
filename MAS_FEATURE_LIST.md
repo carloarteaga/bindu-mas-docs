@@ -123,6 +123,10 @@ Official capability catalog and architectural reference for the Bindu Sovereign 
   Automated solution lifecycle tool (`bindu-studio mas bundle -> deploy -> apply`) enforcing schema synchronization to edge nodes prior to reactor activation.
   * *Reference Docs:* [`bindu_studio_solution_user_guide.md`](./bindu_studio_solution_user_guide.md) · [`mas-deployment-guide.md`](./mas-deployment-guide.md) · [`mas-complete-lifecycle-tutorial/tutorial_guide.md`](./mas-complete-lifecycle-tutorial/tutorial_guide.md)
 
+* **Zero-Noise Security & Vulnerability Auditing (`security audit`):**
+  Static call-graph reachability auditing via the official Go vulnerability database (`govulncheck`). Analyzes compiled call paths to eliminate false alarms and detect reachable CVEs across the Go toolchain and third-party dependencies before release.
+  * *Reference Docs:* [`Bindu Studio — User Guide (Command Overview).md`](./Bindu Studio — User Guide (Command Overview).md)
+
 * **Web Console Observability & SQL Dashboards:**
   Real-time browser-based dashboard engine (`public/console`) supporting live SQL queries against `v_messages`, configurable canvas zoom physics, and topological inspection.
   * *Reference Docs:* [`dashboards_user_guide.md`](./dashboards_user_guide.md) · [`ontology_user_guide.md`](./ontology_user_guide.md) · [`viewer_user_manual.md`](./viewer_user_manual.md)

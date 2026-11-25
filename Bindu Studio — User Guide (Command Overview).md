@@ -28,6 +28,7 @@ Current top-level commands:
 - `runtime` — runtime desired snapshots and runtime update delivery.
 - `schedule-event` — schedule, cancel, list, and purge distributed time-based events, timers, and digital twin awakening state machines.
 - `secrets` (alias `integration-passwords`) — manage encrypted integration credentials, third-party API keys, and storage tokens in `accessControlConfig.brs`.
+- `security` (alias `audit`, `scan`) — audit Go runtime and third-party dependencies for reachable vulnerabilities via static call-graph reachability analysis.
 - `self-update` — update `bindu-studio` binary.
 - `semantic-ai-reactor` — export, import, merge, dry-run, and inspect active semantic AI reactor deployments.
 - `solution` — declarative MAS solution manifests and bundles (`MASSolutionSet`) for AI-driven deployment and cloning.
@@ -63,8 +64,8 @@ bindu-studio hall --format json
   `mesh` (topology: `tree`, `add`, `bulk-add`, `edit`, `move`, `delete`, `remove`, `apply`; diagnostics: `health`, `ping`, `node-presence`, `node-status`, `node-version`; control: `node-refresh`, `node-restart`; recovery: `rescue-parent`, `rescue-all`)
 - Configuration and policy:
   `system-config`, `access-control`, `license`
-- Operational tooling:
-  `doctor`, `config-state`, `root-service`, `reset-bindu`, `self-update`
+- Operational tooling & security:
+  `doctor`, `security`, `config-state`, `root-service`, `reset-bindu`, `self-update`
 
 ## Guide Map
 
@@ -176,3 +177,19 @@ bindu-studio mesh rescue-parent --node-id dell-debian1 --node-ip 10.0.5.52 --aut
 bindu-studio mesh rescue-all --nodes "node-1=10.0.5.51,dell-debian1=10.0.5.52" --yes --auth console:StrongPass123
 bindu-studio mesh rescue-all --inventory /etc/bindu/production-nodes.txt --yes --auth console:StrongPass123
 ```
+
+## Security & Vulnerability Auditing Highlights
+
+`bindu-studio security audit` performs static call-graph reachability analysis against the official Go Vulnerability Database (`govulncheck`), ensuring zero false positives by alerting strictly on vulnerabilities actively reachable in compiled code paths:
+
+```bash
+# 1. Standard reachable vulnerability audit
+bindu-studio security audit
+
+# 2. Audit with verbose breakdown (including uncalled transitive dependencies)
+bindu-studio security audit --show-all
+
+# 3. Machine-readable JSON output for automated CI/CD and DevOps ingestion
+bindu-studio security audit --format json
+```
+
