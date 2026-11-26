@@ -82,11 +82,59 @@ bindu-studio mesh node-deploy \
 
 ---
 
-## 3. Remote Installation Protocol (AI Orchestrator Logic)
+## 3. Native Fleet Deployment Orchestration: `bindu-studio fleet deploy`
 
-The AI Agent or deployment script should consume `fleet-deploy.json` and follow this recipe to install each node:
+Instead of writing fragile custom Python or Bash scripts with external `scp` and `ssh` subprocess loops, Bindu provides a native, highly concurrent Go orchestrator built into the CLI: **`bindu-studio fleet deploy`**.
 
-### Pseudocode for AI Orchestrators
+### Architecture & Key Capabilities
+
+1. **Zero-Disk Streaming (CGO-Free Go SSH)**:
+   Connects using `golang.org/x/crypto/ssh` and pipes the compressed generic payload directly to the remote machine's `tar -xzf -` over the SSH session's stdin. No temporary `.tar.gz` files on remote disks, no multiple SCP round-trips.
+2. **Semantic Template Cloning**:
+   Clones an existing, fully configured node (`--template <node_id>`) with its assigned MAS plugins (`bindu-cv`, `hello-world`), MQTT channels, ports, and CEL reactors across all target units.
+3. **Dynamic Hardware Discovery & Naming**:
+   Supports patterns such as:
+   - `bn-{ip}`: e.g. `bn-10-0-1-42`
+   - `drone-{mac}`: inspects remote network interface (`/sys/class/net/*/address`) and formats hardware MAC.
+   - `drone-{index:03d}`: zero-padded numeric indices (`drone-001`, `drone-002`).
+   - `node-{machine-id}`: unique Linux system machine-id (`/etc/machine-id`).
+4. **Concurrent Worker Pool**:
+   Deploys to hundreds of machines in parallel with configurable goroutine pools (e.g. `--concurrency 30`), achieving $<3$ minutes rollout across 400 drones.
+
+### Command Examples
+
+```bash
+# 1. Deploy 50 drones via IP range with automatic naming by IP
+bindu-studio fleet deploy \
+  --template "drone-template" \
+  --ips "10.0.1.1-10.0.1.50" \
+  --ssh-user "pi" \
+  --ssh-password "raspberry" \
+  --naming "bn-{ip}" \
+  --concurrency 25
+
+# 2. Deploy using a JSON inventory with dynamic MAC address discovery
+bindu-studio fleet deploy \
+  --template "drone-template" \
+  --inventory ./drones-fleet.json \
+  --naming "drone-{mac}" \
+  --concurrency 30
+
+# 3. Simulate and preview node ID resolution without modifying the mesh or executing installations
+bindu-studio fleet deploy \
+  --template "drone-template" \
+  --ips "192.168.10.0/28" \
+  --naming "drone-{index:03d}" \
+  --dry-run --json
+```
+
+---
+
+## 4. Legacy / External Script Orchestration (Python / Shell Reference)
+
+If integrating with external CI/CD or legacy orchestrators, you can still consume `fleet-deploy.json` directly:
+
+### Pseudocode for Custom External Scripts
 
 ```python
 import json

@@ -123,6 +123,14 @@ Official capability catalog and architectural reference for the Bindu Sovereign 
   Automated solution lifecycle tool (`bindu-studio mas bundle -> deploy -> apply`) enforcing schema synchronization to edge nodes prior to reactor activation.
   * *Reference Docs:* [`bindu_studio_solution_user_guide.md`](./bindu_studio_solution_user_guide.md) · [`mas-deployment-guide.md`](./mas-deployment-guide.md) · [`mas-complete-lifecycle-tutorial/tutorial_guide.md`](./mas-complete-lifecycle-tutorial/tutorial_guide.md)
 
+* **Fleet Provisioning & Mass Drone Deployment (`fleet deploy`):**
+  Native, high-concurrency Go SSH orchestrator (`golang.org/x/crypto/ssh`) for rolling out `bindu-node` across hundreds of drones, edge gateways, or cloud instances in parallel:
+  - **Zero-Disk Streaming:** Direct streaming of the compressed generic payload into remote `tar -xzf -` over SSH stdin, eliminating intermediate `.tar.gz` files and multiple SCP round-trips.
+  - **Semantic Template Cloning:** Clones a template node's hardware platform, assigned plugins, MQTT channels, and CEL reactors into the active mesh topology.
+  - **Dynamic Hardware Discovery:** Automates node naming via patterns including `bn-{ip}`, `drone-{mac}` (inspecting `/sys/class/net`), `drone-{index:03d}`, and `{machine-id}`.
+  - **Token Enrollment:** Enrolls nodes using temporary tokens (`X-Enrollment-Token`) to prevent exposing administrative credentials on edge devices.
+  * *Reference Docs:* [`AI Agent Fleet Deployment and Bulk Add Tutorial.md`](./AI Agent Fleet Deployment and Bulk Add Tutorial.md) · [`Bindu Studio — User Guide (Command Overview).md`](./Bindu Studio — User Guide (Command Overview).md)
+
 * **Zero-Noise Security & Vulnerability Auditing (`security audit`):**
   Static call-graph reachability auditing via the official Go vulnerability database (`govulncheck`). Analyzes compiled call paths to eliminate false alarms and detect reachable CVEs across the Go toolchain and third-party dependencies before release.
   * *Reference Docs:* [`Bindu Studio — User Guide (Command Overview).md`](./Bindu Studio — User Guide (Command Overview).md)

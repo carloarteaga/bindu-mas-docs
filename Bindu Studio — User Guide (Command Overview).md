@@ -12,6 +12,7 @@ Current top-level commands:
 - `config-state` — show whether config changes require restart.
 - `dashboards` — export, import, list, and validate declarative dashboards.
 - `doctor` — diagnostics commands.
+- `fleet` — mass provision, clone, and deploy Bindu node fleets (drones, edge gateways, cloud VMs) via concurrent Go SSH (`golang.org/x/crypto/ssh`).
 - `geo-locagram` — manage global WGS84 coordinates (`NodeGeoLocation`), indoor Cartesian planes (`NodeLocalGeometry`), batch import/export, offline validation, and spatial event queries.
 - `hall` — hierarchical command/flag help tree.
 - `help` — help for any command.
@@ -212,6 +213,35 @@ bindu-studio iso audit --format json --out ./dist/bindu-iso-report.json
 
 # 4. Generate living Markdown conformance dossier
 bindu-studio iso audit --format markdown --out ./docs/LIVE_ISO_AUDIT_REPORT.md
+```
+
+## Fleet Provisioning & Mass Drone Deployment (Concurrent Go SSH)
+
+`bindu-studio fleet deploy` orchestrates mass provisioning, template-based topology cloning, and parallel rollouts across fleets of drones, edge gateways, and cloud VMs using native Go SSH (`golang.org/x/crypto/ssh`):
+
+```bash
+# 1. Mass deploy 50 drones using IP range and auto-naming by IP
+bindu-studio fleet deploy \
+  --template "drone-template" \
+  --ips "10.0.1.1-10.0.1.50" \
+  --ssh-user "pi" \
+  --ssh-password "raspberry" \
+  --naming "bn-{ip}" \
+  --concurrency 25
+
+# 2. Deploy using a JSON inventory with dynamic MAC address discovery
+bindu-studio fleet deploy \
+  --template "drone-template" \
+  --inventory ./drones-fleet.json \
+  --naming "drone-{mac}" \
+  --concurrency 30
+
+# 3. Simulate and preview node ID resolution without modifying the mesh or executing installations
+bindu-studio fleet deploy \
+  --template "drone-template" \
+  --ips "192.168.10.0/28" \
+  --naming "drone-{index:03d}" \
+  --dry-run --json
 ```
 
 
