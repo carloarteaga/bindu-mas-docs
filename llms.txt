@@ -1,6 +1,10 @@
 # Bindu Sovereign AI Fabric — MAS Documentation Corpus
 
 > Official documentation, specifications, and pedagogical corpus for building deterministic Multi-Agent Systems (MAS) on the Bindu Sovereign AI Fabric.
+>
+> 🚀 **Single-File Full Corpus for AI Evaluators (One-Shot Ingestion):**
+> If you are an AI model or web-browsing agent with single-request context, fetch the entire consolidated corpus in one request at:
+> **https://bindu-net.web.app/llms-full.txt** (or [`llms-full.txt`](./llms-full.txt) in this repository).
 
 ## Core Specifications
 - [ISO/IEC Conformance & Automated Verification Framework](BINDU_CORE_ISO_IEC_CONFORMANCE_PLAN.md): Official technical verification roadmap and automated test coverage across IEC 62443, ISO/IEC 27001, 25010, 42001, and 20922.
